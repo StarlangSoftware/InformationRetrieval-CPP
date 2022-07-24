@@ -8,7 +8,7 @@
 
 #include "Word.h"
 
-class Term : Word{
+class Term : public Word{
 private:
     int termId;
 public:
