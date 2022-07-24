@@ -4,7 +4,9 @@
 
 #include "Term.h"
 
-Term::Term(string name, int termId) : Word(name){
+#include <utility>
+
+Term::Term(string name, int termId) : Word(std::move(name)){
     this->termId = termId;
 }
 
