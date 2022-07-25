@@ -3,7 +3,7 @@
 //
 
 #include "QueryResult.h"
-#include "QuertResultItemComparator.h"
+#include "QueryResultItemComparator.h"
 
 void QueryResult::add(int docId, double score) {
     items.emplace_back(QueryResultItem(docId, score));

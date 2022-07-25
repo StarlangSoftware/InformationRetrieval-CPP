@@ -8,7 +8,7 @@
 
 #include "Posting.h"
 
-class PostingSkip : Posting{
+class PostingSkip : public Posting{
 private:
     bool skipAvailable = false;
     PostingSkip* skip = nullptr;

@@ -3,10 +3,10 @@
 //
 
 #include <fstream>
-#include <stdlib.h>
 #include "TermDictionary.h"
 #include "Term.h"
 #include "TermOccurrenceComparator.h"
+#include "NGramIndex.h"
 
 TermDictionary::TermDictionary(Comparator comparator) : Dictionary(comparator) {
 }
@@ -79,6 +79,8 @@ vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k) {
     vector<TermOccurrence> terms;
     for (int i = 0; i < size(); i++){
         string word = getWord(i)->getName();
+        vector<TermOccurrence> termList = NGramIndex::constructNGrams(word, i, k);
+        terms.insert(terms.end(), termList.begin(), termList.end());
     }
     std::sort(terms.begin(), terms.end(), termComparator);
     return terms;
