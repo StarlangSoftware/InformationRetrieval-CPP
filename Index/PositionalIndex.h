@@ -8,6 +8,10 @@
 #include <map>
 #include "PositionalPostingList.h"
 #include "TermDictionary.h"
+#include "../Query/Query.h"
+#include "../Document/Document.h"
+#include "TermWeighting.h"
+#include "../Document/DocumentWeighting.h"
 
 class PositionalIndex {
 private:
@@ -18,6 +22,11 @@ public:
     explicit PositionalIndex(string fileName);
     PositionalIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
     void addPosition(int termId, int docId, int position);
+    void save(string fileName);
+    QueryResult positionalSearch(Query query, TermDictionary dictionary);
+    int* getTermFrequencies(int docId);
+    int* getDocumentFrequencies();
+    QueryResult rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents, TermWeighting termWeighting, DocumentWeighting documentWeighting);
 };
 
 
