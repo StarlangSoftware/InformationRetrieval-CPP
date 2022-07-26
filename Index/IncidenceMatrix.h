@@ -13,10 +13,11 @@
 
 class IncidenceMatrix {
 private:
-    bool** incidenceMatrix;
-    int dictionarySize;
-    int documentSize;
+    bool** incidenceMatrix = nullptr;
+    int dictionarySize{};
+    int documentSize{};
 public:
+    IncidenceMatrix();
     IncidenceMatrix(int dictionarySize, int documentSize);
     IncidenceMatrix(vector<TermOccurrence> terms, TermDictionary dictionary, int documentSize);
     ~IncidenceMatrix();

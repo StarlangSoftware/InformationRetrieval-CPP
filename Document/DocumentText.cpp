@@ -30,3 +30,25 @@ set<string> DocumentText::constructDistinctWordList(TermType termType) {
     }
     return words;
 }
+
+vector<TermOccurrence> DocumentText::constructTermList(Document doc, TermType termType) {
+    vector<TermOccurrence> terms;
+    int size = 0;
+    for (int i = 0; i < sentenceCount(); i++){
+        Sentence* sentence = getSentence(i);
+        for (int j = 0; j < sentence.wordCount(); j++){
+            switch (termType){
+                case TermType::TOKEN:
+                    terms.emplace_back(TermOccurrence(*(sentence->getWord(j)), doc.getDocId(), size));
+                    size++;
+                    break;
+                case TermType::PHRASE:
+                    if (j < sentence->wordCount() - 1){
+                        terms.emplace_back(TermOccurrence(Word(sentence->getWord(j).getName() + " " + sentence->getWord(j + 1).getName()), doc.getDocId(), size));
+                        size++;
+                    }
+            }
+        }
+    }
+    return terms;
+}

@@ -64,3 +64,5 @@ QueryResult IncidenceMatrix::search(Query query, TermDictionary dictionary) {
     }
     return result;
 }
+
+IncidenceMatrix::IncidenceMatrix() = default;

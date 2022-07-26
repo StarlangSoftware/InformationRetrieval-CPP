@@ -12,6 +12,7 @@
 
 class TermDictionary : public Dictionary{
 public:
+    TermDictionary();
     explicit TermDictionary(Comparator comparator);
     TermDictionary(Comparator comparator, string fileName);
     TermDictionary(Comparator comparator, vector<TermOccurrence> terms);

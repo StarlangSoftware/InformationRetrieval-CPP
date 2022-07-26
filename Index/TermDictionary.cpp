@@ -85,3 +85,7 @@ vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k) {
     std::sort(terms.begin(), terms.end(), termComparator);
     return terms;
 }
+
+TermDictionary::TermDictionary() : Dictionary(){
+
+}

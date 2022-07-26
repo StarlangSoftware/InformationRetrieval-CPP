@@ -10,12 +10,14 @@
 #include "Corpus.h"
 #include "../Index/TermType.h"
 #include "../Index/TermOccurrence.h"
+#include "Document.h"
 
 class DocumentText : public Corpus{
 public:
     explicit DocumentText(string fileName);
     DocumentText(string fileName, SentenceSplitter* sentenceSplitter);
     set<string> constructDistinctWordList(TermType termType);
+    vector<TermOccurrence> constructTermList(Document doc, TermType termType);
 };
 
 
