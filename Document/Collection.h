@@ -14,6 +14,9 @@
 #include "../Index/NGramIndex.h"
 #include "../Index/PositionalIndex.h"
 #include "Parameter.h"
+#include "../Query/VectorSpaceModel.h"
+#include "Matrix.h"
+#include "../Query/RetrievalType.h"
 
 class Collection {
 private:
@@ -38,14 +41,31 @@ private:
     void constructIndexesInMemory();
     vector<TermOccurrence> constructTerms(TermType termType);
     set<string> constructDistinctWordList(TermType termType);
-    bool notCombinedAllIndexes(int* currentIdList, int size);
+    bool notCombinedAllIndexes(const int* currentIdList, int size);
     bool notCombinedAllDictionaries(string* currentWords, int size);
-    vector<int> selectIndexesWithMinimumTermIds(int* currentIdList, int size);
+    vector<int> selectIndexesWithMinimumTermIds(const int* currentIdList, int size);
+    vector<int> selectDictionariesWithMinimumWords(string* currentWords, int size);
+    void combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount);
+    void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary nGramDictionary, NGramIndex nGramIndex);
+    void constructNGramDictionaryAndIndexInDisk();
+    void combineMultipleInvertedIndexesInDisk(const string& _name, const string& tmpName, int blockCount);
+    void constructInvertedIndexInDisk(TermDictionary _dictionary, TermType termType);
+    void constructDictionaryAndInvertedIndexInDisk(TermType termType);
+    void combineMultiplePositionalIndexesInDisk(const string& _name, int blockCount);
+    void constructDictionaryAndPositionalIndexInDisk(TermType termType);
+    void constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType);
+    void constructNGramIndex();
+    double cosineSimilarity(VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
 public:
-    Collection(string directory, Parameter parameter);
+    Collection(const string& directory, Parameter parameter);
     int size();
     int vocabularySize();
     void save();
+    VectorSpaceModel getVectorSpaceModel(int docId, TermWeighting termWeighting, DocumentWeighting documentWeighting);
+    double cosineSimilarity(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
+    Matrix cosineSimilarity(TermWeighting termWeighting, DocumentWeighting documentWeighting);
+    vector<string> sharedWordList(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
+    QueryResult searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting, DocumentWeighting documentWeighting);
 };
 
 

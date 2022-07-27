@@ -4,10 +4,11 @@
 
 #include "Collection.h"
 #include "../Index/TermOccurrenceComparator.h"
+#include "../Index/Term.h"
 
 using std::filesystem::directory_iterator;
 
-Collection::Collection(string directory, Parameter parameter) {
+Collection::Collection(const string& directory, Parameter parameter) {
     name = directory;
     indexType = parameter.getIndexType();
     comparator = parameter.getWordComparator();
@@ -164,14 +165,14 @@ set<string> Collection::constructDistinctWordList(TermType termType) {
     for (Document doc : documents){
         DocumentText documentText = doc.loadDocument();
         set<string> items = documentText.constructDistinctWordList(termType);
-        for (string item : items){
+        for (const string& item : items){
             words.insert(item);
         }
     }
     return words;
 }
 
-bool Collection::notCombinedAllIndexes(int* currentIdList, int size) {
+bool Collection::notCombinedAllIndexes(const int* currentIdList, int size) {
     for (int i = 0; i < size; i++){
         if (currentIdList[i] != -1){
             return true;
@@ -189,7 +190,7 @@ bool Collection::notCombinedAllDictionaries(string *currentWords, int size) {
     return false;
 }
 
-vector<int> Collection::selectIndexesWithMinimumTermIds(int *currentIdList, int size) {
+vector<int> Collection::selectIndexesWithMinimumTermIds(const int *currentIdList, int size) {
     vector<int> result;
     int min = INT_MAX;
     for (int i = 0; i < size; i++){
@@ -203,4 +204,432 @@ vector<int> Collection::selectIndexesWithMinimumTermIds(int *currentIdList, int 
         }
     }
     return result;
+}
+
+vector<int> Collection::selectDictionariesWithMinimumWords(string *currentWords, int size) {
+    vector<int> result;
+    string min;
+    turkishWordComparator wordComparator = turkishWordComparator(Dictionary::turkishComparatorMap);
+    for (int i = 0; i < size; i++){
+        if (!currentWords[i].empty() && (min.empty() || wordComparator.operator()(new Word(currentWords[i]), new Word(min)))){
+            min = currentWords[i];
+        }
+    }
+    for (int i = 0; i < size; i++){
+        if (currentWords[i] == min){
+            result.emplace_back(i);
+        }
+    }
+    return result;
+}
+
+void Collection::combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount) {
+    ifstream * files;
+    int* currentIdList;
+    string* currentWords;
+    string line;
+    currentIdList = new int[blockCount];
+    currentWords = new string[blockCount];
+    files = new ifstream[blockCount];
+    ofstream outfile;
+    outfile.open(_name + "-dictionary.txt", ofstream :: out);
+    for (int i = 0; i < blockCount; i++){
+        files[i].open("tmp-" + tmpName + ::to_string(i) + "-dictionary.txt", ifstream :: in);
+        getline(files[i], line);
+        currentIdList[i] = stoi(line.substr(0, line.find(' ')));
+        currentWords[i] = line.substr(line.find(' ') + 1);
+    }
+    while (notCombinedAllDictionaries(currentWords, blockCount)){
+        vector<int> indexesToCombine = selectDictionariesWithMinimumWords(currentWords, blockCount);
+        outfile << ::to_string(currentIdList[indexesToCombine[0]]) << " " << currentWords[indexesToCombine[0]] << "\n";
+        for (int i : indexesToCombine) {
+            getline(files[i], line);
+            if (!line.empty()) {
+                currentIdList[i] = stoi(line.substr(0, line.find(' ')));
+                currentWords[i] = line.substr(line.find(' ') + 1);
+            } else {
+                currentWords[i] = "";
+            }
+        }
+    }
+    for (int i = 0; i < blockCount; i++){
+        files[i].close();
+    }
+    outfile.close();
+}
+
+void
+Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary nGramDictionary, NGramIndex nGramIndex) {
+    int wordId = stoi(line.substr(0, line.find(' ')));
+    string word = line.substr(line.find(' ') + 1);
+    hash<string> hash;
+    vector<TermOccurrence> biGrams = NGramIndex::constructNGrams(word, wordId, k);
+    for (TermOccurrence term : biGrams){
+        int termId;
+        int wordIndex = nGramDictionary.getWordIndex(term.getTerm().getName());
+        if (wordIndex != -1){
+            termId = ((Term*) nGramDictionary.getWord(wordIndex))->getTermId();
+        } else {
+            termId = hash(term.getTerm().getName());
+            nGramDictionary.addTerm(term.getTerm().getName(), termId);
+        }
+        nGramIndex.add(termId, wordId);
+    }
+}
+
+void Collection::constructNGramDictionaryAndIndexInDisk() {
+    int i = 0, blockCount = 0;
+    ifstream inputFile;
+    string line;
+    TermDictionary _biGramDictionary = TermDictionary(comparator);
+    TermDictionary _triGramDictionary = TermDictionary(comparator);
+    NGramIndex _biGramIndex = NGramIndex();
+    NGramIndex _triGramIndex = NGramIndex();
+    inputFile.open(name + "-dictionary.txt", ifstream::in);
+    while (inputFile.good()) {
+        getline(inputFile, line);
+        if (i < parameter.getWordLimit()){
+            i++;
+        } else {
+            _biGramDictionary.save("tmp-biGram-" + ::to_string(blockCount));
+            _triGramDictionary.save("tmp-triGram-" + ::to_string(blockCount));
+            _biGramDictionary = TermDictionary(comparator);
+            _triGramDictionary = TermDictionary(comparator);
+            _biGramIndex.save("tmp-biGram-" + ::to_string(blockCount));
+            _biGramIndex = NGramIndex();
+            _triGramIndex.save("tmp-triGram-" + ::to_string(blockCount));
+            _triGramIndex = NGramIndex();
+            blockCount++;
+            i = 0;
+        }
+        addNGramsToDictionaryAndIndex(line, 2, _biGramDictionary, _biGramIndex);
+        addNGramsToDictionaryAndIndex(line, 3, _triGramDictionary, _triGramIndex);
+    }
+    inputFile.close();
+    if (!documents.empty()){
+        _biGramDictionary.save("tmp-biGram-" + ::to_string(blockCount));
+        _triGramDictionary.save("tmp-triGram-" + ::to_string(blockCount));
+        _biGramIndex.save("tmp-biGram-" + ::to_string(blockCount));
+        _triGramIndex.save("tmp-triGram-" + ::to_string(blockCount));
+        blockCount++;
+    }
+    combineMultipleDictionariesInDisk(name + "-biGram", "biGram-", blockCount);
+    combineMultipleDictionariesInDisk(name + "-triGram", "triGram-", blockCount);
+    combineMultipleInvertedIndexesInDisk(name + "-biGram", "biGram-", blockCount);
+    combineMultipleInvertedIndexesInDisk(name + "-triGram", "triGram-", blockCount);
+}
+
+void Collection::combineMultipleInvertedIndexesInDisk(const string& _name, const string& tmpName, int blockCount) {
+    ifstream* files;
+    int* currentIdList;
+    string line;
+    PostingList* currentPostingLists;
+    currentIdList = new int[blockCount];
+    currentPostingLists = new PostingList[blockCount];
+    files = new ifstream[blockCount];
+    ofstream outfile;
+    outfile.open(_name + "-postings.txt", ofstream::out);
+    for (int i = 0; i < blockCount; i++){
+        files[i].open("tmp-" + tmpName + ::to_string(i) + "-postings.txt", ifstream::in);
+        getline(files[i], line);
+        vector<string> items = Word::split(line);
+        currentIdList[i] = stoi(items[0]);
+        getline(files[i], line);
+        currentPostingLists[i] = PostingList(line);
+    }
+    while (notCombinedAllIndexes(currentIdList, blockCount)){
+        vector<int> indexesToCombine = selectIndexesWithMinimumTermIds(currentIdList, blockCount);
+        PostingList mergedPostingList = currentPostingLists[indexesToCombine[0]];
+        for (int i = 1; i < indexesToCombine.size(); i++){
+            mergedPostingList = mergedPostingList.unionWith(currentPostingLists[indexesToCombine[i]]);
+        }
+        mergedPostingList.writeToFile(outfile, currentIdList[indexesToCombine[0]]);
+        for (int i : indexesToCombine) {
+            getline(files[i], line);
+            if (!line.empty()) {
+                vector<string> items = Word::split(line);
+                currentIdList[i] = stoi(items[0]);
+                getline(files[i], line);
+                currentPostingLists[i] = PostingList(line);
+            } else {
+                currentIdList[i] = -1;
+            }
+        }
+    }
+    for (int i = 0; i < blockCount; i++){
+        files[i].close();
+    }
+    outfile.close();
+}
+
+void Collection::constructInvertedIndexInDisk(TermDictionary _dictionary, TermType termType) {
+    int i = 0, blockCount = 0;
+    InvertedIndex _invertedIndex = InvertedIndex();
+    for (Document doc : documents){
+        if (i < parameter.getDocumentLimit()){
+            i++;
+        } else {
+            _invertedIndex.save("tmp-" + ::to_string(blockCount));
+            _invertedIndex = InvertedIndex();
+            blockCount++;
+            i = 0;
+        }
+        DocumentText documentText = doc.loadDocument();
+        set<string> wordList = documentText.constructDistinctWordList(termType);
+        for (const string& word : wordList){
+            int termId = _dictionary.getWordIndex(word);
+            _invertedIndex.add(termId, doc.getDocId());
+        }
+    }
+    if (!documents.empty()){
+        _invertedIndex.save("tmp-" + ::to_string(blockCount));
+        blockCount++;
+    }
+    if (termType == TermType::TOKEN){
+        combineMultipleInvertedIndexesInDisk(name, "", blockCount);
+    } else {
+        combineMultipleInvertedIndexesInDisk(name + "-phrase", "", blockCount);
+    }
+}
+
+void Collection::constructDictionaryAndInvertedIndexInDisk(TermType termType) {
+    int i = 0, blockCount = 0;
+    InvertedIndex _invertedIndex = InvertedIndex();
+    TermDictionary _dictionary = TermDictionary(comparator);
+    hash<string> hash;
+    for (Document doc : documents){
+        if (i < parameter.getDocumentLimit()){
+            i++;
+        } else {
+            _dictionary.save("tmp-" + ::to_string(blockCount));
+            _dictionary = TermDictionary(comparator);
+            _invertedIndex.save("tmp-" + ::to_string(blockCount));
+            _invertedIndex = InvertedIndex();
+            blockCount++;
+            i = 0;
+        }
+        DocumentText documentText = doc.loadDocument();
+        set<string> wordList = documentText.constructDistinctWordList(termType);
+        for (const string& word : wordList){
+            int termId;
+            int wordIndex = _dictionary.getWordIndex(word);
+            if (wordIndex != -1){
+                termId = ((Term*) _dictionary.getWord(wordIndex))->getTermId();
+            } else {
+                termId = hash(word);
+                _dictionary.addTerm(word, termId);
+            }
+            _invertedIndex.add(termId, doc.getDocId());
+        }
+    }
+    if (!documents.empty()){
+        _dictionary.save("tmp-" + ::to_string(blockCount));
+        _invertedIndex.save("tmp-" + ::to_string(blockCount));
+        blockCount++;
+    }
+    if (termType == TermType::TOKEN){
+        combineMultipleDictionariesInDisk(name, "", blockCount);
+        combineMultipleInvertedIndexesInDisk(name, "", blockCount);
+    } else {
+        combineMultipleDictionariesInDisk(name + "-phrase", "", blockCount);
+        combineMultipleInvertedIndexesInDisk(name + "-phrase", "", blockCount);
+    }
+}
+
+void Collection::combineMultiplePositionalIndexesInDisk(const string& _name, int blockCount) {
+    ifstream* files;
+    int* currentIdList;
+    string line;
+    PositionalPostingList* currentPostingLists;
+    currentIdList = new int[blockCount];
+    currentPostingLists = new PositionalPostingList[blockCount];
+    files = new ifstream [blockCount];
+    ofstream outfile;
+    outfile.open(_name + "-positionalPostings.txt", ofstream::out);
+    for (int i = 0; i < blockCount; i++){
+        files[i].open("tmp-" + ::to_string(i) + "-positionalPostings.txt");
+        getline(files[i], line);
+        vector<string> items = Word::split(" ");
+        currentIdList[i] = stoi(items[0]);
+        currentPostingLists[i] = PositionalPostingList(files[i], stoi(items[1]));
+    }
+    while (notCombinedAllIndexes(currentIdList, blockCount)){
+        vector<int> indexesToCombine = selectIndexesWithMinimumTermIds(currentIdList, blockCount);
+        PositionalPostingList mergedPostingList = currentPostingLists[indexesToCombine[0]];
+        for (int i = 1; i < indexesToCombine.size(); i++){
+            mergedPostingList = mergedPostingList.unionWith(currentPostingLists[indexesToCombine[i]]);
+        }
+        mergedPostingList.writeToFile(outfile, currentIdList[indexesToCombine[0]]);
+        for (int i : indexesToCombine) {
+            getline(files[i], line);
+            if (!line.empty()) {
+                vector<string> items = Word::split(" ");
+                currentIdList[i] = stoi(items[0]);
+                currentPostingLists[i] = PositionalPostingList(files[i], stoi(items[1]));
+            } else {
+                currentIdList[i] = -1;
+            }
+        }
+    }
+    for (int i = 0; i < blockCount; i++){
+        files[i].close();
+    }
+    outfile.close();
+}
+
+void Collection::constructDictionaryAndPositionalIndexInDisk(TermType termType) {
+    int i = 0, blockCount = 0;
+    PositionalIndex _positionalIndex = PositionalIndex();
+    TermDictionary _dictionary = TermDictionary(comparator);
+    hash<string> hash;
+    for (Document doc : documents){
+        if (i < parameter.getDocumentLimit()){
+            i++;
+        } else {
+            _dictionary.save("tmp-" + ::to_string(blockCount));
+            _dictionary = TermDictionary(comparator);
+            _positionalIndex.save("tmp-" + ::to_string(blockCount));
+            _positionalIndex = PositionalIndex();
+            blockCount++;
+            i = 0;
+        }
+        DocumentText documentText = doc.loadDocument();
+        vector<TermOccurrence> terms = documentText.constructTermList(doc, termType);
+        for (TermOccurrence termOccurrence : terms){
+            int termId;
+            int wordIndex = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
+            if (wordIndex != -1){
+                termId = ((Term*) _dictionary.getWord(wordIndex))->getTermId();
+            } else {
+                termId = hash(termOccurrence.getTerm().getName());
+                _dictionary.addTerm(termOccurrence.getTerm().getName(), termId);
+            }
+            _positionalIndex.addPosition(termId, termOccurrence.getDocId(), termOccurrence.getPosition());
+        }
+    }
+    if (!documents.empty()){
+        _dictionary.save("tmp-" + ::to_string(blockCount));
+        _positionalIndex.save("tmp-" + ::to_string(blockCount));
+        blockCount++;
+    }
+    if (termType == TermType::TOKEN){
+        combineMultipleDictionariesInDisk(name, "", blockCount);
+        combineMultiplePositionalIndexesInDisk(name, blockCount);
+    } else {
+        combineMultipleDictionariesInDisk(name + "-phrase", "", blockCount);
+        combineMultiplePositionalIndexesInDisk(name + "-phrase", blockCount);
+    }
+}
+
+void Collection::constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType) {
+    int i = 0, blockCount = 0;
+    PositionalIndex _positionalIndex = PositionalIndex();
+    for (Document doc : documents){
+        if (i < parameter.getDocumentLimit()){
+            i++;
+        } else {
+            _positionalIndex.save("tmp-" + ::to_string(blockCount));
+            _positionalIndex = PositionalIndex();
+            blockCount++;
+            i = 0;
+        }
+        DocumentText documentText = doc.loadDocument();
+        vector<TermOccurrence> terms = documentText.constructTermList(doc, termType);
+        for (TermOccurrence termOccurrence : terms){
+            int termId = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
+            _positionalIndex.addPosition(termId, termOccurrence.getDocId(), termOccurrence.getPosition());
+        }
+    }
+    if (!documents.empty()){
+        _positionalIndex.save("tmp-" + ::to_string(blockCount));
+        blockCount++;
+    }
+    if (termType == TermType::TOKEN){
+        combineMultiplePositionalIndexesInDisk(name, blockCount);
+    } else {
+        combineMultiplePositionalIndexesInDisk(name + "-phrase", blockCount);
+    }
+}
+
+void Collection::constructNGramIndex() {
+    vector<TermOccurrence> terms = dictionary.constructTermsFromDictionary(2);
+    biGramDictionary = TermDictionary(comparator, terms);
+    biGramIndex = NGramIndex(biGramDictionary, terms, comparator);
+    terms = dictionary.constructTermsFromDictionary(3);
+    triGramDictionary = TermDictionary(comparator, terms);
+    triGramIndex = NGramIndex(triGramDictionary, terms, comparator);
+}
+
+VectorSpaceModel
+Collection::getVectorSpaceModel(int docId, TermWeighting termWeighting, DocumentWeighting documentWeighting) {
+    return VectorSpaceModel(positionalIndex.getTermFrequencies(docId), positionalIndex.getDocumentFrequencies(), documents.size(), termWeighting, documentWeighting);
+}
+
+double
+Collection::cosineSimilarity(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
+    int index1, index2;
+    double sum = 0.0;
+    for (index1 = 0; index1 < vocabularySize(); index1++){
+        if (spaceModel1.get(index1) > 0.0){
+            index2 = collection2.dictionary.getWordIndex(dictionary.getWord(index1)->getName());
+            if (index2 != -1 && spaceModel2.get(index2) > 0.0){
+                sum += spaceModel1.get(index1) * spaceModel2.get(index2);
+            }
+        }
+    }
+    return sum;
+}
+
+double Collection::cosineSimilarity(VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
+    int index;
+    double sum = 0.0;
+    for (index = 0; index < vocabularySize(); index++){
+        sum += spaceModel1.get(index) * spaceModel2.get(index);
+    }
+    return sum;
+}
+
+Matrix Collection::cosineSimilarity(TermWeighting termWeighting, DocumentWeighting documentWeighting) {
+    Matrix result = Matrix(size(), size());
+    VectorSpaceModel* models;
+    models = new VectorSpaceModel[documents.size()];
+    for (int i = 0; i < documents.size(); i++){
+        models[i] = getVectorSpaceModel(i, termWeighting, documentWeighting);
+    }
+    for (int i = 0; i < documents.size(); i++){
+        for (int j = 0; j < documents.size(); j++){
+            result.setValue(i, j, cosineSimilarity(models[i], models[j]));
+        }
+    }
+    return result;
+}
+
+vector<string>
+Collection::sharedWordList(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
+    int index1, index2;
+    vector<string> list;
+    for (index1 = 0; index1 < vocabularySize(); index1++){
+        if (spaceModel1.get(index1) > 0.0){
+            index2 = collection2.dictionary.getWordIndex(dictionary.getWord(index1)->getName());
+            if (index2 != -1 && spaceModel2.get(index2) > 0.0){
+                list.emplace_back(dictionary.getWord(index1)->getName());
+            }
+        }
+    }
+    return list;
+}
+
+QueryResult Collection::searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting,
+                                         DocumentWeighting documentWeighting) {
+    switch (indexType){
+        case IndexType::INCIDENCE_MATRIX:
+            return incidenceMatrix.search(query, dictionary);
+        case   IndexType::INVERTED_INDEX:
+            switch (retrievalType){
+                case    RetrievalType::BOOLEAN:return invertedIndex.search(query, dictionary);
+                case RetrievalType::POSITIONAL:return positionalIndex.positionalSearch(query, dictionary);
+                case     RetrievalType::RANKED:return positionalIndex.rankedSearch(query, dictionary, documents, termWeighting, documentWeighting);
+            }
+    }
+    return QueryResult();
 }

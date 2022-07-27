@@ -68,3 +68,5 @@ double VectorSpaceModel::weighting(double termFrequency, double documentFrequenc
     }
     return multiplier1 * multiplier2;
 }
+
+VectorSpaceModel::VectorSpaceModel() = default;

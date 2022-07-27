@@ -14,6 +14,7 @@ private:
     double* model;
     int documentSize;
 public:
+    VectorSpaceModel();
     VectorSpaceModel(int* termFrequencies, int* documentFrequencies, int documentSize, TermWeighting termWeighting, DocumentWeighting documentWeighting);
     double get(int index);
     double cosineSimilarity(VectorSpaceModel vectorSpaceModel);
