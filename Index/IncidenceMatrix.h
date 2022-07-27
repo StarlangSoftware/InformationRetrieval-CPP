@@ -20,7 +20,6 @@ public:
     IncidenceMatrix();
     IncidenceMatrix(int dictionarySize, int documentSize);
     IncidenceMatrix(vector<TermOccurrence> terms, TermDictionary dictionary, int documentSize);
-    ~IncidenceMatrix();
     void set(int row, int col);
     QueryResult search(Query query, TermDictionary dictionary);
 };

@@ -20,7 +20,7 @@ MorphologicalDisambiguator* Parameter::getDisambiguator() {
     return disambiguator;
 }
 
-FsmMorphologicalAnalyzer Parameter::getFsm() {
+FsmMorphologicalAnalyzer* Parameter::getFsm() {
     return fsm;
 }
 
@@ -76,7 +76,7 @@ void Parameter::setDisambiguator(MorphologicalDisambiguator* disambiguator) {
     this->disambiguator = disambiguator;
 }
 
-void Parameter::setFsm(FsmMorphologicalAnalyzer fsm) {
+void Parameter::setFsm(FsmMorphologicalAnalyzer* fsm) {
     this->fsm = fsm;
 }
 

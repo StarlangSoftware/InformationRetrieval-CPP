@@ -17,7 +17,7 @@ private:
     Comparator wordComparator = Comparator::TURKISH;
     bool indexesFromFile = false;
     MorphologicalDisambiguator* disambiguator = nullptr;
-    FsmMorphologicalAnalyzer fsm;
+    FsmMorphologicalAnalyzer* fsm = nullptr;
     bool _normalizeDocument = false;
     bool phraseIndex = true;
     bool positionalIndex = true;
@@ -33,7 +33,7 @@ public:
     Comparator getWordComparator();
     bool loadIndexesFromFile();
     MorphologicalDisambiguator* getDisambiguator();
-    FsmMorphologicalAnalyzer getFsm();
+    FsmMorphologicalAnalyzer* getFsm();
     bool constructPhraseIndex();
     bool normalizeDocument();
     bool constructPositionalIndex();
@@ -47,7 +47,7 @@ public:
     void setWordComparator(Comparator wordComparator);
     void setLoadIndexesFromFile(bool loadIndexesFromFile);
     void setDisambiguator(MorphologicalDisambiguator* disambiguator);
-    void setFsm(FsmMorphologicalAnalyzer fsm);
+    void setFsm(FsmMorphologicalAnalyzer* fsm);
     void setNormalizeDocument(bool normalizeDocument);
     void setPhraseIndex(bool phraseIndex);
     void setPositionalIndex(bool positionalIndex);

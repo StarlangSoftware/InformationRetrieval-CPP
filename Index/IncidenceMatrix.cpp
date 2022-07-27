@@ -13,13 +13,6 @@ IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
     }
 }
 
-IncidenceMatrix::~IncidenceMatrix() {
-    for (int i = 0; i < dictionarySize; i++){
-        delete incidenceMatrix[i];
-    }
-    delete incidenceMatrix;
-}
-
 IncidenceMatrix::IncidenceMatrix(vector<TermOccurrence> terms, TermDictionary dictionary, int documentSize){
     this->documentSize = documentSize;
     this->dictionarySize = dictionary.size();
@@ -30,10 +23,12 @@ IncidenceMatrix::IncidenceMatrix(vector<TermOccurrence> terms, TermDictionary di
     if (terms.size() > 0){
         TermOccurrence term = terms[0];
         int i = 1;
-        set(dictionary.getWordIndex(term.getTerm().getName()), term.getDocId());
+        int termIndex = dictionary.getWordIndex(term.getTerm().getName());
+        set(termIndex, term.getDocId());
         while (i < terms.size()){
             term = terms[i];
-            set(dictionary.getWordIndex(term.getTerm().getName()), term.getDocId());
+            termIndex = dictionary.getWordIndex(term.getTerm().getName());
+            set(termIndex, term.getDocId());
             i++;
         }
     }

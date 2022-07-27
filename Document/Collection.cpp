@@ -18,6 +18,7 @@ Collection::Collection(const string& directory, Parameter parameter) {
         if (!file.is_directory() && file.path().string().ends_with(".txt")){
             if (!parameter.limitNumberOfDocumentsLoaded() || j < parameter.getDocumentLimit()){
                 Document document = Document(file.path(), file.path(), j);
+                documents.emplace_back(document);
                 j++;
             }
         }
@@ -153,7 +154,7 @@ vector<TermOccurrence> Collection::constructTerms(TermType termType) {
     vector<TermOccurrence> docTerms;
     for (Document doc : documents){
         DocumentText documentText = doc.loadDocument();
-        docTerms = documentText.constructTermList(doc, termType);
+        docTerms = documentText.constructTermList(doc.getDocId(), termType);
         terms.insert(terms.end(), docTerms.begin(), docTerms.end());
     }
     std::sort(terms.begin(), terms.end(),  termOccurrenceComparator(Dictionary::turkishComparatorMap));
@@ -494,7 +495,7 @@ void Collection::constructDictionaryAndPositionalIndexInDisk(TermType termType) 
             i = 0;
         }
         DocumentText documentText = doc.loadDocument();
-        vector<TermOccurrence> terms = documentText.constructTermList(doc, termType);
+        vector<TermOccurrence> terms = documentText.constructTermList(doc.getDocId(), termType);
         for (TermOccurrence termOccurrence : terms){
             int termId;
             int wordIndex = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
@@ -534,7 +535,7 @@ void Collection::constructPositionalIndexInDisk(TermDictionary _dictionary, Term
             i = 0;
         }
         DocumentText documentText = doc.loadDocument();
-        vector<TermOccurrence> terms = documentText.constructTermList(doc, termType);
+        vector<TermOccurrence> terms = documentText.constructTermList(doc.getDocId(), termType);
         for (TermOccurrence termOccurrence : terms){
             int termId = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
             _positionalIndex.addPosition(termId, termOccurrence.getDocId(), termOccurrence.getPosition());
