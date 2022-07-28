@@ -18,12 +18,12 @@ NGramIndex::NGramIndex(string fileName) : InvertedIndex(fileName) {
 vector<TermOccurrence> NGramIndex::constructNGrams(string word, int termId, int k) {
     vector<TermOccurrence> nGrams;
     if (word.length() >= k - 1){
-        for (int l = -1; l < word.length() - k + 2; l++){
+        for (int l = -1; l < Word::size(word) - k + 2; l++){
             string term;
             if (l == -1){
                 term = "$" + Word::substring(word, 0, k - 1);
             } else {
-                if (l == word.length() - k + 1){
+                if (l == Word::size(word) - k + 1){
                     term = Word::substring(word, l, k - 1) + "$";
                 } else {
                     term = Word::substring(word, l, k);

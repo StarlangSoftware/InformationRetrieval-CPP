@@ -2,6 +2,7 @@
 // Created by Olcay Taner YILDIZ on 26.07.2022.
 //
 
+#include <iostream>
 #include "Collection.h"
 #include "../Index/TermOccurrenceComparator.h"
 #include "../Index/Term.h"

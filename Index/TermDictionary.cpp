@@ -65,9 +65,8 @@ void TermDictionary::addTerm(string name, int termID) {
 
 void TermDictionary::save(string fileName) {
     ofstream outfile;
-    int i;
-    outfile.open(fileName, ofstream :: out);
-    for (Word* word : words) {
+    outfile.open(fileName + "-dictionary.txt", ofstream :: out);
+    for (auto & word : words) {
         Term* term = (Term*) word;
         outfile << term->getTermId() << " " << term->getName() << "\n";
     }

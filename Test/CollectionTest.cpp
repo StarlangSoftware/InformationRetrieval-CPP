@@ -11,6 +11,8 @@ TEST_CASE("testIncidenceMatrixSmall") {
     Parameter parameter = Parameter();
     parameter.setIndexType(IndexType::INCIDENCE_MATRIX);
     Collection collection = Collection("../testCollection2", parameter);
+    REQUIRE(2 == collection.size());
+    REQUIRE(26 == collection.vocabularySize());
 }
 
 TEST_CASE("testSaveIndexesToFileSmall") {

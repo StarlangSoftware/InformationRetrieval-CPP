@@ -70,7 +70,7 @@ void PositionalIndex::addPosition(int termId, int docId, int position) {
 
 void PositionalIndex::save(string fileName) {
     ofstream outfile;
-    outfile.open(fileName, ofstream :: out);
+    outfile.open(fileName + "-positionalPostings.txt", ofstream :: out);
     for (auto & item : positionalIndex) {
         item.second.writeToFile(outfile, item.first);
     }

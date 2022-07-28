@@ -57,7 +57,7 @@ InvertedIndex::InvertedIndex(string fileName) {
 
 void InvertedIndex::save(string fileName) {
     ofstream outfile;
-    outfile.open(fileName, ofstream :: out);
+    outfile.open(fileName + "-postings.txt", ofstream :: out);
     for (auto & item : index) {
         item.second.writeToFile(outfile, item.first);
     }
