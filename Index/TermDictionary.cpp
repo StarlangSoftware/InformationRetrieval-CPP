@@ -14,9 +14,12 @@ TermDictionary::TermDictionary(Comparator comparator) : Dictionary(comparator) {
 TermDictionary::TermDictionary(Comparator comparator, string fileName) : Dictionary(comparator){
     ifstream inputFile;
     string line;
-    inputFile.open(fileName, ifstream :: in);
+    inputFile.open(fileName + "-dictionary.txt", ifstream :: in);
     while (inputFile.good()) {
         getline(inputFile, line);
+        if (line.empty()){
+            continue;
+        }
         int termId = stoi(line.substr(0, line.find(' ')));
         string word = line.substr(line.find(' ') + 1);
         Term* term = new Term(word, termId);
@@ -59,7 +62,7 @@ TermDictionary::TermDictionary(Comparator comparator, set<string> words) : Dicti
 }
 
 void TermDictionary::addTerm(string name, int termID) {
-    auto middle = lower_bound(words.begin(), words.end(), new Word(name));
+    auto middle = lower_bound(words.begin(), words.end(), new Word(name), turkishWordComparator(turkishComparatorMap));
     words.insert(middle, new Term(name, termID));
 }
 

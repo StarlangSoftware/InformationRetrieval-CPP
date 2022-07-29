@@ -9,6 +9,7 @@
 #include<map>
 #include <locale>
 #include "Word.h"
+#include <iostream>
 
 using namespace std;
 
@@ -56,7 +57,7 @@ const inline map<string, int> Dictionary::turkishComparatorMap =
 {"&", 78}, {"'", 79}, {"’", 80}, {".", 81}, {"(", 82}, {")", 83},
 {"0", 84}, {"1", 85}, {"2", 86}, {"3", 87}, {"4", 88}, {"5", 89},
 {"6", 90}, {"7", 91}, {"8", 92}, {"9", 93}, {"<", 94}, {">", 95},
-{"/", 96}, {":", 97}, {";", 98}, {"$", 99}};
+{"/", 96}, {":", 97}, {";", 98}, {"$", 99}, {" ", 100}};
 
 const inline map<string, int> Dictionary::turkishIgnoreCaseComparatorMap =
         {{"a", 0}, {"â", 1}, {"á", 2}, {"å", 3}, {"ã", 4}, {"ä", 5},
@@ -76,7 +77,7 @@ const inline map<string, int> Dictionary::turkishIgnoreCaseComparatorMap =
          {".", 84}, {"(", 85}, {")", 86}, {"0", 87}, {"1", 88}, {"2", 89},
          {"3", 90}, {"4", 91}, {"5", 92}, {"6", 93}, {"7", 94}, {"8", 95},
          {"9", 96}, {"<", 97}, {">", 98}, {"/", 99}, {":", 100}, {";", 101},
-         {"$", 102}};
+         {"$", 102}, {" ", 103}};
 
 struct turkishWordComparator{
     map<string, int> comparatorMap;
@@ -130,6 +131,7 @@ struct turkishWordComparator{
                     }
                 }
             } else {
+                cout << char1 << char2 << endl;
                 return true;
             }
         }

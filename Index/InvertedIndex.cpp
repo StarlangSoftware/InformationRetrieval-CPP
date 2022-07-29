@@ -3,13 +3,14 @@
 //
 
 #include <fstream>
+#include <iostream>
 #include "InvertedIndex.h"
 #include "PostingListComparator.h"
 
 InvertedIndex::InvertedIndex() = default;
 
 InvertedIndex::InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator) {
-    if (terms.size() > 0){
+    if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
         TermOccurrence previousTerm = term;
@@ -29,6 +30,8 @@ InvertedIndex::InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> t
                         prevDocId = term.getDocId();
                     }
                 }
+            } else {
+                cout << "Word " << term.getTerm().getName() << " not found in dictionary" << "\n";
             }
             i++;
             previousTerm = term;
@@ -39,14 +42,16 @@ InvertedIndex::InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> t
 void InvertedIndex::readPostingList(string fileName) {
     ifstream inputFile;
     string line;
-    inputFile.open(fileName, ifstream :: in);
+    inputFile.open(fileName + "-postings.txt", ifstream :: in);
     while (inputFile.good()) {
         getline(inputFile, line);
+        if (line.empty()){
+            continue;
+        }
         vector<string> items = Word::split(line);
         int wordId = stoi(items[0]);
         getline(inputFile, line);
         index[wordId] = PostingList(line);
-        getline(inputFile, line);
     }
     inputFile.close();
 }

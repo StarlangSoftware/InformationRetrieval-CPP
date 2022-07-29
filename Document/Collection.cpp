@@ -176,7 +176,7 @@ set<string> Collection::constructDistinctWordList(TermType termType) {
 
 bool Collection::notCombinedAllIndexes(const int* currentIdList, int size) {
     for (int i = 0; i < size; i++){
-        if (currentIdList[i] != -1){
+        if (currentIdList[i] != -2){
             return true;
         }
     }
@@ -196,7 +196,7 @@ vector<int> Collection::selectIndexesWithMinimumTermIds(const int *currentIdList
     vector<int> result;
     int min = INT_MAX;
     for (int i = 0; i < size; i++){
-        if (currentIdList[i] != -1 && currentIdList[i] < min){
+        if (currentIdList[i] != -2 && currentIdList[i] < min){
             min = currentIdList[i];
         }
     }
@@ -261,7 +261,7 @@ void Collection::combineMultipleDictionariesInDisk(const string& _name, const st
 }
 
 void
-Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary nGramDictionary, NGramIndex nGramIndex) {
+Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex) {
     int wordId = stoi(line.substr(0, line.find(' ')));
     string word = line.substr(line.find(' ') + 1);
     hash<string> hash;
@@ -272,7 +272,7 @@ Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDiction
         if (wordIndex != -1){
             termId = ((Term*) nGramDictionary.getWord(wordIndex))->getTermId();
         } else {
-            termId = hash(term.getTerm().getName());
+            termId = abs((int) hash(term.getTerm().getName()));
             nGramDictionary.addTerm(term.getTerm().getName(), termId);
         }
         nGramIndex.add(termId, wordId);
@@ -290,6 +290,9 @@ void Collection::constructNGramDictionaryAndIndexInDisk() {
     inputFile.open(name + "-dictionary.txt", ifstream::in);
     while (inputFile.good()) {
         getline(inputFile, line);
+        if (line.empty()){
+            continue;
+        }
         if (i < parameter.getWordLimit()){
             i++;
         } else {
@@ -354,7 +357,7 @@ void Collection::combineMultipleInvertedIndexesInDisk(const string& _name, const
                 getline(files[i], line);
                 currentPostingLists[i] = PostingList(line);
             } else {
-                currentIdList[i] = -1;
+                currentIdList[i] = -2;
             }
         }
     }
@@ -418,7 +421,7 @@ void Collection::constructDictionaryAndInvertedIndexInDisk(TermType termType) {
             if (wordIndex != -1){
                 termId = ((Term*) _dictionary.getWord(wordIndex))->getTermId();
             } else {
-                termId = hash(word);
+                termId = abs((int) hash(word));
                 _dictionary.addTerm(word, termId);
             }
             _invertedIndex.add(termId, doc.getDocId());
@@ -451,7 +454,7 @@ void Collection::combineMultiplePositionalIndexesInDisk(const string& _name, int
     for (int i = 0; i < blockCount; i++){
         files[i].open("tmp-" + ::to_string(i) + "-positionalPostings.txt");
         getline(files[i], line);
-        vector<string> items = Word::split(" ");
+        vector<string> items = Word::split(line);
         currentIdList[i] = stoi(items[0]);
         currentPostingLists[i] = PositionalPostingList(files[i], stoi(items[1]));
     }
@@ -465,11 +468,11 @@ void Collection::combineMultiplePositionalIndexesInDisk(const string& _name, int
         for (int i : indexesToCombine) {
             getline(files[i], line);
             if (!line.empty()) {
-                vector<string> items = Word::split(" ");
+                vector<string> items = Word::split(line);
                 currentIdList[i] = stoi(items[0]);
                 currentPostingLists[i] = PositionalPostingList(files[i], stoi(items[1]));
             } else {
-                currentIdList[i] = -1;
+                currentIdList[i] = -2;
             }
         }
     }
@@ -503,7 +506,7 @@ void Collection::constructDictionaryAndPositionalIndexInDisk(TermType termType) 
             if (wordIndex != -1){
                 termId = ((Term*) _dictionary.getWord(wordIndex))->getTermId();
             } else {
-                termId = hash(termOccurrence.getTerm().getName());
+                termId = abs((int) hash(termOccurrence.getTerm().getName()));
                 _dictionary.addTerm(termOccurrence.getTerm().getName(), termId);
             }
             _positionalIndex.addPosition(termId, termOccurrence.getDocId(), termOccurrence.getPosition());

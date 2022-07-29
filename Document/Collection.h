@@ -46,7 +46,7 @@ private:
     vector<int> selectIndexesWithMinimumTermIds(const int* currentIdList, int size);
     vector<int> selectDictionariesWithMinimumWords(string* currentWords, int size);
     void combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount);
-    void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary nGramDictionary, NGramIndex nGramIndex);
+    void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex);
     void constructNGramDictionaryAndIndexInDisk();
     void combineMultipleInvertedIndexesInDisk(const string& _name, const string& tmpName, int blockCount);
     void constructInvertedIndexInDisk(TermDictionary _dictionary, TermType termType);

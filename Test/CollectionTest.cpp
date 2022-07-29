@@ -21,3 +21,40 @@ TEST_CASE("testSaveIndexesToFileSmall") {
     Collection collection = Collection("../testCollection2", parameter);
     collection.save();
 }
+
+TEST_CASE("testLoadIndexesFromFileSmall") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(true);
+    parameter.setLoadIndexesFromFile(true);
+    Collection collection = Collection("../testCollection2", parameter);
+    REQUIRE(2 == collection.size());
+    REQUIRE(26 == collection.vocabularySize());
+}
+
+TEST_CASE("testConstructIndexesInDiskSmall") {
+    Parameter parameter = Parameter();
+    parameter.setConstructIndexInDisk(true);
+    parameter.setNGramIndex(false);
+    parameter.setDocumentLimit(1);
+    Collection collection = Collection("../testCollection2", parameter);
+    REQUIRE(2 == collection.size());
+    REQUIRE(26 == collection.vocabularySize());
+}
+
+TEST_CASE("testLimitNumberOfDocumentsSmall") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(false);
+    parameter.setLimitNumberOfDocumentsLoaded(true);
+    parameter.setDocumentLimit(1);
+    Collection collection = Collection("../testCollection2", parameter);
+    REQUIRE(1 == collection.size());
+    REQUIRE(15 == collection.vocabularySize());
+}
+
+TEST_CASE("testConstructDictionaryAndIndexesInDiskSmall") {
+    Parameter parameter = Parameter();
+    parameter.setConstructDictionaryInDisk(true);
+    parameter.setDocumentLimit(1);
+    parameter.setWordLimit(10);
+    Collection collection = Collection("../testCollection2", parameter);
+}

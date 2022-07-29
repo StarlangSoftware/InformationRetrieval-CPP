@@ -4,6 +4,7 @@
 
 #include <string>
 #include <fstream>
+#include <iostream>
 #include "PositionalIndex.h"
 #include "../Query/VectorSpaceModel.h"
 
@@ -36,6 +37,8 @@ PositionalIndex::PositionalIndex(TermDictionary dictionary, vector<TermOccurrenc
                         addPosition(termId, term.getDocId(), term.getPosition());
                     }
                 }
+            } else {
+                cout << "Word " << term.getTerm().getName() << " not found in dictionary" << "\n";
             }
             i++;
             previousTerm = term;
@@ -46,13 +49,15 @@ PositionalIndex::PositionalIndex(TermDictionary dictionary, vector<TermOccurrenc
 void PositionalIndex::readPositionalPostingList(string fileName) {
     ifstream inputFile;
     string line;
-    inputFile.open(fileName, ifstream :: in);
+    inputFile.open(fileName+ "-positionalPostings.txt", ifstream :: in);
     while (inputFile.good()) {
         getline(inputFile, line);
+        if (line.empty()){
+            continue;
+        }
         vector<string> items = Word::split(line);
         int wordId = stoi(items[0]);
         positionalIndex[wordId] = PositionalPostingList(inputFile, stoi(items[1]));
-        getline(inputFile, line);
     }
     inputFile.close();
 }
