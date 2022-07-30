@@ -107,6 +107,7 @@ PositionalPostingList PositionalPostingList::intersection(PositionalPostingList 
             }
         }
     }
+    return result;
 }
 
 string PositionalPostingList::to_string() {

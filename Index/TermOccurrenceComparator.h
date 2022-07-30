@@ -23,8 +23,10 @@ struct WordComparator{
     }
 
     bool operator() (Word wordA, Word wordB){
-        const char* charPtr1 = wordA.getName().c_str();
-        const char* charPtr2 = wordB.getName().c_str();
+        string nameA = wordA.getName();
+        const char* charPtr1 = nameA.c_str();
+        string nameB = wordB.getName();
+        const char* charPtr2 = nameB.c_str();
         if (wordA.getName() == wordB.getName()){
             return false;
         }
@@ -62,6 +64,7 @@ struct WordComparator{
                 return true;
             }
         }
+        return true;
     }
 };
 
