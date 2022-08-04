@@ -19,6 +19,7 @@ public:
     TermDictionary(Comparator comparator, set<string> words);
     void addTerm(string name, int termID);
     void save(string fileName);
+    static vector<TermOccurrence> constructNGrams(string word, int termId, int k);
     vector<TermOccurrence> constructTermsFromDictionary(int k);
 };
 

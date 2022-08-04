@@ -265,7 +265,7 @@ Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDiction
     int wordId = stoi(line.substr(0, line.find(' ')));
     string word = line.substr(line.find(' ') + 1);
     hash<string> hash;
-    vector<TermOccurrence> biGrams = NGramIndex::constructNGrams(word, wordId, k);
+    vector<TermOccurrence> biGrams = TermDictionary::constructNGrams(word, wordId, k);
     for (TermOccurrence term : biGrams){
         int termId;
         int wordIndex = nGramDictionary.getWordIndex(term.getTerm().getName());

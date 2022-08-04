@@ -76,12 +76,32 @@ void TermDictionary::save(string fileName) {
     outfile.close();
 }
 
+vector<TermOccurrence> TermDictionary::constructNGrams(string word, int termId, int k) {
+    vector<TermOccurrence> nGrams;
+    if (word.length() >= k - 1){
+        for (int l = -1; l < Word::size(word) - k + 2; l++){
+            string term;
+            if (l == -1){
+                term = "$" + Word::substring(word, 0, k - 1);
+            } else {
+                if (l == Word::size(word) - k + 1){
+                    term = Word::substring(word, l, k - 1) + "$";
+                } else {
+                    term = Word::substring(word, l, k);
+                }
+            }
+            nGrams.emplace_back(TermOccurrence(Word(term), termId, l));
+        }
+    }
+    return nGrams;
+}
+
 vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k) {
     termOccurrenceComparator termComparator = termOccurrenceComparator(turkishComparatorMap);
     vector<TermOccurrence> terms;
     for (int i = 0; i < size(); i++){
         string word = getWord(i)->getName();
-        vector<TermOccurrence> termList = NGramIndex::constructNGrams(word, i, k);
+        vector<TermOccurrence> termList = TermDictionary::constructNGrams(word, i, k);
         terms.insert(terms.end(), termList.begin(), termList.end());
     }
     std::sort(terms.begin(), terms.end(), termComparator);

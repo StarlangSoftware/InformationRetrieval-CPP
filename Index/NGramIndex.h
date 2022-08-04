@@ -13,7 +13,6 @@ public:
     NGramIndex();
     NGramIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
     explicit NGramIndex(string fileName);
-    static vector<TermOccurrence> constructNGrams(string word, int termId, int k);
 };
 
 
