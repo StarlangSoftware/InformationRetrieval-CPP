@@ -565,65 +565,6 @@ void Collection::constructNGramIndex() {
     triGramIndex = NGramIndex(triGramDictionary, terms, comparator);
 }
 
-VectorSpaceModel
-Collection::getVectorSpaceModel(int docId, TermWeighting termWeighting, DocumentWeighting documentWeighting) {
-    return VectorSpaceModel(positionalIndex.getTermFrequencies(docId), positionalIndex.getDocumentFrequencies(), documents.size(), termWeighting, documentWeighting);
-}
-
-double
-Collection::cosineSimilarity(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
-    int index1, index2;
-    double sum = 0.0;
-    for (index1 = 0; index1 < vocabularySize(); index1++){
-        if (spaceModel1.get(index1) > 0.0){
-            index2 = collection2.dictionary.getWordIndex(dictionary.getWord(index1)->getName());
-            if (index2 != -1 && spaceModel2.get(index2) > 0.0){
-                sum += spaceModel1.get(index1) * spaceModel2.get(index2);
-            }
-        }
-    }
-    return sum;
-}
-
-double Collection::cosineSimilarity(VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
-    int index;
-    double sum = 0.0;
-    for (index = 0; index < vocabularySize(); index++){
-        sum += spaceModel1.get(index) * spaceModel2.get(index);
-    }
-    return sum;
-}
-
-Matrix Collection::cosineSimilarity(TermWeighting termWeighting, DocumentWeighting documentWeighting) {
-    Matrix result = Matrix(size(), size());
-    VectorSpaceModel* models;
-    models = new VectorSpaceModel[documents.size()];
-    for (int i = 0; i < documents.size(); i++){
-        models[i] = getVectorSpaceModel(i, termWeighting, documentWeighting);
-    }
-    for (int i = 0; i < documents.size(); i++){
-        for (int j = 0; j < documents.size(); j++){
-            result.setValue(i, j, cosineSimilarity(models[i], models[j]));
-        }
-    }
-    return result;
-}
-
-vector<string>
-Collection::sharedWordList(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2) {
-    int index1, index2;
-    vector<string> list;
-    for (index1 = 0; index1 < vocabularySize(); index1++){
-        if (spaceModel1.get(index1) > 0.0){
-            index2 = collection2.dictionary.getWordIndex(dictionary.getWord(index1)->getName());
-            if (index2 != -1 && spaceModel2.get(index2) > 0.0){
-                list.emplace_back(dictionary.getWord(index1)->getName());
-            }
-        }
-    }
-    return list;
-}
-
 QueryResult Collection::searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting,
                                          DocumentWeighting documentWeighting) {
     switch (indexType){

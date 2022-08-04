@@ -55,16 +55,11 @@ private:
     void constructDictionaryAndPositionalIndexInDisk(TermType termType);
     void constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType);
     void constructNGramIndex();
-    double cosineSimilarity(VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
 public:
     Collection(const string& directory, Parameter parameter);
     int size();
     int vocabularySize();
     void save();
-    VectorSpaceModel getVectorSpaceModel(int docId, TermWeighting termWeighting, DocumentWeighting documentWeighting);
-    double cosineSimilarity(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
-    Matrix cosineSimilarity(TermWeighting termWeighting, DocumentWeighting documentWeighting);
-    vector<string> sharedWordList(Collection collection2, VectorSpaceModel spaceModel1, VectorSpaceModel spaceModel2);
     QueryResult searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting, DocumentWeighting documentWeighting);
 };
 
