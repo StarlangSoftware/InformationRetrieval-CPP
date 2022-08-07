@@ -15,6 +15,83 @@ TEST_CASE("testIncidenceMatrixSmall") {
     REQUIRE(26 == collection.vocabularySize());
 }
 
+TEST_CASE("testIncidenceMatrixQuery") {
+    Parameter parameter = Parameter();
+    parameter.setIndexType(IndexType::INCIDENCE_MATRIX);
+    Collection collection = Collection("../testCollection2", parameter);
+    Query query = Query("Brutus");
+    QueryResult result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(2 == result.getItems().size());
+    query = Query("Brutus Caesar");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(2 == result.getItems().size());
+    query = Query("enact");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("noble");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("a");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(0 == result.getItems().size());
+}
+
+TEST_CASE("testInvertedIndexBooleanQuery") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(true);
+    Collection collection = Collection("../testCollection2", parameter);
+    Query query = Query("Brutus");
+    QueryResult result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(2 == result.getItems().size());
+    query = Query("Brutus Caesar");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(2 == result.getItems().size());
+    query = Query("enact");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("noble");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("a");
+    result = collection.searchCollection(query, RetrievalType::BOOLEAN);
+    REQUIRE(0 == result.getItems().size());
+}
+
+TEST_CASE("testPositionalIndexBooleanQuery") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(true);
+    Collection collection = Collection("../testCollection2", parameter);
+    Query query = Query("Julius Caesar");
+    QueryResult result = collection.searchCollection(query, RetrievalType::POSITIONAL);
+    REQUIRE(2 == result.getItems().size());
+    query = Query("I was killed");
+    result = collection.searchCollection(query, RetrievalType::POSITIONAL);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("The noble Brutus");
+    result = collection.searchCollection(query, RetrievalType::POSITIONAL);
+    REQUIRE(1 == result.getItems().size());
+    query = Query("a");
+    result = collection.searchCollection(query, RetrievalType::POSITIONAL);
+    REQUIRE(0 == result.getItems().size());
+}
+
+TEST_CASE("testPositionalIndexRankedQuery") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(true);
+    Collection collection = Collection("../testCollection2", parameter);
+    Query query = Query("Caesar");
+    QueryResult result = collection.searchCollection(query, RetrievalType::RANKED);
+    REQUIRE(2 == result.getItems().size());
+    REQUIRE(1 == result.getItems()[0].getDocId());
+    query = Query("Caesar was killed");
+    result = collection.searchCollection(query, RetrievalType::RANKED);
+    REQUIRE(2 == result.getItems().size());
+    REQUIRE(0 == result.getItems()[0].getDocId());
+    query = Query("in the Capitol");
+    result = collection.searchCollection(query, RetrievalType::RANKED);
+    REQUIRE(1 == result.getItems().size());
+}
+
 TEST_CASE("testSaveIndexesToFileSmall") {
     Parameter parameter = Parameter();
     parameter.setNGramIndex(true);

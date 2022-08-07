@@ -155,11 +155,10 @@ QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary
     }
     for (int i = 0; i < N; i++){
         scores[i] /= documents[i].getSize();
-        if (scores[i] > 0.0){
+        if (scores[i] > 0.000000001){
             result.add(i, scores[i]);
         }
     }
-    result.sort();
     return result;
 }
 

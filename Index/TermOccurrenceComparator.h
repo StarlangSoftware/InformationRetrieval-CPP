@@ -86,16 +86,16 @@ struct termOccurrenceComparator{
                     return false;
                 } else {
                     if (termA.getPosition() < termB.getPosition()){
-                        return false;
-                    } else {
                         return true;
+                    } else {
+                        return false;
                     }
                 }
             } else {
                 if (termA.getDocId() < termB.getDocId()){
-                    return false;
-                } else {
                     return true;
+                } else {
+                    return false;
                 }
             }
         }

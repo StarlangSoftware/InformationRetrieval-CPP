@@ -50,6 +50,8 @@ QueryResult IncidenceMatrix::search(Query query, TermDictionary dictionary) {
             for (int j = 0; j < documentSize; j++){
                 resultRow[j] = resultRow[j] && incidenceMatrix[termIndex][j];
             }
+        } else {
+            return result;
         }
     }
     for (int i = 0; i < documentSize; i++){

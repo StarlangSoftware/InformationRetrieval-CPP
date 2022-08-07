@@ -153,7 +153,7 @@ void Collection::constructIndexesInMemory() {
 vector<TermOccurrence> Collection::constructTerms(TermType termType) {
     vector<TermOccurrence> terms;
     vector<TermOccurrence> docTerms;
-    for (Document doc : documents){
+    for (Document& doc : documents){
         DocumentText documentText = doc.loadDocument();
         docTerms = documentText.constructTermList(doc.getDocId(), termType);
         terms.insert(terms.end(), docTerms.begin(), docTerms.end());

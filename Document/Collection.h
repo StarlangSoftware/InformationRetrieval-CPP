@@ -60,7 +60,8 @@ public:
     int size();
     int vocabularySize();
     void save();
-    QueryResult searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting, DocumentWeighting documentWeighting);
+    QueryResult searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting = TermWeighting::NATURAL,
+                                 DocumentWeighting documentWeighting = DocumentWeighting::NO_IDF);
 };
 
 

@@ -13,7 +13,7 @@ Document::Document(string absoluteFileName, string fileName, int docId) {
 
 DocumentText Document::loadDocument() {
     DocumentText documentText = DocumentText(absoluteFileName, new TurkishSplitter());
-    size = documentText.numberOfWords();
+    this->size = documentText.numberOfWords();
     return documentText;
 }
 

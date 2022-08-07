@@ -86,6 +86,8 @@ QueryResult InvertedIndex::search(Query query, TermDictionary dictionary) {
         int termIndex = dictionary.getWordIndex(query.getTerm(i).getName());
         if (termIndex != -1){
             queryTerms.emplace_back(index[termIndex]);
+        } else {
+            return QueryResult();
         }
     }
     std::sort(queryTerms.begin(), queryTerms.end(), postingListComparator());
