@@ -1,0 +1,12 @@
+//
+// Created by Olcay Taner YILDIZ on 21.07.2022.
+//
+
+#ifndef INFORMATIONRETRIEVAL_TERMTYPE_H
+#define INFORMATIONRETRIEVAL_TERMTYPE_H
+
+enum class TermType{
+    TOKEN = 0,
+    PHRASE
+};
+#endif //INFORMATIONRETRIEVAL_TERMTYPE_H
