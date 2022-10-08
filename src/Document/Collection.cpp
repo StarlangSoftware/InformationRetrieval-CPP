@@ -29,6 +29,11 @@ Collection::Collection(const string& directory, Parameter parameter) {
         invertedIndex = InvertedIndex(directory);
         if (parameter.constructPositionalIndex()){
             positionalIndex = PositionalIndex(directory);
+            int* sizes = positionalIndex.getDocumentSizes(documents.size());
+            for (Document& doc : documents){
+                doc.setSize(sizes[doc.getDocId()]);
+            }
+            delete sizes;
         }
         if (parameter.constructPhraseIndex()){
             phraseDictionary = TermDictionary(comparator, directory + "-phrase");

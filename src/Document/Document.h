@@ -26,6 +26,7 @@ public:
     string getFileName();
     string getAbsoluteFileName();
     int getSize();
+    void setSize(int size);
 };
 
 

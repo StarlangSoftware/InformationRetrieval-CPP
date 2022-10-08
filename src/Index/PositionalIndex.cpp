@@ -159,6 +159,19 @@ QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary
             result.add(i, scores[i]);
         }
     }
+    result.sort();
     return result;
+}
+
+int* PositionalIndex::getDocumentSizes(int documentSize) {
+    int* sizes = new int[documentSize];
+    for (auto& iterator : positionalIndex){
+        for (int j = 0; j < iterator.second.size(); j++){
+            PositionalPosting positionalPosting = iterator.second.get(j);
+            int docId = positionalPosting.getDocId();
+            sizes[docId] += positionalPosting.size();
+        }
+    }
+    return sizes;
 }
 

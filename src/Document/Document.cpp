@@ -48,3 +48,7 @@ string Document::getAbsoluteFileName() {
 int Document::getSize() {
     return size;
 }
+
+void Document::setSize(int size) {
+    this->size = size;
+}

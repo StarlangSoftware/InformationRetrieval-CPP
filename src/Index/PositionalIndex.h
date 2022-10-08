@@ -23,6 +23,7 @@ public:
     PositionalIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
     void addPosition(int termId, int docId, int position);
     void save(string fileName);
+    int* getDocumentSizes(int documentSize);
     QueryResult positionalSearch(Query query, TermDictionary dictionary);
     int* getTermFrequencies(int docId);
     int* getDocumentFrequencies();
