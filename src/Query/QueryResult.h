@@ -17,7 +17,7 @@ public:
     void add(int docId, double score);
     void add(int docId);
     vector<QueryResultItem> getItems();
-    void sort();
+    void getBest(int K);
 };
 
 

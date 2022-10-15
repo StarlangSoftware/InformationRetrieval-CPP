@@ -6,6 +6,7 @@
 #include "Collection.h"
 #include "../Index/TermOccurrenceComparator.h"
 #include "../Index/Term.h"
+#include "../Query/SearchParameter.h"
 
 using std::filesystem::directory_iterator;
 
@@ -570,16 +571,20 @@ void Collection::constructNGramIndex() {
     triGramIndex = NGramIndex(triGramDictionary, terms, comparator);
 }
 
-QueryResult Collection::searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting,
-                                         DocumentWeighting documentWeighting) {
+QueryResult Collection::searchCollection(const Query& query, SearchParameter searchParameter) {
     switch (indexType){
         case IndexType::INCIDENCE_MATRIX:
             return incidenceMatrix.search(query, dictionary);
         case   IndexType::INVERTED_INDEX:
-            switch (retrievalType){
+            switch (searchParameter.getRetrievalType()){
                 case    RetrievalType::BOOLEAN:return invertedIndex.search(query, dictionary);
                 case RetrievalType::POSITIONAL:return positionalIndex.positionalSearch(query, dictionary);
-                case     RetrievalType::RANKED:return positionalIndex.rankedSearch(query, dictionary, documents, termWeighting, documentWeighting);
+                case     RetrievalType::RANKED:return positionalIndex.rankedSearch(query,
+                                                                                   dictionary,
+                                                                                   documents,
+                                                                                   searchParameter.getTermWeighting(),
+                                                                                   searchParameter.getDocumentWeighting(),
+                                                                                   searchParameter.getDocumentsRetrieved());
             }
     }
     return QueryResult();

@@ -17,6 +17,7 @@
 #include "../Query/VectorSpaceModel.h"
 #include "Matrix.h"
 #include "../Query/RetrievalType.h"
+#include "../Query/SearchParameter.h"
 
 class Collection {
 private:
@@ -60,8 +61,7 @@ public:
     int size();
     int vocabularySize();
     void save();
-    QueryResult searchCollection(const Query& query, RetrievalType retrievalType, TermWeighting termWeighting = TermWeighting::NATURAL,
-                                 DocumentWeighting documentWeighting = DocumentWeighting::NO_IDF);
+    QueryResult searchCollection(const Query& query, SearchParameter searchParameter);
 };
 
 

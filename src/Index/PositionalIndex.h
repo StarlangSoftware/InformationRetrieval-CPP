@@ -27,7 +27,7 @@ public:
     QueryResult positionalSearch(Query query, TermDictionary dictionary);
     int* getTermFrequencies(int docId);
     int* getDocumentFrequencies();
-    QueryResult rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents, TermWeighting termWeighting, DocumentWeighting documentWeighting);
+    QueryResult rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
 };
 
 

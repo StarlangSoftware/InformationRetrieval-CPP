@@ -133,9 +133,9 @@ int *PositionalIndex::getDocumentFrequencies() {
 }
 
 QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents,
-                                          TermWeighting termWeighting, DocumentWeighting documentWeighting) {
+                                          TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned) {
     int N = documents.size();
-    auto* scores = new double[N];
+    map<int, double> scores;
     QueryResult result = QueryResult();
     PositionalPostingList positionalPostingList;
     for (int i = 0; i < query.size(); i++){
@@ -148,18 +148,20 @@ QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary
                 int tf = positionalPosting.size();
                 int df = positionalIndex[term].size();
                 if (tf > 0 && df > 0){
-                    scores[docID] += VectorSpaceModel::weighting(tf, df, N, termWeighting, documentWeighting);
+                    double score = VectorSpaceModel::weighting(tf, df, N, termWeighting, documentWeighting);
+                    if (scores.contains(docID)){
+                        scores.insert_or_assign(docID, scores[docID] + score);
+                    } else {
+                        scores.insert_or_assign(docID, score);
+                    }
                 }
             }
         }
     }
-    for (int i = 0; i < N; i++){
-        scores[i] /= documents[i].getSize();
-        if (scores[i] > 0.000000001){
-            result.add(i, scores[i]);
-        }
+    for (auto& iterator : scores){
+        result.add(iterator.first, iterator.second / documents[iterator.first].getSize());
     }
-    result.sort();
+    result.getBest(documentsReturned);
     return result;
 }
 

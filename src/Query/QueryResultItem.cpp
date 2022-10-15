@@ -16,3 +16,7 @@ int QueryResultItem::getDocId() {
 double QueryResultItem::getScore() {
     return score;
 }
+
+QueryResultItem::QueryResultItem() {
+
+}
