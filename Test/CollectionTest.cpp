@@ -119,3 +119,14 @@ TEST_CASE("testLimitNumberOfDocumentsSmall") {
     REQUIRE(1 == collection.size());
     REQUIRE(15 == collection.vocabularySize());
 }
+
+TEST_CASE("testCategoricalCollection") {
+    Parameter parameter = Parameter();
+    parameter.setDocumentType(DocumentType::CATEGORICAL);
+    parameter.setLoadIndexesFromFile(true);
+    parameter.setPhraseIndex(false);
+    parameter.setNGramIndex(false);
+    Collection collection = Collection("../../testCollection3", parameter);
+    REQUIRE(1000 == collection.size());
+    REQUIRE(2283 == collection.vocabularySize());
+}

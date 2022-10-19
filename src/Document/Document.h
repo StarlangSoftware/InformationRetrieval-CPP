@@ -9,6 +9,8 @@
 #include "DocumentText.h"
 #include "MorphologicalDisambiguator.h"
 #include "FsmMorphologicalAnalyzer.h"
+#include "CategoryHierarchy.h"
+#include "DocumentType.h"
 
 using namespace std;
 
@@ -18,15 +20,18 @@ private:
     string fileName;
     int docId;
     int size = 0;
+    DocumentType documentType;
+    CategoryHierarchy categoryHierarchy;
 public:
-    Document(string absoluteFileName, string fileName, int docId);
+    Document(DocumentType documentType, string absoluteFileName, string fileName, int docId);
     DocumentText loadDocument();
-    Corpus normalizeDocument(MorphologicalDisambiguator disambiguator, FsmMorphologicalAnalyzer fsm);
     int getDocId();
     string getFileName();
     string getAbsoluteFileName();
     int getSize();
     void setSize(int size);
+    void setCategoryHierarchy(const string& categoryHierarchy);
+    CategoryHierarchy getCategoryHierarchy();
 };
 
 

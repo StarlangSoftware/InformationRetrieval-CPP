@@ -52,3 +52,5 @@ vector<TermOccurrence> DocumentText::constructTermList(int docId, TermType termT
     }
     return terms;
 }
+
+DocumentText::DocumentText() = default;

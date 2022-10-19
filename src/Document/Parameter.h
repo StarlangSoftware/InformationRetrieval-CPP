@@ -10,6 +10,7 @@
 #include "Dictionary/Dictionary.h"
 #include "MorphologicalDisambiguator.h"
 #include "FsmMorphologicalAnalyzer.h"
+#include "DocumentType.h"
 
 class Parameter {
 private:
@@ -27,6 +28,7 @@ private:
     bool _limitNumberOfDocumentsLoaded = false;
     int documentLimit = 1000;
     int wordLimit = 10000;
+    DocumentType documentType = DocumentType::NORMAL;
 public:
     Parameter() = default;
     IndexType getIndexType();
@@ -57,6 +59,8 @@ public:
     void setDocumentLimit(int documentLimit);
     void setConstructDictionaryInDisk(bool constructDictionaryInDisk);
     void setWordLimit(int wordLimit);
+    DocumentType getDocumentType();
+    void setDocumentType(DocumentType documentType);
 };
 
 

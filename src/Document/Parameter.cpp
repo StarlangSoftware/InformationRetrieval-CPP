@@ -118,3 +118,11 @@ void Parameter::setConstructDictionaryInDisk(bool constructDictionaryInDisk) {
 void Parameter::setWordLimit(int wordLimit) {
     this->wordLimit = wordLimit;
 }
+
+DocumentType Parameter::getDocumentType() {
+    return documentType;
+}
+
+void Parameter::setDocumentType(DocumentType documentType) {
+    this->documentType = documentType;
+}

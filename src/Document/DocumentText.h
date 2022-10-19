@@ -13,6 +13,7 @@
 
 class DocumentText : public Corpus{
 public:
+    DocumentText();
     explicit DocumentText(string fileName);
     DocumentText(string fileName, SentenceSplitter* sentenceSplitter);
     set<string> constructDistinctWordList(TermType termType);

@@ -19,13 +19,16 @@ Collection::Collection(const string& directory, Parameter parameter) {
     for (const auto & file : directory_iterator(directory)){
         if (!file.is_directory() && file.path().string().ends_with(".txt")){
             if (!parameter.limitNumberOfDocumentsLoaded() || j < parameter.getDocumentLimit()){
-                Document document = Document(file.path(), file.path(), j);
+                Document document = Document(parameter.getDocumentType(), file.path(), file.path(), j);
                 documents.emplace_back(document);
                 j++;
             }
         }
     }
     if (parameter.loadIndexesFromFile()){
+        if (parameter.getDocumentType() == DocumentType::CATEGORICAL){
+            loadCategories();
+        }
         dictionary = TermDictionary(comparator, directory);
         invertedIndex = InvertedIndex(directory);
         if (parameter.constructPositionalIndex()){
@@ -90,6 +93,9 @@ void Collection::save() {
             biGramIndex.save(name + "-biGram");
             triGramIndex.save(name + "-triGram");
         }
+    }
+    if (parameter.getDocumentType() == DocumentType::CATEGORICAL){
+        saveCategories();
     }
 }
 
@@ -588,4 +594,29 @@ QueryResult Collection::searchCollection(const Query& query, SearchParameter sea
             }
     }
     return QueryResult();
+}
+
+void Collection::saveCategories() {
+    ofstream outfile;
+    outfile.open(name + "-categories.txt", ofstream::out);
+    for (Document document : documents){
+        outfile << document.getDocId() << "\t" << document.getCategoryHierarchy().to_string() << "\n";
+    }
+    outfile.close();
+}
+
+void Collection::loadCategories() {
+    ifstream inputFile;
+    string line;
+    inputFile.open(name + "-categories.txt", ifstream :: in);
+    while (inputFile.good()) {
+        getline(inputFile, line);
+        if (line.empty()){
+            continue;
+        }
+        vector<string> items = Word::split(line, "\t");
+        int docId = stoi(items.at(0));
+        documents[docId].setCategoryHierarchy(items[1]);
+    }
+    inputFile.close();
 }

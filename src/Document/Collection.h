@@ -56,6 +56,8 @@ private:
     void constructDictionaryAndPositionalIndexInDisk(TermType termType);
     void constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType);
     void constructNGramIndex();
+    void saveCategories();
+    void loadCategories();
 public:
     Collection(const string& directory, Parameter parameter);
     int size();
