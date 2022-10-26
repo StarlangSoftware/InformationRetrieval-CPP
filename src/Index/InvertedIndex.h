@@ -15,14 +15,14 @@ using namespace std;
 class InvertedIndex {
 private:
     map<int, PostingList> index;
-    void readPostingList(string fileName);
+    void readPostingList(const string& fileName);
 public:
     InvertedIndex();
-    explicit InvertedIndex(string fileName);
-    InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
-    void save(string fileName);
+    explicit InvertedIndex(const string& fileName);
+    InvertedIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
+    void save(const string& fileName);
     void add(int termId, int docId);
-    QueryResult search(Query query, TermDictionary dictionary);
+    QueryResult search(const Query& query, TermDictionary dictionary);
 };
 
 

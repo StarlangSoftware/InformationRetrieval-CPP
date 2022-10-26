@@ -8,6 +8,6 @@ Posting::Posting(int id) {
     this->id = id;
 }
 
-int Posting::getId() {
+int Posting::getId() const{
     return id;
 }

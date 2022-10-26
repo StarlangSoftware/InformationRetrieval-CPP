@@ -16,7 +16,7 @@ private:
 public:
     CategoryHierarchy() = default;
     explicit CategoryHierarchy(const string& list);
-    string to_string();
+    string to_string() const;
 };
 
 

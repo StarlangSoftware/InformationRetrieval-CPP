@@ -15,11 +15,11 @@ private:
     int docId;
     int position;
 public:
-    TermOccurrence(Word term, int docId, int position);
-    Word getTerm();
-    int getDocId();
-    int getPosition();
-    bool isDifferent(TermOccurrence currentTerm, Comparator comparator);
+    TermOccurrence(const Word& term, int docId, int position);
+    Word getTerm() const;
+    int getDocId() const;
+    int getPosition() const;
+    bool isDifferent(const TermOccurrence& currentTerm, Comparator comparator);
 };
 
 

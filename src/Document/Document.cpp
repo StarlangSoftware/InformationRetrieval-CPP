@@ -5,14 +5,14 @@
 #include "Document.h"
 #include "../include/TurkishSplitter.h"
 
-Document::Document(DocumentType documentType, string absoluteFileName, string fileName, int docId) {
+Document::Document(DocumentType documentType, const string& absoluteFileName, const string& fileName, int docId) {
     this->docId = docId;
     this->absoluteFileName = absoluteFileName;
     this->fileName = fileName;
     this->documentType = documentType;
 }
 
-DocumentText Document::loadDocument() {
+DocumentText Document::loadDocument(){
     DocumentText documentText;
     switch (documentType){
         case DocumentType::NORMAL:
@@ -36,30 +36,30 @@ DocumentText Document::loadDocument() {
     return documentText;
 }
 
-int Document::getDocId() {
+int Document::getDocId() const{
     return docId;
 }
 
-string Document::getFileName() {
+string Document::getFileName() const{
     return fileName;
 }
 
-string Document::getAbsoluteFileName() {
+string Document::getAbsoluteFileName() const{
     return absoluteFileName;
 }
 
-int Document::getSize() {
+int Document::getSize() const{
     return size;
 }
 
-void Document::setSize(int size) {
-    this->size = size;
+void Document::setSize(int _size) {
+    this->size = _size;
 }
 
-void Document::setCategoryHierarchy(const string& categoryHierarchy) {
-    this->categoryHierarchy = CategoryHierarchy(categoryHierarchy);
+void Document::setCategoryHierarchy(const string& _categoryHierarchy) {
+    this->categoryHierarchy = CategoryHierarchy(_categoryHierarchy);
 }
 
-CategoryHierarchy Document::getCategoryHierarchy() {
+CategoryHierarchy Document::getCategoryHierarchy() const{
     return categoryHierarchy;
 }

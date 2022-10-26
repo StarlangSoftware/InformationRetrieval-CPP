@@ -12,8 +12,8 @@ class Term : public Word{
 private:
     int termId;
 public:
-    Term(string name, int termId);
-    int getTermId();
+    Term(const string& name, int termId);
+    int getTermId() const;
 };
 
 

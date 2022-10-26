@@ -7,23 +7,23 @@
 PostingSkip::PostingSkip(int id) : Posting(id) {
 }
 
-bool PostingSkip::hasSkip() {
+bool PostingSkip::hasSkip() const{
     return skipAvailable;
 }
 
-void PostingSkip::addSkip(PostingSkip *skip) {
+void PostingSkip::addSkip(PostingSkip *_skip) {
     skipAvailable = true;
-    this->skip = skip;
+    this->skip = _skip;
 }
 
 void PostingSkip::setNext(PostingSkip *next) {
     this->_next = next;
 }
 
-PostingSkip *PostingSkip::next() {
+PostingSkip *PostingSkip::next() const{
     return _next;
 }
 
-PostingSkip *PostingSkip::getSkip() {
+PostingSkip *PostingSkip::getSkip() const{
     return skip;
 }

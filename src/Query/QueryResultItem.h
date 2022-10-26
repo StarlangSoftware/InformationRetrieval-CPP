@@ -13,8 +13,8 @@ private:
 public:
     QueryResultItem();
     QueryResultItem(int docId, double score);
-    int getDocId();
-    double getScore();
+    int getDocId() const;
+    double getScore() const;
 };
 
 

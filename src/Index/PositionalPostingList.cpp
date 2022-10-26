@@ -23,11 +23,11 @@ PositionalPostingList::PositionalPostingList(ifstream &infile, int count) {
     }
 }
 
-int PositionalPostingList::size() {
+int PositionalPostingList::size() const{
     return postings.size();
 }
 
-int PositionalPostingList::getIndex(int docId) {
+int PositionalPostingList::getIndex(int docId) const{
     int begin = 0, end = size() - 1, middle;
     while (begin <= end){
         middle = (begin + end) / 2;
@@ -44,9 +44,9 @@ int PositionalPostingList::getIndex(int docId) {
     return -1;
 }
 
-QueryResult PositionalPostingList::toQueryResult() {
+QueryResult PositionalPostingList::toQueryResult() const{
     QueryResult result = QueryResult();
-    for (PositionalPosting posting: postings){
+    for (const PositionalPosting& posting: postings){
         result.add(posting.getDocId());
     }
     return result;
@@ -62,18 +62,18 @@ void PositionalPostingList::add(int docId, int position) {
     }
 }
 
-PositionalPosting PositionalPostingList::get(int index) {
+PositionalPosting PositionalPostingList::get(int index) const {
     return postings[index];
 }
 
-PositionalPostingList PositionalPostingList::unionWith(PositionalPostingList secondList) {
+PositionalPostingList PositionalPostingList::unionWith(const PositionalPostingList& secondList) const{
     PositionalPostingList result = PositionalPostingList();
     result.postings.insert(result.postings.end(), postings.begin(), postings.end());
     result.postings.insert(result.postings.end(), secondList.postings.begin(), secondList.postings.end());
     return result;
 }
 
-PositionalPostingList PositionalPostingList::intersection(PositionalPostingList secondList) {
+PositionalPostingList PositionalPostingList::intersection(const PositionalPostingList& secondList) const{
     int i = 0, j = 0;
     PositionalPostingList result = PositionalPostingList();
     while (i < postings.size() && j < secondList.postings.size()){
@@ -110,9 +110,9 @@ PositionalPostingList PositionalPostingList::intersection(PositionalPostingList 
     return result;
 }
 
-string PositionalPostingList::to_string() {
-    string result = "";
-    for (PositionalPosting positionalPosting : postings){
+string PositionalPostingList::to_string() const{
+    string result;
+    for (const PositionalPosting& positionalPosting : postings){
         result += "\t" + positionalPosting.to_string() + "\n";
     }
     return result;

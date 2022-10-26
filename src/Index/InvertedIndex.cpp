@@ -9,7 +9,7 @@
 
 InvertedIndex::InvertedIndex() = default;
 
-InvertedIndex::InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator) {
+InvertedIndex::InvertedIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
     if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
@@ -39,7 +39,7 @@ InvertedIndex::InvertedIndex(TermDictionary dictionary, vector<TermOccurrence> t
     }
 }
 
-void InvertedIndex::readPostingList(string fileName) {
+void InvertedIndex::readPostingList(const string& fileName) {
     ifstream inputFile;
     string line;
     inputFile.open(fileName + "-postings.txt", ifstream :: in);
@@ -56,11 +56,11 @@ void InvertedIndex::readPostingList(string fileName) {
     inputFile.close();
 }
 
-InvertedIndex::InvertedIndex(string fileName) {
+InvertedIndex::InvertedIndex(const string& fileName) {
     readPostingList(fileName);
 }
 
-void InvertedIndex::save(string fileName) {
+void InvertedIndex::save(const string& fileName) {
     ofstream outfile;
     outfile.open(fileName + "-postings.txt", ofstream :: out);
     for (auto & item : index) {
@@ -80,7 +80,7 @@ void InvertedIndex::add(int termId, int docId) {
     index[termId] = postingList;
 }
 
-QueryResult InvertedIndex::search(Query query, TermDictionary dictionary) {
+QueryResult InvertedIndex::search(const Query& query, TermDictionary dictionary) {
     vector<PostingList> queryTerms;
     for (int i = 0; i < query.size(); i++){
         int termIndex = dictionary.getWordIndex(query.getTerm(i).getName());

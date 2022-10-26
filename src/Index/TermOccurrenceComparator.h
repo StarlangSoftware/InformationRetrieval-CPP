@@ -18,11 +18,11 @@ struct WordComparator{
  * lexicographically less than wordB; and a value greater than {@code 0} if this wordA is lexicographically greater
  * than wordB.
  */
-    WordComparator(map<string, int> comparatorMap){
+    explicit WordComparator(const map<string, int>& comparatorMap){
         this->comparatorMap = comparatorMap;
     }
 
-    bool operator() (Word wordA, Word wordB){
+    bool operator() (const Word& wordA, const Word& wordB){
         string nameA = wordA.getName();
         const char* charPtr1 = nameA.c_str();
         string nameB = wordB.getName();
@@ -72,11 +72,11 @@ struct termOccurrenceComparator{
 
     map<string, int> comparatorMap;
 
-    termOccurrenceComparator(map<string, int> comparatorMap){
+    explicit termOccurrenceComparator(const map<string, int>& comparatorMap){
         this->comparatorMap = comparatorMap;
     }
 
-    bool operator() (TermOccurrence termA, TermOccurrence termB){
+    bool operator() (const TermOccurrence& termA, const TermOccurrence& termB){
         WordComparator wordComparator = WordComparator(Dictionary::turkishComparatorMap);
         if (termA.getTerm() != termB.getTerm()){
             return wordComparator.operator()(termA.getTerm() ,termB.getTerm());

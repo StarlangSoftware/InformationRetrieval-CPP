@@ -16,18 +16,18 @@
 class PositionalIndex {
 private:
     map<int, PositionalPostingList> positionalIndex;
-    void readPositionalPostingList(string fileName);
+    void readPositionalPostingList(const string& fileName);
 public:
     PositionalIndex();
-    explicit PositionalIndex(string fileName);
-    PositionalIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
+    explicit PositionalIndex(const string& fileName);
+    PositionalIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
     void addPosition(int termId, int docId, int position);
-    void save(string fileName);
-    int* getDocumentSizes(int documentSize);
-    QueryResult positionalSearch(Query query, TermDictionary dictionary);
-    int* getTermFrequencies(int docId);
-    int* getDocumentFrequencies();
-    QueryResult rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
+    void save(const string& fileName);
+    int* getDocumentSizes(int documentSize) const;
+    QueryResult positionalSearch(const Query& query, TermDictionary dictionary);
+    int* getTermFrequencies(int docId) const;
+    int* getDocumentFrequencies() const;
+    QueryResult rankedSearch(const Query& query, TermDictionary dictionary, const vector<Document>& documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
 };
 
 

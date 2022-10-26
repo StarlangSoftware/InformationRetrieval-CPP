@@ -13,19 +13,19 @@ void PositionalPosting::add(int position) {
     positions.emplace_back(position);
 }
 
-int PositionalPosting::getDocId() {
+int PositionalPosting::getDocId() const{
     return docId;
 }
 
-vector<Posting> PositionalPosting::getPositions() {
+vector<Posting> PositionalPosting::getPositions() const{
     return positions;
 }
 
-int PositionalPosting::size() {
+int PositionalPosting::size() const{
     return positions.size();
 }
 
-string PositionalPosting::to_string() {
+string PositionalPosting::to_string() const{
     string result = ::to_string(docId) + " " + ::to_string(positions.size());
     for (Posting posting : positions){
         result += " ";

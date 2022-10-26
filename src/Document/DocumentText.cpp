@@ -4,15 +4,15 @@
 
 #include "DocumentText.h"
 
-DocumentText::DocumentText(string fileName) : Corpus(fileName) {
+DocumentText::DocumentText(const string& fileName) : Corpus(fileName) {
 
 }
 
-DocumentText::DocumentText(string fileName, SentenceSplitter* sentenceSplitter) : Corpus(fileName, sentenceSplitter) {
+DocumentText::DocumentText(const string& fileName, SentenceSplitter* sentenceSplitter) : Corpus(fileName, sentenceSplitter) {
 
 }
 
-set<string> DocumentText::constructDistinctWordList(TermType termType) {
+set<string> DocumentText::constructDistinctWordList(TermType termType) const{
     set<string> words;
     for (int i = 0; i < sentenceCount(); i++){
         Sentence* sentence = getSentence(i);
@@ -31,7 +31,7 @@ set<string> DocumentText::constructDistinctWordList(TermType termType) {
     return words;
 }
 
-vector<TermOccurrence> DocumentText::constructTermList(int docId, TermType termType) {
+vector<TermOccurrence> DocumentText::constructTermList(int docId, TermType termType) const{
     vector<TermOccurrence> terms;
     int size = 0;
     for (int i = 0; i < sentenceCount(); i++){

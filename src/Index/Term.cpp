@@ -6,10 +6,10 @@
 
 #include <utility>
 
-Term::Term(string name, int termId) : Word(std::move(name)){
+Term::Term(const string& name, int termId) : Word(name){
     this->termId = termId;
 }
 
-int Term::getTermId() {
+int Term::getTermId() const{
     return termId;
 }

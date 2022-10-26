@@ -4,96 +4,96 @@
 
 #include "Parameter.h"
 
-IndexType Parameter::getIndexType() {
+IndexType Parameter::getIndexType() const{
     return indexType;
 }
 
-Comparator Parameter::getWordComparator() {
+Comparator Parameter::getWordComparator() const{
     return wordComparator;
 }
 
-bool Parameter::loadIndexesFromFile() {
+bool Parameter::loadIndexesFromFile() const{
     return indexesFromFile;
 }
 
-MorphologicalDisambiguator* Parameter::getDisambiguator() {
+MorphologicalDisambiguator* Parameter::getDisambiguator() const{
     return disambiguator;
 }
 
-FsmMorphologicalAnalyzer* Parameter::getFsm() {
+FsmMorphologicalAnalyzer* Parameter::getFsm() const{
     return fsm;
 }
 
-bool Parameter::constructPhraseIndex() {
+bool Parameter::constructPhraseIndex() const{
     return phraseIndex;
 }
 
-bool Parameter::normalizeDocument() {
+bool Parameter::normalizeDocument() const{
     return _normalizeDocument;
 }
 
-bool Parameter::constructPositionalIndex() {
+bool Parameter::constructPositionalIndex() const{
     return positionalIndex;
 }
 
-bool Parameter::limitNumberOfDocumentsLoaded() {
+bool Parameter::limitNumberOfDocumentsLoaded() const{
     return _limitNumberOfDocumentsLoaded;
 }
 
-int Parameter::getDocumentLimit() {
+int Parameter::getDocumentLimit() const{
     return documentLimit;
 }
 
-bool Parameter::constructDictionaryInDisk() {
+bool Parameter::constructDictionaryInDisk() const{
     return dictionaryInDisk;
 }
 
-bool Parameter::constructNGramIndex() {
+bool Parameter::constructNGramIndex() const{
     return nGramIndex;
 }
 
-bool Parameter::constructIndexInDisk() {
+bool Parameter::constructIndexInDisk() const{
     return indexInDisk;
 }
 
-int Parameter::getWordLimit() {
+int Parameter::getWordLimit() const{
     return wordLimit;
 }
 
-void Parameter::setIndexType(IndexType indexType) {
-    this->indexType = indexType;
+void Parameter::setIndexType(IndexType _indexType) {
+    this->indexType = _indexType;
 }
 
-void Parameter::setWordComparator(Comparator wordComparator) {
-    this->wordComparator = wordComparator;
+void Parameter::setWordComparator(Comparator _wordComparator) {
+    this->wordComparator = _wordComparator;
 }
 
 void Parameter::setLoadIndexesFromFile(bool loadIndexesFromFile) {
     this->indexesFromFile = loadIndexesFromFile;
 }
 
-void Parameter::setDisambiguator(MorphologicalDisambiguator* disambiguator) {
-    this->disambiguator = disambiguator;
+void Parameter::setDisambiguator(MorphologicalDisambiguator* _disambiguator) {
+    this->disambiguator = _disambiguator;
 }
 
-void Parameter::setFsm(FsmMorphologicalAnalyzer* fsm) {
-    this->fsm = fsm;
+void Parameter::setFsm(FsmMorphologicalAnalyzer* _fsm) {
+    this->fsm = _fsm;
 }
 
 void Parameter::setNormalizeDocument(bool normalizeDocument) {
     this->_normalizeDocument = normalizeDocument;
 }
 
-void Parameter::setPhraseIndex(bool phraseIndex) {
-    this->phraseIndex = phraseIndex;
+void Parameter::setPhraseIndex(bool _phraseIndex) {
+    this->phraseIndex = _phraseIndex;
 }
 
-void Parameter::setPositionalIndex(bool positionalIndex) {
-    this->positionalIndex = positionalIndex;
+void Parameter::setPositionalIndex(bool _positionalIndex) {
+    this->positionalIndex = _positionalIndex;
 }
 
-void Parameter::setNGramIndex(bool nGramIndex) {
-    this->nGramIndex = nGramIndex;
+void Parameter::setNGramIndex(bool _nGramIndex) {
+    this->nGramIndex = _nGramIndex;
 }
 
 void Parameter::setConstructIndexInDisk(bool constructIndexInDisk) {
@@ -104,8 +104,8 @@ void Parameter::setLimitNumberOfDocumentsLoaded(bool limitNumberOfDocumentsLoade
     this->_limitNumberOfDocumentsLoaded = limitNumberOfDocumentsLoaded;
 }
 
-void Parameter::setDocumentLimit(int documentLimit) {
-    this->documentLimit = documentLimit;
+void Parameter::setDocumentLimit(int _documentLimit) {
+    this->documentLimit = _documentLimit;
 }
 
 void Parameter::setConstructDictionaryInDisk(bool constructDictionaryInDisk) {
@@ -115,14 +115,14 @@ void Parameter::setConstructDictionaryInDisk(bool constructDictionaryInDisk) {
     }
 }
 
-void Parameter::setWordLimit(int wordLimit) {
-    this->wordLimit = wordLimit;
+void Parameter::setWordLimit(int _wordLimit) {
+    this->wordLimit = _wordLimit;
 }
 
-DocumentType Parameter::getDocumentType() {
+DocumentType Parameter::getDocumentType() const{
     return documentType;
 }
 
-void Parameter::setDocumentType(DocumentType documentType) {
-    this->documentType = documentType;
+void Parameter::setDocumentType(DocumentType _documentType) {
+    this->documentType = _documentType;
 }

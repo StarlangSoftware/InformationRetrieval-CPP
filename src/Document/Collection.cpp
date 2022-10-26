@@ -6,11 +6,10 @@
 #include "Collection.h"
 #include "../Index/TermOccurrenceComparator.h"
 #include "../Index/Term.h"
-#include "../Query/SearchParameter.h"
 
 using std::filesystem::directory_iterator;
 
-Collection::Collection(const string& directory, Parameter parameter) {
+Collection::Collection(const string& directory, const Parameter& parameter) {
     name = directory;
     indexType = parameter.getIndexType();
     comparator = parameter.getWordComparator();
@@ -65,11 +64,11 @@ Collection::Collection(const string& directory, Parameter parameter) {
     }
 }
 
-int Collection::size() {
+int Collection::size() const{
     return documents.size();
 }
 
-int Collection::vocabularySize() {
+int Collection::vocabularySize() const{
     return dictionary.size();
 }
 
@@ -162,10 +161,10 @@ void Collection::constructIndexesInMemory() {
     }
 }
 
-vector<TermOccurrence> Collection::constructTerms(TermType termType) {
+vector<TermOccurrence> Collection::constructTerms(TermType termType) const{
     vector<TermOccurrence> terms;
     vector<TermOccurrence> docTerms;
-    for (Document& doc : documents){
+    for (Document doc : documents){
         DocumentText documentText = doc.loadDocument();
         docTerms = documentText.constructTermList(doc.getDocId(), termType);
         terms.insert(terms.end(), docTerms.begin(), docTerms.end());
@@ -174,7 +173,7 @@ vector<TermOccurrence> Collection::constructTerms(TermType termType) {
     return terms;
 }
 
-set<string> Collection::constructDistinctWordList(TermType termType) {
+set<string> Collection::constructDistinctWordList(TermType termType) const{
     set<string> words;
     for (Document doc : documents){
         DocumentText documentText = doc.loadDocument();
@@ -186,7 +185,7 @@ set<string> Collection::constructDistinctWordList(TermType termType) {
     return words;
 }
 
-bool Collection::notCombinedAllIndexes(const int* currentIdList, int size) {
+bool Collection::notCombinedAllIndexes(const int* currentIdList, int size) const{
     for (int i = 0; i < size; i++){
         if (currentIdList[i] != -2){
             return true;
@@ -195,7 +194,7 @@ bool Collection::notCombinedAllIndexes(const int* currentIdList, int size) {
     return false;
 }
 
-bool Collection::notCombinedAllDictionaries(string *currentWords, int size) {
+bool Collection::notCombinedAllDictionaries(string *currentWords, int size) const{
     for (int i = 0; i < size; i++){
         if (!currentWords[i].empty()){
             return true;
@@ -204,7 +203,7 @@ bool Collection::notCombinedAllDictionaries(string *currentWords, int size) {
     return false;
 }
 
-vector<int> Collection::selectIndexesWithMinimumTermIds(const int *currentIdList, int size) {
+vector<int> Collection::selectIndexesWithMinimumTermIds(const int *currentIdList, int size) const{
     vector<int> result;
     int min = INT_MAX;
     for (int i = 0; i < size; i++){
@@ -220,7 +219,7 @@ vector<int> Collection::selectIndexesWithMinimumTermIds(const int *currentIdList
     return result;
 }
 
-vector<int> Collection::selectDictionariesWithMinimumWords(string *currentWords, int size) {
+vector<int> Collection::selectDictionariesWithMinimumWords(string *currentWords, int size) const{
     vector<int> result;
     string min;
     turkishWordComparator wordComparator = turkishWordComparator(Dictionary::turkishComparatorMap);
@@ -272,13 +271,12 @@ void Collection::combineMultipleDictionariesInDisk(const string& _name, const st
     outfile.close();
 }
 
-void
-Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex) {
+void Collection::addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex) {
     int wordId = stoi(line.substr(0, line.find(' ')));
     string word = line.substr(line.find(' ') + 1);
     hash<string> hash;
     vector<TermOccurrence> biGrams = TermDictionary::constructNGrams(word, wordId, k);
-    for (TermOccurrence term : biGrams){
+    for (const TermOccurrence& term : biGrams){
         int termId;
         int wordIndex = nGramDictionary.getWordIndex(term.getTerm().getName());
         if (wordIndex != -1){
@@ -577,7 +575,7 @@ void Collection::constructNGramIndex() {
     triGramIndex = NGramIndex(triGramDictionary, terms, comparator);
 }
 
-QueryResult Collection::searchCollection(const Query& query, SearchParameter searchParameter) {
+QueryResult Collection::searchCollection(const Query& query, const SearchParameter& searchParameter) {
     switch (indexType){
         case IndexType::INCIDENCE_MATRIX:
             return incidenceMatrix.search(query, dictionary);

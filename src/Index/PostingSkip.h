@@ -15,11 +15,11 @@ private:
     PostingSkip* _next = nullptr;
 public:
     explicit PostingSkip(int id);
-    bool hasSkip();
-    void addSkip(PostingSkip* skip);
+    bool hasSkip() const;
+    void addSkip(PostingSkip* _skip);
     void setNext(PostingSkip* next);
-    PostingSkip* next();
-    PostingSkip* getSkip();
+    PostingSkip* next() const;
+    PostingSkip* getSkip() const;
 };
 
 

@@ -17,13 +17,13 @@ private:
     TermWeighting termWeighting = TermWeighting::NATURAL;
     int documentsRetrieved = 1;
 public:
-    RetrievalType getRetrievalType();
+    RetrievalType getRetrievalType() const;
     void setRetrievalType(RetrievalType retrievalType);
-    DocumentWeighting getDocumentWeighting();
+    DocumentWeighting getDocumentWeighting() const;
     void setDocumentWeighting(DocumentWeighting documentWeighting);
-    TermWeighting getTermWeighting();
+    TermWeighting getTermWeighting() const;
     void setTermWeighting(TermWeighting termWeighting);
-    int getDocumentsRetrieved();
+    int getDocumentsRetrieved() const;
     void setDocumentsRetrieved(int documentsRetrieved);
 };
 

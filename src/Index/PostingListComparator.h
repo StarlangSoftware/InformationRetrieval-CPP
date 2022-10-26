@@ -9,7 +9,7 @@
 
 struct postingListComparator{
 
-    bool operator() (PostingList listA, PostingList listB){
+    bool operator() (const PostingList& listA, const PostingList& listB){
         if (listA.size() <= listB.size()){
             return false;
         } else {

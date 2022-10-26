@@ -18,10 +18,10 @@ private:
 public:
     explicit PositionalPosting(int docId);
     void add(int position);
-    int getDocId();
-    vector<Posting> getPositions();
-    int size();
-    string to_string();
+    int getDocId() const;
+    vector<Posting> getPositions() const;
+    int size() const;
+    string to_string() const;
 };
 
 

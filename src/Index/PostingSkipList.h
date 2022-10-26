@@ -15,7 +15,7 @@ public:
     PostingSkipList();
     void add(int docId);
     void addSkipPointers();
-    PostingSkipList intersection(PostingSkipList secondList);
+    PostingSkipList intersection(const PostingSkipList& secondList) const;
 };
 
 

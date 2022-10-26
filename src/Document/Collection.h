@@ -40,12 +40,12 @@ private:
     void constructDictionaryInDisk();
     void constructIndexesInDisk();
     void constructIndexesInMemory();
-    vector<TermOccurrence> constructTerms(TermType termType);
-    set<string> constructDistinctWordList(TermType termType);
-    bool notCombinedAllIndexes(const int* currentIdList, int size);
-    bool notCombinedAllDictionaries(string* currentWords, int size);
-    vector<int> selectIndexesWithMinimumTermIds(const int* currentIdList, int size);
-    vector<int> selectDictionariesWithMinimumWords(string* currentWords, int size);
+    vector<TermOccurrence> constructTerms(TermType termType) const;
+    set<string> constructDistinctWordList(TermType termType) const;
+    bool notCombinedAllIndexes(const int* currentIdList, int size) const;
+    bool notCombinedAllDictionaries(string* currentWords, int size) const;
+    vector<int> selectIndexesWithMinimumTermIds(const int* currentIdList, int size) const;
+    vector<int> selectDictionariesWithMinimumWords(string* currentWords, int size) const;
     void combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount);
     void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex);
     void constructNGramDictionaryAndIndexInDisk();
@@ -59,11 +59,11 @@ private:
     void saveCategories();
     void loadCategories();
 public:
-    Collection(const string& directory, Parameter parameter);
-    int size();
-    int vocabularySize();
+    Collection(const string& directory, const Parameter& parameter);
+    int size() const;
+    int vocabularySize() const;
     void save();
-    QueryResult searchCollection(const Query& query, SearchParameter searchParameter);
+    QueryResult searchCollection(const Query& query, const SearchParameter& searchParameter);
 };
 
 

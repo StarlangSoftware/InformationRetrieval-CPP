@@ -13,9 +13,9 @@ class Query {
 private:
     vector<Word> terms;
 public:
-    explicit Query(string query);
-    Word getTerm(int index);
-    int size();
+    explicit Query(const string& query);
+    Word getTerm(int index) const;
+    int size() const;
 };
 
 

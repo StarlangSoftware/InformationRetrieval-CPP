@@ -11,8 +11,8 @@
 class NGramIndex : public InvertedIndex{
 public:
     NGramIndex();
-    NGramIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator);
-    explicit NGramIndex(string fileName);
+    NGramIndex(const TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
+    explicit NGramIndex(const string& fileName);
 };
 
 

@@ -13,11 +13,11 @@ void QueryResult::add(int docId) {
     items.emplace_back(QueryResultItem(docId, 0.0));
 }
 
-vector<QueryResultItem> QueryResult::getItems() {
+vector<QueryResultItem> QueryResult::getItems() const{
     return items;
 }
 
-int isSmallerQueryResultItem(QueryResultItem first, QueryResultItem second){
+int isSmallerQueryResultItem(const QueryResultItem& first, const QueryResultItem& second){
     if (first.getScore() - second.getScore() < 0){
         return -1;
     } else {
@@ -29,7 +29,7 @@ int isSmallerQueryResultItem(QueryResultItem first, QueryResultItem second){
     }
 }
 
-void QueryResult::getBest(int K) {
+void QueryResult::getBest(int K){
     MaxHeap<QueryResultItem> maxHeap = MaxHeap<QueryResultItem>(2 * K, isSmallerQueryResultItem);
     for (QueryResultItem queryResultItem : items){
         maxHeap.insert(queryResultItem);

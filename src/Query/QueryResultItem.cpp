@@ -9,11 +9,11 @@ QueryResultItem::QueryResultItem(int docId, double score) {
     this->score = score;
 }
 
-int QueryResultItem::getDocId() {
+int QueryResultItem::getDocId() const{
     return docId;
 }
 
-double QueryResultItem::getScore() {
+double QueryResultItem::getScore() const{
     return score;
 }
 

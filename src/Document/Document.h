@@ -23,15 +23,15 @@ private:
     DocumentType documentType;
     CategoryHierarchy categoryHierarchy;
 public:
-    Document(DocumentType documentType, string absoluteFileName, string fileName, int docId);
+    Document(DocumentType documentType, const string& absoluteFileName, const string& fileName, int docId);
     DocumentText loadDocument();
-    int getDocId();
-    string getFileName();
-    string getAbsoluteFileName();
-    int getSize();
-    void setSize(int size);
-    void setCategoryHierarchy(const string& categoryHierarchy);
-    CategoryHierarchy getCategoryHierarchy();
+    int getDocId() const;
+    string getFileName() const;
+    string getAbsoluteFileName() const;
+    int getSize() const;
+    void setSize(int _size);
+    void setCategoryHierarchy(const string& _categoryHierarchy);
+    CategoryHierarchy getCategoryHierarchy() const;
 };
 
 

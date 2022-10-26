@@ -19,11 +19,11 @@ VectorSpaceModel::VectorSpaceModel(int *termFrequencies, int *documentFrequencie
     }
 }
 
-double VectorSpaceModel::get(int index) {
+double VectorSpaceModel::get(int index) const{
     return model[index];
 }
 
-double VectorSpaceModel::cosineSimilarity(VectorSpaceModel secondModel) {
+double VectorSpaceModel::cosineSimilarity(const VectorSpaceModel& secondModel) const{
     double sum = 0.0;
     for (int i = 0; i < documentSize; i++){
         sum += model[i] * secondModel.model[i];
@@ -32,7 +32,7 @@ double VectorSpaceModel::cosineSimilarity(VectorSpaceModel secondModel) {
 }
 
 double VectorSpaceModel::weighting(double termFrequency, double documentFrequency, int documentSize,
-                                   TermWeighting termWeighting, DocumentWeighting documentWeighting) {
+                                   TermWeighting termWeighting, DocumentWeighting documentWeighting){
     double multiplier1 = 1, multiplier2 = 1;
     switch (termWeighting){
         case   TermWeighting::NATURAL:

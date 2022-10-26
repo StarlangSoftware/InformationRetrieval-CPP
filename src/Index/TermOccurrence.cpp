@@ -4,24 +4,24 @@
 
 #include "TermOccurrence.h"
 
-TermOccurrence::TermOccurrence(Word term, int docId, int position) {
+TermOccurrence::TermOccurrence(const Word& term, int docId, int position) {
     this->term = term;
     this->docId = docId;
     this->position = position;
 }
 
-Word TermOccurrence::getTerm() {
+Word TermOccurrence::getTerm() const{
     return term;
 }
 
-int TermOccurrence::getDocId() {
+int TermOccurrence::getDocId() const{
     return docId;
 }
 
-int TermOccurrence::getPosition() {
+int TermOccurrence::getPosition() const{
     return position;
 }
 
-bool TermOccurrence::isDifferent(TermOccurrence currentTerm, Comparator comparator) {
+bool TermOccurrence::isDifferent(const TermOccurrence& currentTerm, Comparator comparator) {
     return !(currentTerm.getTerm() == term);
 }

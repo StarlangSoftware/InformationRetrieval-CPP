@@ -9,7 +9,7 @@ CategoryHierarchy::CategoryHierarchy(const string& list) {
     this->categoryList = Word::split(list, "%");
 }
 
-string CategoryHierarchy::to_string() {
+string CategoryHierarchy::to_string() const{
     string result = categoryList[0];
     for (int i = 1; i < categoryList.size(); i++){
         result += categoryList[i];

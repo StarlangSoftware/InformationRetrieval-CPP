@@ -11,7 +11,7 @@ protected:
     int id;
 public:
     explicit Posting(int id);
-    int getId();
+    int getId() const;
 };
 
 

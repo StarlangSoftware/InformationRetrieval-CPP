@@ -17,14 +17,14 @@ protected:
     vector<Posting*> postings;
 public:
     PostingList();
-    explicit PostingList(string line);
+    explicit PostingList(const string& line);
     void add(int docId);
-    int size();
-    PostingList intersection(PostingList secondList);
-    PostingList unionWith(PostingList secondList);
-    QueryResult toQueryResult();
+    int size() const;
+    PostingList intersection(const PostingList& secondList) const;
+    PostingList unionWith(const PostingList& secondList) const;
+    QueryResult toQueryResult() const;
     void writeToFile(ofstream& outfile, int index);
-    string to_string();
+    string to_string() const;
 };
 
 

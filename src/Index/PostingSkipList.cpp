@@ -31,7 +31,7 @@ void PostingSkipList::addSkipPointers() {
     }
 }
 
-PostingSkipList PostingSkipList::intersection(PostingSkipList secondList) {
+PostingSkipList PostingSkipList::intersection(const PostingSkipList& secondList) const{
     auto* p1 = (PostingSkip*) postings[0];
     auto* p2 = (PostingSkip*) secondList.postings[0];
     PostingSkipList result = PostingSkipList();

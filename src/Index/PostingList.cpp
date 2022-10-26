@@ -8,9 +8,9 @@
 
 PostingList::PostingList() = default;
 
-PostingList::PostingList(string line) {
+PostingList::PostingList(const string& line) {
     vector<string> ids = Word::split(line);
-    for (string id : ids){
+    for (const string& id : ids){
         add(stoi(id));
     }
 }
@@ -19,11 +19,11 @@ void PostingList::add(int docId) {
     postings.emplace_back(new Posting(docId));
 }
 
-int PostingList::size() {
+int PostingList::size() const{
     return postings.size();
 }
 
-PostingList PostingList::intersection(PostingList secondList) {
+PostingList PostingList::intersection(const PostingList& secondList) const{
     int i = 0, j = 0;
     PostingList result = PostingList();
     while (i < size() && j < secondList.size()){
@@ -44,14 +44,14 @@ PostingList PostingList::intersection(PostingList secondList) {
     return result;
 }
 
-PostingList PostingList::unionWith(PostingList secondList) {
+PostingList PostingList::unionWith(const PostingList& secondList) const{
     PostingList result = PostingList();
     result.postings.insert(result.postings.end(), postings.begin(), postings.end());
     result.postings.insert(result.postings.end(), secondList.postings.begin(), secondList.postings.end());
     return result;
 }
 
-QueryResult PostingList::toQueryResult() {
+QueryResult PostingList::toQueryResult() const{
     QueryResult result = QueryResult();
     for (Posting* posting : postings){
         result.add(posting->getId());
@@ -59,7 +59,7 @@ QueryResult PostingList::toQueryResult() {
     return result;
 }
 
-string PostingList::to_string() {
+string PostingList::to_string() const{
     string result;
     for (Posting* posting : postings){
         result += ::to_string(posting->getId()) + " ";

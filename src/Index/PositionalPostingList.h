@@ -15,14 +15,14 @@ private:
 public:
     PositionalPostingList();
     PositionalPostingList(ifstream &infile, int count);
-    int size();
-    int getIndex(int docId);
-    QueryResult toQueryResult();
+    int size() const;
+    int getIndex(int docId) const;
+    QueryResult toQueryResult() const;
     void add(int docId, int position);
-    PositionalPosting get(int index);
-    PositionalPostingList unionWith(PositionalPostingList second);
-    PositionalPostingList intersection(PositionalPostingList secondList);
-    string to_string();
+    PositionalPosting get(int index) const;
+    PositionalPostingList unionWith(const PositionalPostingList& second) const;
+    PositionalPostingList intersection(const PositionalPostingList& secondList) const;
+    string to_string() const;
     void writeToFile(ofstream& outfile, int index);
 };
 

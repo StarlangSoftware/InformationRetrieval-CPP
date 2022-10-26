@@ -8,9 +8,9 @@ NGramIndex::NGramIndex() : InvertedIndex(){
 
 }
 
-NGramIndex::NGramIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator) : InvertedIndex(
+NGramIndex::NGramIndex(const TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator) : InvertedIndex(
         dictionary, terms, comparator) {
 }
 
-NGramIndex::NGramIndex(string fileName) : InvertedIndex(fileName) {
+NGramIndex::NGramIndex(const string& fileName) : InvertedIndex(fileName) {
 }

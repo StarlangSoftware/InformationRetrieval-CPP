@@ -14,10 +14,10 @@
 class DocumentText : public Corpus{
 public:
     DocumentText();
-    explicit DocumentText(string fileName);
-    DocumentText(string fileName, SentenceSplitter* sentenceSplitter);
-    set<string> constructDistinctWordList(TermType termType);
-    vector<TermOccurrence> constructTermList(int docId, TermType termType);
+    explicit DocumentText(const string& fileName);
+    DocumentText(const string& fileName, SentenceSplitter* sentenceSplitter);
+    set<string> constructDistinctWordList(TermType termType) const;
+    vector<TermOccurrence> constructTermList(int docId, TermType termType) const;
 };
 
 

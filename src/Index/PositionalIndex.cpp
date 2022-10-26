@@ -10,11 +10,11 @@
 
 PositionalIndex::PositionalIndex() = default;
 
-PositionalIndex::PositionalIndex(string fileName) {
+PositionalIndex::PositionalIndex(const string& fileName) {
     readPositionalPostingList(fileName);
 }
 
-PositionalIndex::PositionalIndex(TermDictionary dictionary, vector<TermOccurrence> terms, Comparator comparator) {
+PositionalIndex::PositionalIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
     if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
@@ -46,7 +46,7 @@ PositionalIndex::PositionalIndex(TermDictionary dictionary, vector<TermOccurrenc
     }
 }
 
-void PositionalIndex::readPositionalPostingList(string fileName) {
+void PositionalIndex::readPositionalPostingList(const string& fileName) {
     ifstream inputFile;
     string line;
     inputFile.open(fileName+ "-positionalPostings.txt", ifstream :: in);
@@ -73,7 +73,7 @@ void PositionalIndex::addPosition(int termId, int docId, int position) {
     positionalIndex[termId] = positionalPostingList;
 }
 
-void PositionalIndex::save(string fileName) {
+void PositionalIndex::save(const string& fileName) {
     ofstream outfile;
     outfile.open(fileName + "-positionalPostings.txt", ofstream :: out);
     for (auto & item : positionalIndex) {
@@ -82,7 +82,7 @@ void PositionalIndex::save(string fileName) {
     outfile.close();
 }
 
-QueryResult PositionalIndex::positionalSearch(Query query, TermDictionary dictionary) {
+QueryResult PositionalIndex::positionalSearch(const Query& query, TermDictionary dictionary) {
     PositionalPostingList postingResult = PositionalPostingList();
     for (int i = 0; i < query.size(); i++){
         int term = dictionary.getWordIndex(query.getTerm(i).getName());
@@ -106,11 +106,11 @@ QueryResult PositionalIndex::positionalSearch(Query query, TermDictionary dictio
         return {};
 }
 
-int *PositionalIndex::getTermFrequencies(int docId) {
+int *PositionalIndex::getTermFrequencies(int docId) const{
     int* tf = new int[positionalIndex.size()];
     int i = 0;
     for (auto & item : positionalIndex){
-        PositionalPostingList positionalPostingList = positionalIndex[item.first];
+        PositionalPostingList positionalPostingList = positionalIndex.at(item.first);
         int index = positionalPostingList.getIndex(docId);
         if (index != -1){
             tf[i] = positionalPostingList.get(index).size();
@@ -122,17 +122,17 @@ int *PositionalIndex::getTermFrequencies(int docId) {
     return tf;
 }
 
-int *PositionalIndex::getDocumentFrequencies() {
+int *PositionalIndex::getDocumentFrequencies() const{
     int* df = new int[positionalIndex.size()];
     int i = 0;
     for (auto & item : positionalIndex){
-        df[i] = positionalIndex[item.first].size();
+        df[i] = positionalIndex.at(item.first).size();
         i++;
     }
     return df;
 }
 
-QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary, vector<Document> documents,
+QueryResult PositionalIndex::rankedSearch(const Query& query, TermDictionary dictionary, const vector<Document>& documents,
                                           TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned) {
     int N = documents.size();
     map<int, double> scores;
@@ -165,7 +165,7 @@ QueryResult PositionalIndex::rankedSearch(Query query, TermDictionary dictionary
     return result;
 }
 
-int* PositionalIndex::getDocumentSizes(int documentSize) {
+int* PositionalIndex::getDocumentSizes(int documentSize) const{
     int* sizes = new int[documentSize];
     for (auto& iterator : positionalIndex){
         for (int j = 0; j < iterator.second.size(); j++){

@@ -14,12 +14,12 @@ class TermDictionary : public Dictionary{
 public:
     TermDictionary();
     explicit TermDictionary(Comparator comparator);
-    TermDictionary(Comparator comparator, string fileName);
-    TermDictionary(Comparator comparator, vector<TermOccurrence> terms);
-    TermDictionary(Comparator comparator, set<string> words);
-    void addTerm(string name, int termID);
-    void save(string fileName);
-    static vector<TermOccurrence> constructNGrams(string word, int termId, int k);
+    TermDictionary(Comparator comparator, const string& fileName);
+    TermDictionary(Comparator comparator, const vector<TermOccurrence>& terms);
+    TermDictionary(Comparator comparator, const set<string>& words);
+    void addTerm(const string& name, int termID);
+    void save(const string& fileName);
+    static vector<TermOccurrence> constructNGrams(const string& word, int termId, int k);
     vector<TermOccurrence> constructTermsFromDictionary(int k);
 };
 

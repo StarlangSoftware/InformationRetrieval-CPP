@@ -6,12 +6,11 @@
 #include "TermDictionary.h"
 #include "Term.h"
 #include "TermOccurrenceComparator.h"
-#include "NGramIndex.h"
 
 TermDictionary::TermDictionary(Comparator comparator) : Dictionary(comparator) {
 }
 
-TermDictionary::TermDictionary(Comparator comparator, string fileName) : Dictionary(comparator){
+TermDictionary::TermDictionary(Comparator comparator, const string& fileName) : Dictionary(comparator){
     ifstream inputFile;
     string line;
     inputFile.open(fileName + "-dictionary.txt", ifstream :: in);
@@ -28,7 +27,7 @@ TermDictionary::TermDictionary(Comparator comparator, string fileName) : Diction
     inputFile.close();
 }
 
-TermDictionary::TermDictionary(Comparator comparator, vector<TermOccurrence> terms) : Dictionary(comparator){
+TermDictionary::TermDictionary(Comparator comparator, const vector<TermOccurrence>& terms) : Dictionary(comparator){
     int i, termId = 0;
     if (!terms.empty()){
         TermOccurrence term = terms[0];
@@ -48,7 +47,7 @@ TermDictionary::TermDictionary(Comparator comparator, vector<TermOccurrence> ter
     }
 }
 
-TermDictionary::TermDictionary(Comparator comparator, set<string> words) : Dictionary(comparator){
+TermDictionary::TermDictionary(Comparator comparator, const set<string>& words) : Dictionary(comparator){
     vector<Word*> wordList;
     for (const auto& word : words){
         wordList.emplace_back(new Word(word));
@@ -61,12 +60,12 @@ TermDictionary::TermDictionary(Comparator comparator, set<string> words) : Dicti
     }
 }
 
-void TermDictionary::addTerm(string name, int termID) {
+void TermDictionary::addTerm(const string& name, int termID) {
     auto middle = lower_bound(words.begin(), words.end(), new Word(name), turkishWordComparator(turkishComparatorMap));
     words.insert(middle, new Term(name, termID));
 }
 
-void TermDictionary::save(string fileName) {
+void TermDictionary::save(const string& fileName) {
     ofstream outfile;
     outfile.open(fileName + "-dictionary.txt", ofstream :: out);
     for (auto & word : words) {
@@ -76,7 +75,7 @@ void TermDictionary::save(string fileName) {
     outfile.close();
 }
 
-vector<TermOccurrence> TermDictionary::constructNGrams(string word, int termId, int k) {
+vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int termId, int k){
     vector<TermOccurrence> nGrams;
     if (word.length() >= k - 1){
         for (int l = -1; l < Word::size(word) - k + 2; l++){
@@ -96,7 +95,7 @@ vector<TermOccurrence> TermDictionary::constructNGrams(string word, int termId, 
     return nGrams;
 }
 
-vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k) {
+vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k){
     termOccurrenceComparator termComparator = termOccurrenceComparator(turkishComparatorMap);
     vector<TermOccurrence> terms;
     for (int i = 0; i < size(); i++){
