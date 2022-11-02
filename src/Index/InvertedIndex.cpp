@@ -9,7 +9,7 @@
 
 InvertedIndex::InvertedIndex() = default;
 
-InvertedIndex::InvertedIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
+InvertedIndex::InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
     if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
@@ -80,7 +80,7 @@ void InvertedIndex::add(int termId, int docId) {
     index[termId] = postingList;
 }
 
-QueryResult InvertedIndex::search(const Query& query, TermDictionary dictionary) {
+QueryResult InvertedIndex::search(const Query& query, TermDictionary& dictionary) {
     vector<PostingList> queryTerms;
     for (int i = 0; i < query.size(); i++){
         int termIndex = dictionary.getWordIndex(query.getTerm(i).getName());

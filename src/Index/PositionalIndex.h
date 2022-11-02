@@ -20,14 +20,15 @@ private:
 public:
     PositionalIndex();
     explicit PositionalIndex(const string& fileName);
-    PositionalIndex(TermDictionary dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
+    PositionalIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
     void addPosition(int termId, int docId, int position);
     void save(const string& fileName);
     int* getDocumentSizes(int documentSize) const;
-    QueryResult positionalSearch(const Query& query, TermDictionary dictionary);
+    void setCategoryCounts(vector<Document>& documents);
+    QueryResult positionalSearch(const Query& query, TermDictionary& dictionary);
     int* getTermFrequencies(int docId) const;
     int* getDocumentFrequencies() const;
-    QueryResult rankedSearch(const Query& query, TermDictionary dictionary, const vector<Document>& documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
+    QueryResult rankedSearch(const Query& query, TermDictionary& dictionary, const vector<Document>& documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
 };
 
 

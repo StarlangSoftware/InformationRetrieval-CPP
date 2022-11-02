@@ -23,7 +23,6 @@ DocumentText Document::loadDocument(){
         case DocumentType::CATEGORICAL:
             Corpus corpus = Corpus(absoluteFileName);
             if (corpus.sentenceCount() >= 2){
-                categoryHierarchy = CategoryHierarchy(corpus.getSentence(0)->to_string());
                 documentText = DocumentText();
                 vector<Sentence*> sentences = TurkishSplitter().split(corpus.getSentence(1)->to_string());
                 for (Sentence* sentence : sentences){
@@ -34,6 +33,16 @@ DocumentText Document::loadDocument(){
             break;
     }
     return documentText;
+}
+
+
+void Document::loadCategory(CategoryTree* categoryTree) {
+    if (documentType == DocumentType::CATEGORICAL){
+        Corpus corpus = Corpus(absoluteFileName);
+        if (corpus.sentenceCount() >= 2) {
+            category = categoryTree->addCategoryHierarchy(corpus.getSentence(0)->to_string());
+        }
+    }
 }
 
 int Document::getDocId() const{
@@ -56,10 +65,10 @@ void Document::setSize(int _size) {
     this->size = _size;
 }
 
-void Document::setCategoryHierarchy(const string& _categoryHierarchy) {
-    this->categoryHierarchy = CategoryHierarchy(_categoryHierarchy);
+CategoryNode* Document::getCategory() const{
+    return category;
 }
 
-CategoryHierarchy Document::getCategoryHierarchy() const{
-    return categoryHierarchy;
+void Document::setCategory(CategoryTree* categoryTree, const string& _category) {
+    category = categoryTree->addCategoryHierarchy(_category);
 }

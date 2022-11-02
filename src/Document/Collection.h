@@ -37,6 +37,7 @@ private:
     Comparator comparator;
     string name;
     Parameter parameter;
+    CategoryTree* categoryTree = nullptr;
     void constructDictionaryInDisk();
     void constructIndexesInDisk();
     void constructIndexesInMemory();
@@ -50,11 +51,11 @@ private:
     void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex);
     void constructNGramDictionaryAndIndexInDisk();
     void combineMultipleInvertedIndexesInDisk(const string& _name, const string& tmpName, int blockCount);
-    void constructInvertedIndexInDisk(TermDictionary _dictionary, TermType termType);
+    void constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType);
     void constructDictionaryAndInvertedIndexInDisk(TermType termType);
     void combineMultiplePositionalIndexesInDisk(const string& _name, int blockCount);
     void constructDictionaryAndPositionalIndexInDisk(TermType termType);
-    void constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType);
+    void constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType);
     void constructNGramIndex();
     void saveCategories();
     void loadCategories();
@@ -63,6 +64,7 @@ public:
     int size() const;
     int vocabularySize() const;
     void save();
+    string topNString(int N);
     QueryResult searchCollection(const Query& query, const SearchParameter& searchParameter);
 };
 

@@ -62,6 +62,9 @@ Collection::Collection(const string& directory, const Parameter& parameter) {
             }
         }
     }
+    if (parameter.getDocumentType() == DocumentType::CATEGORICAL){
+        positionalIndex.setCategoryCounts(documents);
+    }
 }
 
 int Collection::size() const{
@@ -156,6 +159,12 @@ void Collection::constructIndexesInMemory() {
             }
             if (parameter.constructNGramIndex()){
                 constructNGramIndex();
+            }
+            if (parameter.getDocumentType() == DocumentType::CATEGORICAL){
+                categoryTree = new CategoryTree(name);
+                for (Document& document : documents){
+                    document.loadCategory(categoryTree);
+                }
             }
             break;
     }
@@ -377,7 +386,7 @@ void Collection::combineMultipleInvertedIndexesInDisk(const string& _name, const
     outfile.close();
 }
 
-void Collection::constructInvertedIndexInDisk(TermDictionary _dictionary, TermType termType) {
+void Collection::constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType) {
     int i = 0, blockCount = 0;
     InvertedIndex _invertedIndex = InvertedIndex();
     for (Document doc : documents){
@@ -510,7 +519,7 @@ void Collection::constructDictionaryAndPositionalIndexInDisk(TermType termType) 
         }
         DocumentText documentText = doc.loadDocument();
         vector<TermOccurrence> terms = documentText.constructTermList(doc.getDocId(), termType);
-        for (TermOccurrence termOccurrence : terms){
+        for (const TermOccurrence& termOccurrence : terms){
             int termId;
             int wordIndex = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
             if (wordIndex != -1){
@@ -536,7 +545,7 @@ void Collection::constructDictionaryAndPositionalIndexInDisk(TermType termType) 
     }
 }
 
-void Collection::constructPositionalIndexInDisk(TermDictionary _dictionary, TermType termType) {
+void Collection::constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType) {
     int i = 0, blockCount = 0;
     PositionalIndex _positionalIndex = PositionalIndex();
     for (Document doc : documents){
@@ -550,7 +559,7 @@ void Collection::constructPositionalIndexInDisk(TermDictionary _dictionary, Term
         }
         DocumentText documentText = doc.loadDocument();
         vector<TermOccurrence> terms = documentText.constructTermList(doc.getDocId(), termType);
-        for (TermOccurrence termOccurrence : terms){
+        for (const TermOccurrence& termOccurrence : terms){
             int termId = _dictionary.getWordIndex(termOccurrence.getTerm().getName());
             _positionalIndex.addPosition(termId, termOccurrence.getDocId(), termOccurrence.getPosition());
         }
@@ -597,8 +606,8 @@ QueryResult Collection::searchCollection(const Query& query, const SearchParamet
 void Collection::saveCategories() {
     ofstream outfile;
     outfile.open(name + "-categories.txt", ofstream::out);
-    for (Document document : documents){
-        outfile << document.getDocId() << "\t" << document.getCategoryHierarchy().to_string() << "\n";
+    for (const Document& document : documents){
+        outfile << document.getDocId() << "\t" << document.getCategory()->to_string() << "\n";
     }
     outfile.close();
 }
@@ -606,6 +615,7 @@ void Collection::saveCategories() {
 void Collection::loadCategories() {
     ifstream inputFile;
     string line;
+    categoryTree = new CategoryTree(name);
     inputFile.open(name + "-categories.txt", ifstream :: in);
     while (inputFile.good()) {
         getline(inputFile, line);
@@ -614,7 +624,11 @@ void Collection::loadCategories() {
         }
         vector<string> items = Word::split(line, "\t");
         int docId = stoi(items.at(0));
-        documents[docId].setCategoryHierarchy(items[1]);
+        documents[docId].setCategory(categoryTree, items[1]);
     }
     inputFile.close();
+}
+
+string Collection::topNString(int N) {
+    return categoryTree->topNString(dictionary, N);
 }

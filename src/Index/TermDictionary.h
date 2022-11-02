@@ -10,7 +10,7 @@
 #include "Dictionary/Dictionary.h"
 #include "TermOccurrence.h"
 
-class TermDictionary : public Dictionary{
+class TermDictionary : public Dictionary {
 public:
     TermDictionary();
     explicit TermDictionary(Comparator comparator);

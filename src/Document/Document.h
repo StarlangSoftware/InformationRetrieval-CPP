@@ -9,8 +9,9 @@
 #include "DocumentText.h"
 #include "MorphologicalDisambiguator.h"
 #include "FsmMorphologicalAnalyzer.h"
-#include "CategoryHierarchy.h"
 #include "DocumentType.h"
+#include "../Index/CategoryNode.h"
+#include "../Index/CategoryTree.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ private:
     int docId;
     int size = 0;
     DocumentType documentType;
-    CategoryHierarchy categoryHierarchy;
+    CategoryNode* category;
 public:
     Document(DocumentType documentType, const string& absoluteFileName, const string& fileName, int docId);
     DocumentText loadDocument();
@@ -30,8 +31,9 @@ public:
     string getAbsoluteFileName() const;
     int getSize() const;
     void setSize(int _size);
-    void setCategoryHierarchy(const string& _categoryHierarchy);
-    CategoryHierarchy getCategoryHierarchy() const;
+    CategoryNode* getCategory() const;
+    void setCategory(CategoryTree* categoryTree, const string& _category);
+    void loadCategory(CategoryTree* categoryTree);
 };
 
 

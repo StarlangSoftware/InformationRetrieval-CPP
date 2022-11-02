@@ -13,7 +13,7 @@ IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
     }
 }
 
-IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary dictionary, int documentSize){
+IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary& dictionary, int documentSize){
     this->documentSize = documentSize;
     this->dictionarySize = dictionary.size();
     incidenceMatrix = new bool*[dictionary.size()];
@@ -38,7 +38,7 @@ void IncidenceMatrix::set(int row, int col) {
     incidenceMatrix[row][col] = true;
 }
 
-QueryResult IncidenceMatrix::search(const Query& query, TermDictionary dictionary) {
+QueryResult IncidenceMatrix::search(const Query& query, TermDictionary& dictionary) {
     QueryResult result = QueryResult();
     bool* resultRow = new bool[documentSize];
     for (int i = 0; i < documentSize; i++){

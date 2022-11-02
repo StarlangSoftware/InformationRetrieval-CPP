@@ -19,9 +19,9 @@ private:
 public:
     IncidenceMatrix();
     IncidenceMatrix(int dictionarySize, int documentSize);
-    IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary dictionary, int documentSize);
+    IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary& dictionary, int documentSize);
     void set(int row, int col);
-    QueryResult search(const Query& query, TermDictionary dictionary);
+    QueryResult search(const Query& query, TermDictionary& dictionary);
 };
 
 
