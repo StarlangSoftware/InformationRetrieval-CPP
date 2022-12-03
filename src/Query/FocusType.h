@@ -1,0 +1,13 @@
+//
+// Created by Olcay Taner YILDIZ on 3.12.2022.
+//
+
+#ifndef INFORMATIONRETRIEVAL_FOCUSTYPE_H
+#define INFORMATIONRETRIEVAL_FOCUSTYPE_H
+
+enum class FocusType{
+    OVERALL = 0,
+    CATEGORY
+};
+
+#endif //INFORMATIONRETRIEVAL_FOCUSTYPE_H

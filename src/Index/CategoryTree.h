@@ -7,6 +7,7 @@
 
 
 #include "CategoryNode.h"
+#include "../Query/CategoryDeterminationType.h"
 
 class CategoryTree {
 private:
@@ -14,7 +15,8 @@ private:
 public:
     explicit CategoryTree(const string& rootName);
     CategoryNode* addCategoryHierarchy(const string& hierarchy);
-    string topNString(TermDictionary& dictionary, int N) const;
+    vector<CategoryNode*> getCategories(const Query& query, TermDictionary* dictionary, CategoryDeterminationType categoryDeterminationType);
+    void setRepresentativeCount(int representativeCount);
 };
 
 

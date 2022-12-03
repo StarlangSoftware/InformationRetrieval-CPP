@@ -23,12 +23,11 @@ private:
     bool phraseIndex = true;
     bool positionalIndex = true;
     bool nGramIndex = true;
-    bool indexInDisk = false;
-    bool dictionaryInDisk = false;
     bool _limitNumberOfDocumentsLoaded = false;
     int documentLimit = 1000;
     int wordLimit = 10000;
     DocumentType documentType = DocumentType::NORMAL;
+    int representativeCount = 10;
 public:
     Parameter() = default;
     IndexType getIndexType() const;
@@ -40,10 +39,8 @@ public:
     bool normalizeDocument() const;
     bool constructPositionalIndex() const;
     bool constructNGramIndex() const;
-    bool constructIndexInDisk() const;
     bool limitNumberOfDocumentsLoaded() const;
     int getDocumentLimit() const;
-    bool constructDictionaryInDisk() const;
     int getWordLimit() const;
     void setIndexType(IndexType _indexType);
     void setWordComparator(Comparator _wordComparator);
@@ -54,13 +51,13 @@ public:
     void setPhraseIndex(bool _phraseIndex);
     void setPositionalIndex(bool _positionalIndex);
     void setNGramIndex(bool _nGramIndex);
-    void setConstructIndexInDisk(bool constructIndexInDisk);
     void setLimitNumberOfDocumentsLoaded(bool limitNumberOfDocumentsLoaded);
     void setDocumentLimit(int _documentLimit);
-    void setConstructDictionaryInDisk(bool constructDictionaryInDisk);
     void setWordLimit(int _wordLimit);
     DocumentType getDocumentType() const;
     void setDocumentType(DocumentType _documentType);
+    int getRepresentationCount() const;
+    void setRepresentativeCount(int _representativeCount);
 };
 
 

@@ -9,6 +9,8 @@
 #include "RetrievalType.h"
 #include "../Document/DocumentWeighting.h"
 #include "../Index/TermWeighting.h"
+#include "CategoryDeterminationType.h"
+#include "FocusType.h"
 
 class SearchParameter {
 private:
@@ -16,15 +18,21 @@ private:
     DocumentWeighting documentWeighting = DocumentWeighting::NO_IDF;
     TermWeighting termWeighting = TermWeighting::NATURAL;
     int documentsRetrieved = 1;
+    CategoryDeterminationType categoryDeterminationType = CategoryDeterminationType::KEYWORD;
+    FocusType focusType = FocusType::OVERALL;
 public:
     RetrievalType getRetrievalType() const;
-    void setRetrievalType(RetrievalType retrievalType);
+    void setRetrievalType(RetrievalType _retrievalType);
     DocumentWeighting getDocumentWeighting() const;
-    void setDocumentWeighting(DocumentWeighting documentWeighting);
+    void setDocumentWeighting(DocumentWeighting _documentWeighting);
     TermWeighting getTermWeighting() const;
-    void setTermWeighting(TermWeighting termWeighting);
+    void setTermWeighting(TermWeighting _termWeighting);
     int getDocumentsRetrieved() const;
-    void setDocumentsRetrieved(int documentsRetrieved);
+    void setDocumentsRetrieved(int _documentsRetrieved);
+    CategoryDeterminationType getCategoryDeterminationType() const;
+    void setCategoryDeterminationType(CategoryDeterminationType _categoryDeterminationType);
+    FocusType getFocusType() const;
+    void setFocusType(FocusType _focusType);
 };
 
 

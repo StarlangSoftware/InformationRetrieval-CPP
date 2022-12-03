@@ -44,16 +44,8 @@ int Parameter::getDocumentLimit() const{
     return documentLimit;
 }
 
-bool Parameter::constructDictionaryInDisk() const{
-    return dictionaryInDisk;
-}
-
 bool Parameter::constructNGramIndex() const{
     return nGramIndex;
-}
-
-bool Parameter::constructIndexInDisk() const{
-    return indexInDisk;
 }
 
 int Parameter::getWordLimit() const{
@@ -96,23 +88,12 @@ void Parameter::setNGramIndex(bool _nGramIndex) {
     this->nGramIndex = _nGramIndex;
 }
 
-void Parameter::setConstructIndexInDisk(bool constructIndexInDisk) {
-    this->indexInDisk = constructIndexInDisk;
-}
-
 void Parameter::setLimitNumberOfDocumentsLoaded(bool limitNumberOfDocumentsLoaded) {
     this->_limitNumberOfDocumentsLoaded = limitNumberOfDocumentsLoaded;
 }
 
 void Parameter::setDocumentLimit(int _documentLimit) {
     this->documentLimit = _documentLimit;
-}
-
-void Parameter::setConstructDictionaryInDisk(bool constructDictionaryInDisk) {
-    this->dictionaryInDisk = constructDictionaryInDisk;
-    if (constructDictionaryInDisk){
-        this->indexInDisk = true;
-    }
 }
 
 void Parameter::setWordLimit(int _wordLimit) {
@@ -125,4 +106,12 @@ DocumentType Parameter::getDocumentType() const{
 
 void Parameter::setDocumentType(DocumentType _documentType) {
     this->documentType = _documentType;
+}
+
+int Parameter::getRepresentationCount() const {
+    return representativeCount;
+}
+
+void Parameter::setRepresentativeCount(int _representativeCount) {
+    this->representativeCount = _representativeCount;
 }

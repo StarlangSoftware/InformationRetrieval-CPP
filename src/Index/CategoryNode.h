@@ -9,15 +9,16 @@
 #include <vector>
 #include "CounterHashMap.h"
 #include "TermDictionary.h"
+#include "../Query/Query.h"
 
 using namespace std;
 
 class CategoryNode {
 private:
-    string name;
     vector<CategoryNode*> children;
     CategoryNode* parent;
     CounterHashMap<int> counts;
+    vector<string> categoryWords;
     void addChild(CategoryNode* child);
 public:
     CategoryNode(const string& _name, CategoryNode* _parent);
@@ -25,9 +26,11 @@ public:
     CategoryNode* getChild(const string& childName) const;
     void addCounts(int termId, int count);
     vector<CategoryNode*> getChildren() const;
-    vector<pair<int, int>> topN(int N) const;
-    string topNString(TermDictionary& dictionary, int N) const;
     string to_string() const;
+    bool isDescendant(CategoryNode* ancestor) const;
+    void setRepresentativeCount(int representativeCount);
+    void getCategoriesWithKeyword(const Query& query, vector<CategoryNode*>& result);
+    void getCategoriesWithCosine(const Query& query, TermDictionary* dictionary, vector<CategoryNode*>& result);
 };
 
 

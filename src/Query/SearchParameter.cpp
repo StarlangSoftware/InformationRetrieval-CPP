@@ -8,30 +8,46 @@ RetrievalType SearchParameter::getRetrievalType() const{
     return retrievalType;
 }
 
-void SearchParameter::setRetrievalType(RetrievalType retrievalType) {
-    this->retrievalType = retrievalType;
+void SearchParameter::setRetrievalType(RetrievalType _retrievalType) {
+    this->retrievalType = _retrievalType;
 }
 
 DocumentWeighting SearchParameter::getDocumentWeighting() const{
     return documentWeighting;
 }
 
-void SearchParameter::setDocumentWeighting(DocumentWeighting documentWeighting) {
-    this->documentWeighting = documentWeighting;
+void SearchParameter::setDocumentWeighting(DocumentWeighting _documentWeighting) {
+    this->documentWeighting = _documentWeighting;
 }
 
 TermWeighting SearchParameter::getTermWeighting() const{
     return termWeighting;
 }
 
-void SearchParameter::setTermWeighting(TermWeighting termWeighting) {
-    this->termWeighting = termWeighting;
+void SearchParameter::setTermWeighting(TermWeighting _termWeighting) {
+    this->termWeighting = _termWeighting;
 }
 
 int SearchParameter::getDocumentsRetrieved() const{
     return documentsRetrieved;
 }
 
-void SearchParameter::setDocumentsRetrieved(int documentsRetrieved) {
-    this->documentsRetrieved = documentsRetrieved;
+void SearchParameter::setDocumentsRetrieved(int _documentsRetrieved) {
+    this->documentsRetrieved = _documentsRetrieved;
+}
+
+CategoryDeterminationType SearchParameter::getCategoryDeterminationType() const{
+    return categoryDeterminationType;
+}
+
+void SearchParameter::setCategoryDeterminationType(CategoryDeterminationType _categoryDeterminationType) {
+    this->categoryDeterminationType = _categoryDeterminationType;
+}
+
+FocusType SearchParameter::getFocusType() const {
+    return focusType;
+}
+
+void SearchParameter::setFocusType(FocusType _focusType) {
+    this->focusType = _focusType;
 }

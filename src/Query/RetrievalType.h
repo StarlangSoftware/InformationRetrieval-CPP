@@ -8,6 +8,7 @@
 enum class RetrievalType{
     BOOLEAN = 0,
     POSITIONAL,
-    RANKED
+    RANKED,
+    ATTRIBUTE
 };
 #endif //INFORMATIONRETRIEVAL_RETRIEVALTYPE_H

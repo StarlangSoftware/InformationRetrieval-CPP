@@ -39,3 +39,28 @@ void QueryResult::getBest(int K){
         items.emplace_back(maxHeap.deleteTop());
     }
 }
+
+int QueryResult::size() const{
+    return items.size();
+}
+
+QueryResult QueryResult::intersection(const QueryResult &queryResult) const {
+    QueryResult result = QueryResult();
+    int i = 0, j = 0;
+    while (i < size() && j < queryResult.size()){
+        QueryResultItem item1 = items[i];
+        QueryResultItem item2 = queryResult.items[j];
+        if (item1.getDocId() == item2.getDocId()){
+            result.add(item1.getDocId());
+            i++;
+            j++;
+        } else {
+            if (item1.getDocId() < item2.getDocId()){
+                i++;
+            } else {
+                j++;
+            }
+        }
+    }
+    return result;
+}

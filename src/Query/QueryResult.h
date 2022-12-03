@@ -18,6 +18,8 @@ public:
     void add(int docId);
     vector<QueryResultItem> getItems() const;
     void getBest(int K);
+    int size() const;
+    QueryResult intersection(const QueryResult& queryResult) const;
 };
 
 

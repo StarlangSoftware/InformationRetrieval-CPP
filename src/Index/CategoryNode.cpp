@@ -3,9 +3,10 @@
 //
 
 #include "CategoryNode.h"
+#include "Term.h"
 
 CategoryNode::CategoryNode(const string& _name, CategoryNode *_parent) {
-    name = _name;
+    categoryWords = Word::split(_name);
     parent = _parent;
     if (parent != nullptr){
         parent->addChild(this);
@@ -17,7 +18,11 @@ void CategoryNode::addChild(CategoryNode *child) {
 }
 
 string CategoryNode::getName() const{
-    return name;
+    string result = categoryWords[0];
+    for (int i = 1; i < categoryWords.size(); i++){
+        result += " " + categoryWords[i];
+    }
+    return result;
 }
 
 CategoryNode *CategoryNode::getChild(const string& childName) const{
@@ -41,32 +46,64 @@ vector<CategoryNode *> CategoryNode::getChildren() const{
     return children;
 }
 
-vector<pair<int, int>> CategoryNode::topN(int N) const{
-    if (N <= counts.size()){
-        return counts.topN(N);
-    } else {
-        return counts.topN(counts.size());
-    }
-}
-
-string CategoryNode::topNString(TermDictionary& dictionary, int N) const{
-    vector<pair<int, int>> topN = this->topN(N);
-    string result = to_string();
-    for (pair<int, int> item : topN){
-        if (!Word::isPunctuation(dictionary.getWord(item.first)->getName())){
-            result += "\t" + dictionary.getWord(item.first)->getName() + " (" + std::to_string(item.second) + ")";
-        }
-    }
-    return result;
-}
-
 string CategoryNode::to_string() const{
     if (parent != nullptr){
         if (parent->parent != nullptr){
-            return parent->to_string() + "%" + name;
+            return parent->to_string() + "%" + getName();
         } else {
-            return name;
+            return getName();
         }
     }
     return "";
+}
+
+bool CategoryNode::isDescendant(CategoryNode *ancestor) const {
+    if (this == ancestor){
+        return true;
+    }
+    if (parent == nullptr){
+        return false;
+    }
+    return parent->isDescendant(ancestor);
+}
+
+void CategoryNode::setRepresentativeCount(int representativeCount) {
+    vector<pair<int, int>> topList;
+    if (representativeCount <= counts.size()){
+        topList = counts.topN(representativeCount);
+        for (pair<int, int> entry : topList) {
+            counts.putNTimes(entry.first, entry.second);
+        }
+    }
+}
+
+void CategoryNode::getCategoriesWithKeyword(const Query &query, vector<CategoryNode *>& result){
+    double categoryScore = 0;
+    for (int i = 0; i < query.size(); i++){
+        if (std::find(categoryWords.begin(), categoryWords.end(), query.getTerm(i).getName()) != categoryWords.end()){
+            categoryScore++;
+        }
+    }
+    if (categoryScore > 0){
+        result.push_back(this);
+    }
+    for (CategoryNode* child : children){
+        child->getCategoriesWithKeyword(query, result);
+    }
+}
+
+void CategoryNode::getCategoriesWithCosine(const Query &query, TermDictionary* dictionary, vector<CategoryNode*>& result) {
+    double categoryScore = 0;
+    for (int i = 0; i < query.size(); i++){
+        Term* term = (Term*) dictionary->getWord(query.getTerm(i).getName());
+        if (term != nullptr){
+            categoryScore += counts.count(term->getTermId());
+        }
+    }
+    if (categoryScore > 0){
+        result.push_back(this);
+    }
+    for (CategoryNode* child : children){
+        child->getCategoriesWithCosine(query, dictionary, result);
+    }
 }

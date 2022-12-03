@@ -21,19 +21,20 @@ CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) {
     return current;
 }
 
-string CategoryTree::topNString(TermDictionary& dictionary, int N) const{
-    deque<CategoryNode*> queue;
-    queue.push_back(root);
-    string result;
-    while (!queue.empty()){
-        CategoryNode* node = queue.front();
-        queue.pop_front();
-        if (node != root){
-            result += node->topNString(dictionary, N) + "\n";
-        }
-        for (CategoryNode* child : node->getChildren()){
-            queue.push_back(child);
-        }
+vector<CategoryNode *> CategoryTree::getCategories(const Query &query, TermDictionary *dictionary,
+                                                   CategoryDeterminationType categoryDeterminationType) {
+    vector<CategoryNode*> result;
+    switch (categoryDeterminationType) {
+        case CategoryDeterminationType::KEYWORD:
+            root->getCategoriesWithKeyword(query, result);
+            break;
+        case CategoryDeterminationType::COSINE:
+            root->getCategoriesWithCosine(query, dictionary, result);
+            break;
     }
     return result;
+}
+
+void CategoryTree::setRepresentativeCount(int representativeCount) {
+    root->setRepresentativeCount(representativeCount);
 }
