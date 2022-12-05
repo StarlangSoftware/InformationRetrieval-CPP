@@ -14,7 +14,7 @@ PositionalIndex::PositionalIndex(const string& fileName) {
     readPositionalPostingList(fileName);
 }
 
-PositionalIndex::PositionalIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
+PositionalIndex::PositionalIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms) {
     if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
@@ -26,7 +26,7 @@ PositionalIndex::PositionalIndex(TermDictionary& dictionary, const vector<TermOc
             term = terms[i];
             termId = dictionary.getWordIndex(term.getTerm().getName());
             if (termId != -1){
-                if (term.isDifferent(previousTerm, comparator)){
+                if (term.isDifferent(previousTerm)){
                     addPosition(termId, term.getDocId(), term.getPosition());
                     prevDocId = term.getDocId();
                 } else {

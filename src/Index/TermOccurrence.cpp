@@ -22,6 +22,6 @@ int TermOccurrence::getPosition() const{
     return position;
 }
 
-bool TermOccurrence::isDifferent(const TermOccurrence& currentTerm, Comparator comparator) {
+bool TermOccurrence::isDifferent(const TermOccurrence& currentTerm) {
     return !(currentTerm.getTerm() == term);
 }

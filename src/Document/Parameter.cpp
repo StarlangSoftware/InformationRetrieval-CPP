@@ -8,10 +8,6 @@ IndexType Parameter::getIndexType() const{
     return indexType;
 }
 
-Comparator Parameter::getWordComparator() const{
-    return wordComparator;
-}
-
 bool Parameter::loadIndexesFromFile() const{
     return indexesFromFile;
 }
@@ -54,10 +50,6 @@ int Parameter::getWordLimit() const{
 
 void Parameter::setIndexType(IndexType _indexType) {
     this->indexType = _indexType;
-}
-
-void Parameter::setWordComparator(Comparator _wordComparator) {
-    this->wordComparator = _wordComparator;
 }
 
 void Parameter::setLoadIndexesFromFile(bool loadIndexesFromFile) {

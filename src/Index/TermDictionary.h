@@ -13,10 +13,9 @@
 class TermDictionary : public Dictionary {
 public:
     TermDictionary();
-    explicit TermDictionary(Comparator comparator);
-    TermDictionary(Comparator comparator, const string& fileName);
-    TermDictionary(Comparator comparator, const vector<TermOccurrence>& terms);
-    TermDictionary(Comparator comparator, const set<string>& words);
+    TermDictionary(const string& fileName);
+    TermDictionary(const vector<TermOccurrence>& terms);
+    TermDictionary(const set<string>& words);
     void addTerm(const string& name, int termID);
     void save(const string& fileName);
     static vector<TermOccurrence> constructNGrams(const string& word, int termId, int k);

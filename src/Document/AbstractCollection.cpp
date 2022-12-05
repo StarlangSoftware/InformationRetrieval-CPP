@@ -7,7 +7,6 @@ using std::filesystem::directory_iterator;
 
 AbstractCollection::AbstractCollection(const string &directory, const Parameter &parameter) {
     name = directory;
-    comparator = parameter.getWordComparator();
     this->parameter = parameter;
     loadAttributeList();
     int j = 0;
@@ -35,11 +34,11 @@ int AbstractCollection::vocabularySize() const{
 
 void AbstractCollection::constructNGramIndex() {
     vector<TermOccurrence> terms = dictionary.constructTermsFromDictionary(2);
-    biGramDictionary = TermDictionary(comparator, terms);
-    biGramIndex = NGramIndex(biGramDictionary, terms, comparator);
+    biGramDictionary = TermDictionary(terms);
+    biGramIndex = NGramIndex(biGramDictionary, terms);
     terms = dictionary.constructTermsFromDictionary(3);
-    triGramDictionary = TermDictionary(comparator, terms);
-    triGramIndex = NGramIndex(triGramDictionary, terms, comparator);
+    triGramDictionary = TermDictionary(terms);
+    triGramIndex = NGramIndex(triGramDictionary, terms);
 }
 
 void AbstractCollection::loadCategories() {

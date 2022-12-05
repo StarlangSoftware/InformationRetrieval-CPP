@@ -23,7 +23,7 @@ MemoryCollection::MemoryCollection(const string& directory, const Parameter& par
 }
 
 void MemoryCollection::loadIndexesFromFile(const string &directory) {
-    dictionary = TermDictionary(comparator, directory);
+    dictionary = TermDictionary(directory);
     invertedIndex = InvertedIndex(directory);
     if (parameter.constructPositionalIndex()){
         positionalIndex = PositionalIndex(directory);
@@ -34,15 +34,15 @@ void MemoryCollection::loadIndexesFromFile(const string &directory) {
         delete sizes;
     }
     if (parameter.constructPhraseIndex()){
-        phraseDictionary = TermDictionary(comparator, directory + "-phrase");
+        phraseDictionary = TermDictionary(directory + "-phrase");
         phraseIndex = InvertedIndex(directory + "-phrase");
         if (parameter.constructPositionalIndex()){
             phrasePositionalIndex = PositionalIndex(directory + "-phrase");
         }
     }
     if (parameter.constructNGramIndex()){
-        biGramDictionary = TermDictionary(comparator, directory + "-biGram");
-        triGramDictionary = TermDictionary(comparator, directory + "-triGram");
+        biGramDictionary = TermDictionary(directory + "-biGram");
+        triGramDictionary = TermDictionary(directory + "-triGram");
         biGramIndex = NGramIndex(directory + "-biGram");
         triGramIndex = NGramIndex(directory + "-triGram");
     }
@@ -85,22 +85,22 @@ void MemoryCollection::saveCategories() {
 
 void MemoryCollection::constructIndexesInMemory() {
     vector<TermOccurrence> terms = constructTerms(TermType::TOKEN);
-    dictionary = TermDictionary(comparator, terms);
+    dictionary = TermDictionary(terms);
     switch (indexType){
         case IndexType::INCIDENCE_MATRIX:
             incidenceMatrix = IncidenceMatrix(terms, dictionary, documents.size());
             break;
         case IndexType::INVERTED_INDEX:
-            invertedIndex = InvertedIndex(dictionary, terms, comparator);
+            invertedIndex = InvertedIndex(dictionary, terms);
             if (parameter.constructPositionalIndex()){
-                positionalIndex = PositionalIndex(dictionary, terms, comparator);
+                positionalIndex = PositionalIndex(dictionary, terms);
             }
             if (parameter.constructPhraseIndex()){
                 terms = constructTerms(TermType::PHRASE);
-                phraseDictionary = TermDictionary(comparator, terms);
-                phraseIndex = InvertedIndex(phraseDictionary, terms, comparator);
+                phraseDictionary = TermDictionary(terms);
+                phraseIndex = InvertedIndex(phraseDictionary, terms);
                 if (parameter.constructPositionalIndex()){
-                    phrasePositionalIndex = PositionalIndex(phraseDictionary, terms, comparator);
+                    phrasePositionalIndex = PositionalIndex(phraseDictionary, terms);
                 }
             }
             if (parameter.constructNGramIndex()){

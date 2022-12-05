@@ -35,12 +35,16 @@ bool LargeCollection::notCombinedAllDictionaries(string *currentWords, int size)
     return false;
 }
 
+bool compareWord2(Word* wordA, Word* wordB)
+{
+    return wordA->getName() < wordB->getName();
+}
+
 vector<int> LargeCollection::selectDictionariesWithMinimumWords(string *currentWords, int size) const{
     vector<int> result;
     string min;
-    turkishWordComparator wordComparator = turkishWordComparator(Dictionary::turkishComparatorMap);
     for (int i = 0; i < size; i++){
-        if (!currentWords[i].empty() && (min.empty() || wordComparator.operator()(new Word(currentWords[i]), new Word(min)))){
+        if (!currentWords[i].empty() && (min.empty() || compareWord2(new Word(currentWords[i]), new Word(min)))){
             min = currentWords[i];
         }
     }
@@ -90,14 +94,14 @@ void LargeCollection::combineMultipleDictionariesInDisk(const string& _name, con
 void LargeCollection::constructDictionaryAndInvertedIndexInDisk(TermType termType) {
     int i = 0, blockCount = 0;
     InvertedIndex _invertedIndex = InvertedIndex();
-    TermDictionary _dictionary = TermDictionary(comparator);
+    TermDictionary _dictionary = TermDictionary();
     hash<string> hash;
     for (Document doc : documents){
         if (i < parameter.getDocumentLimit()){
             i++;
         } else {
             _dictionary.save("tmp-" + ::to_string(blockCount));
-            _dictionary = TermDictionary(comparator);
+            _dictionary = TermDictionary();
             _invertedIndex.save("tmp-" + ::to_string(blockCount));
             _invertedIndex = InvertedIndex();
             blockCount++;
@@ -134,14 +138,14 @@ void LargeCollection::constructDictionaryAndInvertedIndexInDisk(TermType termTyp
 void LargeCollection::constructDictionaryAndPositionalIndexInDisk(TermType termType) {
     int i = 0, blockCount = 0;
     PositionalIndex _positionalIndex = PositionalIndex();
-    TermDictionary _dictionary = TermDictionary(comparator);
+    TermDictionary _dictionary = TermDictionary();
     hash<string> hash;
     for (Document doc : documents){
         if (i < parameter.getDocumentLimit()){
             i++;
         } else {
             _dictionary.save("tmp-" + ::to_string(blockCount));
-            _dictionary = TermDictionary(comparator);
+            _dictionary = TermDictionary();
             _positionalIndex.save("tmp-" + ::to_string(blockCount));
             _positionalIndex = PositionalIndex();
             blockCount++;
@@ -197,8 +201,8 @@ void LargeCollection::constructNGramDictionaryAndIndexInDisk() {
     int i = 0, blockCount = 0;
     ifstream inputFile;
     string line;
-    TermDictionary _biGramDictionary = TermDictionary(comparator);
-    TermDictionary _triGramDictionary = TermDictionary(comparator);
+    TermDictionary _biGramDictionary = TermDictionary();
+    TermDictionary _triGramDictionary = TermDictionary();
     NGramIndex _biGramIndex = NGramIndex();
     NGramIndex _triGramIndex = NGramIndex();
     inputFile.open(name + "-dictionary.txt", ifstream::in);
@@ -212,8 +216,8 @@ void LargeCollection::constructNGramDictionaryAndIndexInDisk() {
         } else {
             _biGramDictionary.save("tmp-biGram-" + ::to_string(blockCount));
             _triGramDictionary.save("tmp-triGram-" + ::to_string(blockCount));
-            _biGramDictionary = TermDictionary(comparator);
-            _triGramDictionary = TermDictionary(comparator);
+            _biGramDictionary = TermDictionary();
+            _triGramDictionary = TermDictionary();
             _biGramIndex.save("tmp-biGram-" + ::to_string(blockCount));
             _biGramIndex = NGramIndex();
             _triGramIndex.save("tmp-triGram-" + ::to_string(blockCount));

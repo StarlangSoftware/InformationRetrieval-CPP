@@ -83,14 +83,14 @@ void MediumCollection::constructPositionalIndexInDisk(TermDictionary& _dictionar
 
 void MediumCollection::constructIndexesInDisk() {
     set<string> wordList = constructDistinctWordList(TermType::TOKEN);
-    dictionary = TermDictionary(comparator, wordList);
+    dictionary = TermDictionary(wordList);
     constructInvertedIndexInDisk(dictionary, TermType::TOKEN);
     if (parameter.constructPositionalIndex()){
         constructPositionalIndexInDisk(dictionary, TermType::TOKEN);
     }
     if (parameter.constructPhraseIndex()){
         wordList = constructDistinctWordList(TermType::PHRASE);
-        phraseDictionary = TermDictionary(comparator, wordList);
+        phraseDictionary = TermDictionary(wordList);
         constructInvertedIndexInDisk(phraseDictionary, TermType::PHRASE);
         if (parameter.constructPositionalIndex()){
             constructPositionalIndexInDisk(phraseDictionary, TermType::PHRASE);

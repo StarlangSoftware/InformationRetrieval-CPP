@@ -19,7 +19,7 @@ public:
     Word getTerm() const;
     int getDocId() const;
     int getPosition() const;
-    bool isDifferent(const TermOccurrence& currentTerm, Comparator comparator);
+    bool isDifferent(const TermOccurrence& currentTerm);
 };
 
 

@@ -27,7 +27,6 @@ protected:
     PositionalIndex positionalIndex;
     InvertedIndex phraseIndex;
     PositionalIndex phrasePositionalIndex;
-    Comparator comparator = Comparator::ENGLISH;
     string name;
     Parameter parameter;
     CategoryTree* categoryTree = nullptr;

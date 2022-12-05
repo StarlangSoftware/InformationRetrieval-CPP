@@ -15,7 +15,6 @@
 class Parameter {
 private:
     IndexType indexType = IndexType::INVERTED_INDEX;
-    Comparator wordComparator = Comparator::TURKISH;
     bool indexesFromFile = false;
     MorphologicalDisambiguator* disambiguator = nullptr;
     FsmMorphologicalAnalyzer* fsm = nullptr;
@@ -31,7 +30,6 @@ private:
 public:
     Parameter() = default;
     IndexType getIndexType() const;
-    Comparator getWordComparator() const;
     bool loadIndexesFromFile() const;
     MorphologicalDisambiguator* getDisambiguator() const;
     FsmMorphologicalAnalyzer* getFsm() const;
@@ -43,7 +41,6 @@ public:
     int getDocumentLimit() const;
     int getWordLimit() const;
     void setIndexType(IndexType _indexType);
-    void setWordComparator(Comparator _wordComparator);
     void setLoadIndexesFromFile(bool loadIndexesFromFile);
     void setDisambiguator(MorphologicalDisambiguator* _disambiguator);
     void setFsm(FsmMorphologicalAnalyzer* _fsm);

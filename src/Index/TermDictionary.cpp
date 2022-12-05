@@ -7,10 +7,10 @@
 #include "Term.h"
 #include "TermOccurrenceComparator.h"
 
-TermDictionary::TermDictionary(Comparator comparator) : Dictionary(comparator) {
+TermDictionary::TermDictionary() : Dictionary() {
 }
 
-TermDictionary::TermDictionary(Comparator comparator, const string& fileName) : Dictionary(comparator){
+TermDictionary::TermDictionary(const string& fileName) : Dictionary(){
     ifstream inputFile;
     string line;
     inputFile.open(fileName + "-dictionary.txt", ifstream :: in);
@@ -25,9 +25,10 @@ TermDictionary::TermDictionary(Comparator comparator, const string& fileName) : 
         words.emplace_back(term);
     }
     inputFile.close();
+    updateWordMap();
 }
 
-TermDictionary::TermDictionary(Comparator comparator, const vector<TermOccurrence>& terms) : Dictionary(comparator){
+TermDictionary::TermDictionary(const vector<TermOccurrence>& terms) : Dictionary(){
     int i, termId = 0;
     if (!terms.empty()){
         TermOccurrence term = terms[0];
@@ -37,7 +38,7 @@ TermDictionary::TermDictionary(Comparator comparator, const vector<TermOccurrenc
         i = 1;
         while (i < terms.size()){
             term = terms[i];
-            if (term.isDifferent(previousTerm, comparator)){
+            if (term.isDifferent(previousTerm)){
                 addTerm(term.getTerm().getName(), termId);
                 termId++;
             }
@@ -45,23 +46,30 @@ TermDictionary::TermDictionary(Comparator comparator, const vector<TermOccurrenc
             previousTerm = term;
         }
     }
+    sort();
 }
 
-TermDictionary::TermDictionary(Comparator comparator, const set<string>& words) : Dictionary(comparator){
+bool compareWord1(Word* wordA, Word* wordB)
+{
+    return wordA->getName() < wordB->getName();
+}
+
+TermDictionary::TermDictionary(const set<string>& words) : Dictionary(){
     vector<Word*> wordList;
     for (const auto& word : words){
         wordList.emplace_back(new Word(word));
     }
-    std::sort(wordList.begin(), wordList.end(), turkishWordComparator(turkishComparatorMap));
+    std::sort(wordList.begin(), wordList.end(), compareWord1);
     int termID = 0;
     for (Word* term : wordList){
         addTerm(term->getName(), termID);
         termID++;
     }
+    sort();
 }
 
 void TermDictionary::addTerm(const string& name, int termID) {
-    auto middle = lower_bound(words.begin(), words.end(), new Word(name), turkishWordComparator(turkishComparatorMap));
+    auto middle = lower_bound(words.begin(), words.end(), new Word(name), compareWord1);
     words.insert(middle, new Term(name, termID));
 }
 
@@ -105,8 +113,4 @@ vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k){
     }
     std::sort(terms.begin(), terms.end(), termComparator);
     return terms;
-}
-
-TermDictionary::TermDictionary() : Dictionary(){
-
 }

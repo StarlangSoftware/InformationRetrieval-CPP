@@ -9,7 +9,7 @@
 
 InvertedIndex::InvertedIndex() = default;
 
-InvertedIndex::InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator) {
+InvertedIndex::InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms) {
     if (!terms.empty()){
         TermOccurrence term = terms[0];
         int i = 1;
@@ -21,7 +21,7 @@ InvertedIndex::InvertedIndex(TermDictionary& dictionary, const vector<TermOccurr
             term = terms[i];
             termId = dictionary.getWordIndex(term.getTerm().getName());
             if (termId != -1){
-                if (term.isDifferent(previousTerm, comparator)){
+                if (term.isDifferent(previousTerm)){
                     add(termId, term.getDocId());
                     prevDocId = term.getDocId();
                 } else {

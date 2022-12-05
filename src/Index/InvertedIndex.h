@@ -19,7 +19,7 @@ private:
 public:
     InvertedIndex();
     explicit InvertedIndex(const string& fileName);
-    InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
+    InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms);
     void save(const string& fileName);
     void add(int termId, int docId);
     QueryResult search(const Query& query, TermDictionary& dictionary);

@@ -144,6 +144,9 @@ TEST_CASE("testAttributeQuery") {
     query = Query("Müzikli");
     result = collection.searchCollection(query, searchParameter);
     REQUIRE(4 == result.getItems().size());
+    query = Query("Çift Yönlü Alüminyum Bebek Arabası");
+    result = collection.searchCollection(query, searchParameter);
+    REQUIRE(2 == result.getItems().size());
 }
 
 TEST_CASE("testCategoricalQuery") {

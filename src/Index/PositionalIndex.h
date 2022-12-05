@@ -20,7 +20,7 @@ private:
 public:
     PositionalIndex();
     explicit PositionalIndex(const string& fileName);
-    PositionalIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms, Comparator comparator);
+    PositionalIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms);
     void addPosition(int termId, int docId, int position);
     void save(const string& fileName);
     int* getDocumentSizes(int documentSize) const;
