@@ -97,3 +97,18 @@ QueryResult InvertedIndex::search(const Query& query, TermDictionary& dictionary
     }
     return result.toQueryResult();
 }
+
+void InvertedIndex::autoCompleteWord(vector<string> &wordList, TermDictionary &dictionary) {
+    vector<int> counts;
+    for (const string& word : wordList){
+        counts.emplace_back(index[dictionary.getWordIndex(word)].size());
+    }
+    for (int i = 0; i < wordList.size() - 1; i++){
+        for (int j = i + 1; j < wordList.size(); j++){
+            if (counts[i] < counts[j]){
+                std::swap(counts[i], counts[j]);
+                std::swap(wordList[i], wordList[j]);
+            }
+        }
+    }
+}

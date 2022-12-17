@@ -198,3 +198,21 @@ QueryResult MemoryCollection::searchCollection(Query& query, const SearchParamet
     }
     return QueryResult();
 }
+
+vector<string> MemoryCollection::autoCompleteWord(const string &prefix) {
+    vector<string> result;
+    int i = dictionary.getWordStartingWith(prefix);
+    if (i < 0){
+        i = -(i + 1);
+    }
+    while (i < dictionary.size()){
+        if (dictionary.getWord(i)->getName().starts_with(prefix)){
+            result.emplace_back(dictionary.getWord(i)->getName());
+        } else {
+            break;
+        }
+        i++;
+    }
+    invertedIndex.autoCompleteWord(result, dictionary);
+    return result;
+}

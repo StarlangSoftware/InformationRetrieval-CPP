@@ -22,6 +22,7 @@ public:
     InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms);
     void save(const string& fileName);
     void add(int termId, int docId);
+    void autoCompleteWord(vector<string>& wordList, TermDictionary& dictionary);
     QueryResult search(const Query& query, TermDictionary& dictionary);
 };
 

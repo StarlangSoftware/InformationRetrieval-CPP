@@ -25,6 +25,7 @@ protected:
 public:
     MemoryCollection(const string& directory, const Parameter& parameter);
     void save();
+    vector<string> autoCompleteWord(const string& prefix);
     QueryResult searchCollection(Query& query, const SearchParameter& searchParameter);
 };
 

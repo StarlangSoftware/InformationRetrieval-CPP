@@ -165,3 +165,12 @@ TEST_CASE("testCategoricalQuery") {
     result = collection.searchCollection(query, searchParameter);
     REQUIRE(5 == result.getItems().size());
 }
+
+TEST_CASE("testAutoCompleteWord") {
+    Parameter parameter = Parameter();
+    parameter.setNGramIndex(true);
+    parameter.setLoadIndexesFromFile(true);
+    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    vector<string> autoCompleteList = collection.autoCompleteWord("kill");
+    REQUIRE(1 == autoCompleteList.size());
+}
