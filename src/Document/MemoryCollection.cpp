@@ -124,7 +124,7 @@ vector<TermOccurrence> MemoryCollection::constructTerms(TermType termType) const
         docTerms = documentText.constructTermList(doc.getDocId(), termType);
         terms.insert(terms.end(), docTerms.begin(), docTerms.end());
     }
-    std::sort(terms.begin(), terms.end(),  termOccurrenceComparator(Dictionary::turkishComparatorMap));
+    std::sort(terms.begin(), terms.end(),  termOccurrenceComparator());
     return terms;
 }
 

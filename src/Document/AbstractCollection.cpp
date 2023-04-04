@@ -53,7 +53,9 @@ void AbstractCollection::loadCategories() {
         }
         vector<string> items = Word::split(line, "\t");
         int docId = stoi(items.at(0));
-        documents[docId].setCategory(categoryTree, items[1]);
+        if (items.size() > 1){
+            documents[docId].setCategory(categoryTree, items[1]);
+        }
     }
     inputFile.close();
 }

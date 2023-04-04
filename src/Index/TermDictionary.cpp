@@ -104,7 +104,7 @@ vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int t
 }
 
 vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k){
-    termOccurrenceComparator termComparator = termOccurrenceComparator(turkishComparatorMap);
+    termOccurrenceComparator termComparator = termOccurrenceComparator();
     vector<TermOccurrence> terms;
     for (int i = 0; i < size(); i++){
         string word = getWord(i)->getName();

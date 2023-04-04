@@ -70,16 +70,17 @@ struct WordComparator{
 
 struct termOccurrenceComparator{
 
-    map<string, int> comparatorMap;
+    explicit termOccurrenceComparator(){
+    }
 
-    explicit termOccurrenceComparator(const map<string, int>& comparatorMap){
-        this->comparatorMap = comparatorMap;
+    static bool compareWord(const Word& wordA, const Word& wordB)
+    {
+        return wordA.getName() < wordB.getName();
     }
 
     bool operator() (const TermOccurrence& termA, const TermOccurrence& termB){
-        WordComparator wordComparator = WordComparator(Dictionary::turkishComparatorMap);
         if (termA.getTerm() != termB.getTerm()){
-            return wordComparator.operator()(termA.getTerm() ,termB.getTerm());
+            return compareWord(termA.getTerm(),termB.getTerm());
         } else {
             if (termA.getDocId() == termB.getDocId()){
                 if (termA.getPosition() == termB.getPosition()){
