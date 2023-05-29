@@ -2,7 +2,7 @@
 // Created by Olcay Taner YILDIZ on 22.07.2022.
 //
 
-#include <MaxHeap.h>
+#include <MinHeap.h>
 #include "QueryResult.h"
 
 void QueryResult::add(int docId, double score) {
@@ -30,13 +30,21 @@ int isSmallerQueryResultItem(const QueryResultItem& first, const QueryResultItem
 }
 
 void QueryResult::getBest(int K){
-    MaxHeap<QueryResultItem> maxHeap = MaxHeap<QueryResultItem>(2 * K, isSmallerQueryResultItem);
-    for (QueryResultItem queryResultItem : items){
-        maxHeap.insert(queryResultItem);
+    MinHeap<QueryResultItem> minHeap = MinHeap<QueryResultItem>(K, isSmallerQueryResultItem);
+    for (int i = 0; i < K && i < items.size(); i++){
+        minHeap.insert(items[i]);
+    }
+    for (int i = K + 1; i < items.size(); i++){
+        QueryResultItem top = minHeap.deleteTop();
+        if (isSmallerQueryResultItem(top, items[i]) > 0){
+            minHeap.insert(top);
+        } else {
+            minHeap.insert(items[i]);
+        }
     }
     items.clear();
-    for (int i = 0; i < K && !maxHeap.isEmpty(); i++){
-        items.emplace_back(maxHeap.deleteTop());
+    for (int i = 0; i < K && !minHeap.isEmpty(); i++){
+        items.insert(items.begin(), minHeap.deleteTop());
     }
 }
 
