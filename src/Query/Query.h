@@ -17,7 +17,7 @@ public:
     explicit Query(const string& query);
     Word getTerm(int index) const;
     int size() const;
-    void filterAttributes(const unordered_set<string>& attributeList, Query& termAttributes, Query& phraseAttributes);
+    Query filterAttributes(const unordered_set<string>& attributeList, Query& termAttributes, Query& phraseAttributes);
 };
 
 

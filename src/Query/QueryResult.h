@@ -19,7 +19,9 @@ public:
     vector<QueryResultItem> getItems() const;
     void getBest(int K);
     int size() const;
-    QueryResult intersection(const QueryResult& queryResult) const;
+    QueryResult intersectionFastSearch(const QueryResult& queryResult) const;
+    QueryResult intersectionBinarySearch(const QueryResult& queryResult) const;
+    QueryResult intersectionLinearSearch(const QueryResult& queryResult) const;
 };
 
 

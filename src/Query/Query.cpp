@@ -19,9 +19,10 @@ int Query::size() const{
     return terms.size();
 }
 
-void Query::filterAttributes(const unordered_set<string>& attributeList, Query &termAttributes,
+Query Query::filterAttributes(const unordered_set<string>& attributeList, Query &termAttributes,
                              Query &phraseAttributes) {
     int i = 0;
+    Query filteredQuery = Query();
     while (i < this->terms.size()){
         if (i < this->terms.size() - 1){
             string pair = this->terms[i].getName() + " " + this->terms[i + 1].getName();
@@ -33,9 +34,12 @@ void Query::filterAttributes(const unordered_set<string>& attributeList, Query &
         }
         if (attributeList.contains(this->terms[i].getName())){
             termAttributes.terms.emplace_back(this->terms[i]);
+        } else {
+            filteredQuery.terms.emplace_back(this->terms[i]);
         }
         i++;
     }
+    return filteredQuery;
 }
 
 Query::Query() = default;

@@ -51,3 +51,11 @@ FocusType SearchParameter::getFocusType() const {
 void SearchParameter::setFocusType(FocusType _focusType) {
     this->focusType = _focusType;
 }
+
+bool SearchParameter::getSearchAttributes() const{
+    return searchAttributes;
+}
+
+void SearchParameter::setSearchAttributes(bool _searchAttributes) {
+    this->searchAttributes = _searchAttributes;
+}

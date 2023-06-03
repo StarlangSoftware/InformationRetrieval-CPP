@@ -137,7 +137,9 @@ TEST_CASE("testAttributeQuery") {
     parameter.setLoadIndexesFromFile(true);
     MemoryCollection collection = MemoryCollection("../../testCollection3", parameter);
     SearchParameter searchParameter = SearchParameter();
-    searchParameter.setRetrievalType(RetrievalType::ATTRIBUTE);
+    searchParameter.setRetrievalType(RetrievalType::RANKED);
+    searchParameter.setDocumentsRetrieved(400);
+    searchParameter.setSearchAttributes(true);
     Query query = Query("Çift Yönlü");
     QueryResult result = collection.searchCollection(query, searchParameter);
     REQUIRE(10 == result.getItems().size());

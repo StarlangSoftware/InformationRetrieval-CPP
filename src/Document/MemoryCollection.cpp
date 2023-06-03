@@ -128,12 +128,13 @@ vector<TermOccurrence> MemoryCollection::constructTerms(TermType termType) const
     return terms;
 }
 
-QueryResult MemoryCollection::attributeSearch(Query& query) {
+QueryResult MemoryCollection::attributeSearch(Query& query, const SearchParameter& parameter) {
     Query termAttributes = Query();
     Query phraseAttributes = Query();
     QueryResult termResult = QueryResult();
     QueryResult phraseResult = QueryResult();
-    query.filterAttributes(attributeList, termAttributes, phraseAttributes);
+    QueryResult attributeResult, filteredResult;
+    Query filteredQuery = query.filterAttributes(attributeList, termAttributes, phraseAttributes);
     if (termAttributes.size() > 0){
         termResult = invertedIndex.search(termAttributes, dictionary);
     }
@@ -141,12 +142,28 @@ QueryResult MemoryCollection::attributeSearch(Query& query) {
         phraseResult = phraseIndex.search(phraseAttributes, phraseDictionary);
     }
     if (termAttributes.size() == 0){
-        return phraseResult;
+        attributeResult = phraseResult;
+    } else {
+        if (phraseAttributes.size() == 0){
+            attributeResult = termResult;
+        } else {
+            attributeResult = termResult.intersectionFastSearch(phraseResult);
+        }
     }
-    if (phraseAttributes.size() == 0){
-        return termResult;
+    if (filteredQuery.size() == 0){
+        return attributeResult;
+    } else {
+        filteredResult = searchWithInvertedIndex(filteredQuery, parameter);
+        if (parameter.getRetrievalType() != RetrievalType::RANKED){
+            return filteredResult.intersectionFastSearch(attributeResult);
+        } else {
+            if (attributeResult.size() < 10){
+                return filteredResult.intersectionLinearSearch(attributeResult);
+            } else {
+                return filteredResult.intersectionBinarySearch(attributeResult);
+            }
+        }
     }
-    return termResult.intersection(phraseResult);
 }
 
 QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const SearchParameter &parameter) {
@@ -162,8 +179,6 @@ QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const Search
                                                 parameter.getTermWeighting(),
                                                 parameter.getDocumentWeighting(),
                                                 parameter.getDocumentsRetrieved());
-        case RetrievalType::ATTRIBUTE:
-            return attributeSearch(query);
     }
     return QueryResult();
 }
@@ -184,8 +199,13 @@ QueryResult MemoryCollection::filterAccordingToCategories(const QueryResult &cur
 }
 
 QueryResult MemoryCollection::searchCollection(Query& query, const SearchParameter& searchParameter) {
+    QueryResult currentResult;
     if (searchParameter.getFocusType() == FocusType::CATEGORY){
-        QueryResult currentResult = searchWithInvertedIndex(query, searchParameter);
+        if (searchParameter.getSearchAttributes()){
+            currentResult = attributeSearch(query, searchParameter);
+        } else {
+            currentResult = searchWithInvertedIndex(query, searchParameter);
+        }
         vector<CategoryNode*> categories = categoryTree->getCategories(query, &dictionary, searchParameter.getCategoryDeterminationType());
         return filterAccordingToCategories(currentResult, categories);
     } else {
@@ -193,7 +213,11 @@ QueryResult MemoryCollection::searchCollection(Query& query, const SearchParamet
             case IndexType::INCIDENCE_MATRIX:
                 return incidenceMatrix.search(query, dictionary);
             case   IndexType::INVERTED_INDEX:
-                return searchWithInvertedIndex(query, searchParameter);
+                if (searchParameter.getSearchAttributes()){
+                    return attributeSearch(query, searchParameter);
+                } else {
+                    return searchWithInvertedIndex(query, searchParameter);
+                }
         }
     }
     return QueryResult();

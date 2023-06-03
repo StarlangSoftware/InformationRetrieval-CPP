@@ -17,7 +17,7 @@ private:
     void constructIndexesInMemory();
     vector<TermOccurrence> constructTerms(TermType termType) const;
     void saveCategories();
-    QueryResult attributeSearch(Query& query);
+    QueryResult attributeSearch(Query& query, const SearchParameter& parameter);
     QueryResult searchWithInvertedIndex(Query& query, const SearchParameter& parameter);
     QueryResult filterAccordingToCategories(const QueryResult& currentResult, const vector<CategoryNode*>& categories);
 protected:

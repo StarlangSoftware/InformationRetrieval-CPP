@@ -52,7 +52,7 @@ int QueryResult::size() const{
     return items.size();
 }
 
-QueryResult QueryResult::intersection(const QueryResult &queryResult) const {
+QueryResult QueryResult::intersectionFastSearch(const QueryResult &queryResult) const {
     QueryResult result = QueryResult();
     int i = 0, j = 0;
     while (i < size() && j < queryResult.size()){
@@ -67,6 +67,45 @@ QueryResult QueryResult::intersection(const QueryResult &queryResult) const {
                 i++;
             } else {
                 j++;
+            }
+        }
+    }
+    return result;
+}
+
+QueryResult QueryResult::intersectionBinarySearch(const QueryResult &queryResult) const {
+    QueryResult result = QueryResult();
+    for (QueryResultItem searchedItem : items){
+        int low = 0;
+        int high = queryResult.size() - 1;
+        int middle = (low + high) / 2;
+        bool found = false;
+        while (low <= high){
+            if (searchedItem.getDocId() > queryResult.items[middle].getDocId()){
+                low = middle + 1;
+            } else {
+                if (searchedItem.getDocId() < queryResult.items[middle].getDocId()){
+                    high = middle - 1;
+                } else {
+                    found = true;
+                    break;
+                }
+            }
+            middle = (low + high) / 2;
+        }
+        if (found){
+            result.add(searchedItem.getDocId(), searchedItem.getScore());
+        }
+    }
+    return result;
+}
+
+QueryResult QueryResult::intersectionLinearSearch(const QueryResult &queryResult) const {
+    QueryResult result = QueryResult();
+    for (QueryResultItem searchedItem : items){
+        for (QueryResultItem item : queryResult.items){
+            if (searchedItem.getDocId() == item.getDocId()){
+                result.add(searchedItem.getDocId(), searchedItem.getScore());
             }
         }
     }

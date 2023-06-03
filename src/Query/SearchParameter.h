@@ -20,6 +20,7 @@ private:
     int documentsRetrieved = 1;
     CategoryDeterminationType categoryDeterminationType = CategoryDeterminationType::KEYWORD;
     FocusType focusType = FocusType::OVERALL;
+    bool searchAttributes = false;
 public:
     RetrievalType getRetrievalType() const;
     void setRetrievalType(RetrievalType _retrievalType);
@@ -33,6 +34,8 @@ public:
     void setCategoryDeterminationType(CategoryDeterminationType _categoryDeterminationType);
     FocusType getFocusType() const;
     void setFocusType(FocusType _focusType);
+    bool getSearchAttributes() const;
+    void setSearchAttributes(bool _searchAttributes);
 };
 
 
