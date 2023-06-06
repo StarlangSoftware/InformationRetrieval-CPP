@@ -153,15 +153,21 @@ QueryResult MemoryCollection::attributeSearch(Query& query, const SearchParamete
     if (filteredQuery.size() == 0){
         return attributeResult;
     } else {
-        filteredResult = searchWithInvertedIndex(filteredQuery, parameter);
         if (parameter.getRetrievalType() != RetrievalType::RANKED){
+            filteredResult = searchWithInvertedIndex(filteredQuery, parameter);
             return filteredResult.intersectionFastSearch(attributeResult);
         } else {
+            filteredResult = positionalIndex.rankedSearch(filteredQuery,
+                                                          dictionary,
+                                                          documents,
+                                                          parameter);
             if (attributeResult.size() < 10){
-                return filteredResult.intersectionLinearSearch(attributeResult);
+                filteredResult = filteredResult.intersectionLinearSearch(attributeResult);
             } else {
-                return filteredResult.intersectionBinarySearch(attributeResult);
+                filteredResult = filteredResult.intersectionBinarySearch(attributeResult);
             }
+            filteredResult.getBest(parameter.getDocumentsRetrieved());
+            return filteredResult;
         }
     }
 }
@@ -173,12 +179,12 @@ QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const Search
         case RetrievalType::POSITIONAL:
             return positionalIndex.positionalSearch(query, dictionary);
         case RetrievalType::RANKED:
-            return positionalIndex.rankedSearch(query,
-                                                dictionary,
-                                                documents,
-                                                parameter.getTermWeighting(),
-                                                parameter.getDocumentWeighting(),
-                                                parameter.getDocumentsRetrieved());
+            QueryResult result = positionalIndex.rankedSearch(query,
+                                                              dictionary,
+                                                              documents,
+                                                              parameter);
+            result.getBest(parameter.getDocumentsRetrieved());
+            return result;
     }
     return QueryResult();
 }

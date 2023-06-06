@@ -12,6 +12,7 @@
 #include "../Document/Document.h"
 #include "TermWeighting.h"
 #include "../Document/DocumentWeighting.h"
+#include "../Query/SearchParameter.h"
 
 class PositionalIndex {
 private:
@@ -28,7 +29,7 @@ public:
     QueryResult positionalSearch(const Query& query, TermDictionary& dictionary);
     int* getTermFrequencies(int docId) const;
     int* getDocumentFrequencies() const;
-    QueryResult rankedSearch(const Query& query, TermDictionary& dictionary, const vector<Document>& documents, TermWeighting termWeighting, DocumentWeighting documentWeighting, int documentsReturned);
+    QueryResult rankedSearch(const Query& query, TermDictionary& dictionary, const vector<Document>& documents, const SearchParameter searchParameter);
 };
 
 
