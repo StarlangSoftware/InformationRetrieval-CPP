@@ -2,7 +2,15 @@
 // Created by Olcay Taner YILDIZ on 22.07.2022.
 //
 
+#include <regex>
 #include "Query.h"
+
+const vector<string> Query::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "gram", "hz", "inc", "inch",
+                                                      "inç", "kg", "kw", "kva", "litre", "lt", "m2", "m3", "mah", "mb",
+                                                      "metre", "mg", "mhz", "ml", "mm", "mp", "ms", "mt", "mv", "tb",
+                                                      "tl", "va", "volt", "watt", "ah", "hp", "oz", "rpm", "dpi", "ppm",
+                                                      "ohm", "kwh", "kcal", "kbit", "mbit", "gbit", "bit", "byte", "mbps",
+                                                      "gbps", "cm3", "mm2", "mm3", "khz", "ft", "db", "sn", "g", "v", "m", "l", "w", "s"};
 
 Query::Query(const string& query) {
     vector<string> _terms = Word::split(query);
@@ -27,6 +35,12 @@ Query Query::filterAttributes(const unordered_set<string>& attributeList, Query 
         if (i < this->terms.size() - 1){
             string pair = this->terms[i].getName() + " " + this->terms[i + 1].getName();
             if (attributeList.contains(pair)){
+                phraseAttributes.terms.emplace_back(pair);
+                i += 2;
+                continue;
+            }
+            if (std::find(shortcuts.begin(), shortcuts.end(), this->terms[i + 1].getName()) != shortcuts.end() &&
+                    (regex_match(this->terms[i].getName(), regex("[-+]?\\d+")) || regex_match(this->terms[i].getName(), regex(R"((\+|-)?(\d+)?\.\d*)")))){
                 phraseAttributes.terms.emplace_back(pair);
                 i += 2;
                 continue;
