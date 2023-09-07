@@ -16,7 +16,7 @@ IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
 IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary& dictionary, int documentSize){
     this->documentSize = documentSize;
     this->dictionarySize = dictionary.size();
-    incidenceMatrix = new bool*[dictionary.size()];
+    incidenceMatrix = new bool*[this->dictionarySize];
     for (int i = 0; i < dictionary.size(); i++){
         incidenceMatrix[i] = new bool[documentSize];
     }

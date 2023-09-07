@@ -40,7 +40,6 @@ TEST_CASE("testIncidenceMatrixQuery") {
 
 TEST_CASE("testInvertedIndexBooleanQuery") {
     Parameter parameter = Parameter();
-    parameter.setNGramIndex(true);
     MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
     Query query = Query("Brutus");
     SearchParameter searchParameter = SearchParameter();
@@ -63,7 +62,6 @@ TEST_CASE("testInvertedIndexBooleanQuery") {
 
 TEST_CASE("testPositionalIndexBooleanQuery") {
     Parameter parameter = Parameter();
-    parameter.setNGramIndex(true);
     MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
     Query query = Query("Julius Caesar");
     SearchParameter searchParameter = SearchParameter();
