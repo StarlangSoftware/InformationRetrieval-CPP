@@ -10,7 +10,7 @@
 TEST_CASE("testIncidenceMatrixSmall") {
     Parameter parameter = Parameter();
     parameter.setIndexType(IndexType::INCIDENCE_MATRIX);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     REQUIRE(2 == collection.size());
     REQUIRE(26 == collection.vocabularySize());
 }
@@ -18,7 +18,7 @@ TEST_CASE("testIncidenceMatrixSmall") {
 TEST_CASE("testIncidenceMatrixQuery") {
     Parameter parameter = Parameter();
     parameter.setIndexType(IndexType::INCIDENCE_MATRIX);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     Query query = Query("Brutus");
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setRetrievalType(RetrievalType::BOOLEAN);
@@ -40,7 +40,7 @@ TEST_CASE("testIncidenceMatrixQuery") {
 
 TEST_CASE("testInvertedIndexBooleanQuery") {
     Parameter parameter = Parameter();
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     Query query = Query("Brutus");
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setRetrievalType(RetrievalType::BOOLEAN);
@@ -62,7 +62,7 @@ TEST_CASE("testInvertedIndexBooleanQuery") {
 
 TEST_CASE("testPositionalIndexBooleanQuery") {
     Parameter parameter = Parameter();
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     Query query = Query("Julius Caesar");
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setRetrievalType(RetrievalType::POSITIONAL);
@@ -82,7 +82,7 @@ TEST_CASE("testPositionalIndexBooleanQuery") {
 TEST_CASE("testPositionalIndexRankedQuery") {
     Parameter parameter = Parameter();
     parameter.setLoadIndexesFromFile(true);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     Query query = Query("Caesar");
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setRetrievalType(RetrievalType::RANKED);
@@ -103,7 +103,7 @@ TEST_CASE("testLoadIndexesFromFileSmall") {
     Parameter parameter = Parameter();
     parameter.setNGramIndex(true);
     parameter.setLoadIndexesFromFile(true);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     REQUIRE(2 == collection.size());
     REQUIRE(26 == collection.vocabularySize());
 }
@@ -113,7 +113,7 @@ TEST_CASE("testLimitNumberOfDocumentsSmall") {
     parameter.setNGramIndex(false);
     parameter.setLimitNumberOfDocumentsLoaded(true);
     parameter.setDocumentLimit(1);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     REQUIRE(1 == collection.size());
     REQUIRE(15 == collection.vocabularySize());
 }
@@ -124,7 +124,7 @@ TEST_CASE("testCategoricalCollection") {
     parameter.setLoadIndexesFromFile(true);
     parameter.setPhraseIndex(false);
     parameter.setNGramIndex(false);
-    MemoryCollection collection = MemoryCollection("../../testCollection3", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection3", parameter);
     REQUIRE(1000 == collection.size());
     REQUIRE(2283 == collection.vocabularySize());
 }
@@ -133,7 +133,7 @@ TEST_CASE("testAttributeQuery") {
     Parameter parameter = Parameter();
     parameter.setDocumentType(DocumentType::CATEGORICAL);
     parameter.setLoadIndexesFromFile(true);
-    MemoryCollection collection = MemoryCollection("../../testCollection3", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection3", parameter);
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setRetrievalType(RetrievalType::RANKED);
     searchParameter.setDocumentsRetrieved(400);
@@ -153,7 +153,7 @@ TEST_CASE("testCategoricalQuery") {
     Parameter parameter = Parameter();
     parameter.setDocumentType(DocumentType::CATEGORICAL);
     parameter.setLoadIndexesFromFile(true);
-    MemoryCollection collection = MemoryCollection("../../testCollection3", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection3", parameter);
     SearchParameter searchParameter = SearchParameter();
     searchParameter.setFocusType(FocusType::CATEGORY);
     searchParameter.setRetrievalType(RetrievalType::BOOLEAN);
@@ -170,7 +170,7 @@ TEST_CASE("testAutoCompleteWord") {
     Parameter parameter = Parameter();
     parameter.setNGramIndex(true);
     parameter.setLoadIndexesFromFile(true);
-    MemoryCollection collection = MemoryCollection("../../testCollection2", parameter);
+    MemoryCollection collection = MemoryCollection("../testCollection2", parameter);
     vector<string> autoCompleteList = collection.autoCompleteWord("kill");
     REQUIRE(1 == autoCompleteList.size());
 }
