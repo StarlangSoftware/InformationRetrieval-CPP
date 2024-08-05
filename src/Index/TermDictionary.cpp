@@ -7,9 +7,17 @@
 #include "Term.h"
 #include "TermOccurrenceComparator.h"
 
+/**
+ * Constructor of the TermDictionary. Initializes the comparator for terms and the hasp map.
+ */
 TermDictionary::TermDictionary() : Dictionary() {
 }
 
+/**
+ * Constructor of the TermDictionary. Reads the terms and their ids from the given dictionary file. Each line stores
+ * the term id and the term name separated via space.
+ * @param fileName Dictionary file name
+ */
 TermDictionary::TermDictionary(const string& fileName) : Dictionary(){
     ifstream inputFile;
     string line;
@@ -28,6 +36,11 @@ TermDictionary::TermDictionary(const string& fileName) : Dictionary(){
     updateWordMap();
 }
 
+/**
+ * Constructs the TermDictionary from a list of tokens (term occurrences). The terms array should be sorted
+ * before calling this method. Constructs the distinct terms and their corresponding term ids.
+ * @param terms Sorted list of tokens in the memory collection.
+ */
 TermDictionary::TermDictionary(const vector<TermOccurrence>& terms) : Dictionary(){
     int i, termId = 0;
     if (!terms.empty()){
@@ -54,6 +67,11 @@ bool compareWord1(Word* wordA, Word* wordB)
     return wordA->getName() < wordB->getName();
 }
 
+/**
+ * Constructs the TermDictionary from a hash set of tokens (strings). Constructs sorted dictinct terms array and
+ * their corresponding term ids.
+ * @param words Hash set of tokens in the memory collection.
+ */
 TermDictionary::TermDictionary(const set<string>& words) : Dictionary(){
     vector<Word*> wordList;
     for (const auto& word : words){
@@ -68,11 +86,23 @@ TermDictionary::TermDictionary(const set<string>& words) : Dictionary(){
     sort();
 }
 
+/**
+ * Adds a new term to the sorted words array. First the term is searched in the words array using binary search,
+ * then the word is added into the correct place.
+ * @param name Lemma of the term
+ * @param termId Id of the term
+ */
 void TermDictionary::addTerm(const string& name, int termID) {
     auto middle = lower_bound(words.begin(), words.end(), new Word(name), compareWord1);
     words.insert(middle, new Term(name, termID));
 }
 
+/**
+ * Saves the term dictionary into the dictionary file. Each line stores the term id and the term name separated via
+ * space.
+ * @param fileName Dictionary file name. Real dictionary file name is created by attaching -dictionary.txt to this
+ *                 file name
+ */
 void TermDictionary::save(const string& fileName) {
     ofstream outfile;
     outfile.open(fileName + "-dictionary.txt", ofstream :: out);
@@ -83,6 +113,13 @@ void TermDictionary::save(const string& fileName) {
     outfile.close();
 }
 
+/**
+ * Constructs all NGrams from a given word. For example, 3 grams for word "term" are "$te", "ter", "erm", "rm$".
+ * @param word Word for which NGrams will b created.
+ * @param termId Term id to add into the posting list.
+ * @param N N in NGram.
+ * @return An array of NGrams for a given word.
+ */
 vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int termId, int k){
     vector<TermOccurrence> nGrams;
     if (word.length() >= k - 1){
@@ -103,6 +140,12 @@ vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int t
     return nGrams;
 }
 
+/**
+ * Constructs all NGrams for all words in the dictionary. For example, 3 grams for word "term" are "$te", "ter",
+ * "erm", "rm$".
+ * @param N N in NGram.
+ * @return A sorted array of NGrams for all words in the dictionary.
+ */
 vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k){
     termOccurrenceComparator termComparator = termOccurrenceComparator();
     vector<TermOccurrence> terms;

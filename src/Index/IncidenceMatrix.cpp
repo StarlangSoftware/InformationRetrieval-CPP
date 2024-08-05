@@ -4,6 +4,12 @@
 
 #include "IncidenceMatrix.h"
 
+/**
+ * Empty constructor for the incidence matrix representation. Initializes the incidence matrix according to the
+ * given dictionary and document size.
+ * @param dictionarySize Number of words in the dictionary (number of distinct words in the collection)
+ * @param documentSize Number of documents in the collection
+ */
 IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
     this->documentSize = documentSize;
     this->dictionarySize = dictionarySize;
@@ -13,6 +19,12 @@ IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
     }
 }
 
+/**
+ * Constructs an incidence matrix from a list of sorted tokens in the given terms array.
+ * @param dictionary Term dictionary
+ * @param terms List of tokens in the memory collection.
+ * @param documentSize Number of documents in the collection
+ */
 IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary& dictionary, int documentSize){
     this->documentSize = documentSize;
     this->dictionarySize = dictionary.size();
@@ -34,10 +46,21 @@ IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictio
     }
 }
 
+/**
+ * Sets the given cell in the incidence matrix to true.
+ * @param row Row no of the cell
+ * @param col Column no of the cell
+ */
 void IncidenceMatrix::set(int row, int col) {
     incidenceMatrix[row][col] = true;
 }
 
+/**
+ * Searches a given query in the document collection using incidence matrix boolean search.
+ * @param query Query string
+ * @param dictionary Term dictionary
+ * @return The result of the query obtained by doing incidence matrix boolean search in the collection.
+ */
 QueryResult IncidenceMatrix::search(const Query& query, TermDictionary& dictionary) {
     QueryResult result = QueryResult();
     bool* resultRow = new bool[documentSize];

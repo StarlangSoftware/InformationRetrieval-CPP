@@ -5,14 +5,27 @@
 #include <MinHeap.h>
 #include "QueryResult.h"
 
+/**
+ * Adds a new result item to the list of query result.
+ * @param docId Document id of the result
+ * @param score Score of the result
+ */
 void QueryResult::add(int docId, double score) {
     items.emplace_back(QueryResultItem(docId, score));
 }
 
+/**
+ * Adds a new result item with score 0 to the list of query result.
+ * @param docId Document id of the result
+ */
 void QueryResult::add(int docId) {
     items.emplace_back(QueryResultItem(docId, 0.0));
 }
 
+/**
+ * Returns result list for query
+ * @return Result list for query
+ */
 vector<QueryResultItem> QueryResult::getItems() const{
     return items;
 }
@@ -29,6 +42,10 @@ int isSmallerQueryResultItem(const QueryResultItem& first, const QueryResultItem
     }
 }
 
+/**
+ * The method returns K best results from the query result using min heap in O(K log N + N log K) time.
+ * @param K Size of the best subset.
+ */
 void QueryResult::getBest(int K){
     MinHeap<QueryResultItem> minHeap = MinHeap<QueryResultItem>(K, isSmallerQueryResultItem);
     for (int i = 0; i < K && i < items.size(); i++){
@@ -48,10 +65,20 @@ void QueryResult::getBest(int K){
     }
 }
 
+/**
+ * Returns number of results for query
+ * @return Number of results for query
+ */
 int QueryResult::size() const{
     return items.size();
 }
 
+/**
+ * Given two query results, this method identifies the intersection of those two results by doing parallel iteration
+ * in O(N).
+ * @param queryResult Second query result to be intersected.
+ * @return Intersection of this query result with the second query result
+ */
 QueryResult QueryResult::intersectionFastSearch(const QueryResult &queryResult) const {
     QueryResult result = QueryResult();
     int i = 0, j = 0;
@@ -73,6 +100,12 @@ QueryResult QueryResult::intersectionFastSearch(const QueryResult &queryResult) 
     return result;
 }
 
+/**
+ * Given two query results, this method identifies the intersection of those two results by doing binary search on
+ * the second list in O(N log N).
+ * @param queryResult Second query result to be intersected.
+ * @return Intersection of this query result with the second query result
+ */
 QueryResult QueryResult::intersectionBinarySearch(const QueryResult &queryResult) const {
     QueryResult result = QueryResult();
     for (QueryResultItem searchedItem : items){
@@ -100,6 +133,12 @@ QueryResult QueryResult::intersectionBinarySearch(const QueryResult &queryResult
     return result;
 }
 
+/**
+ * Given two query results, this method identifies the intersection of those two results by doing exhaustive search
+ * on the second list in O(N^2).
+ * @param queryResult Second query result to be intersected.
+ * @return Intersection of this query result with the second query result
+ */
 QueryResult QueryResult::intersectionLinearSearch(const QueryResult &queryResult) const {
     QueryResult result = QueryResult();
     for (QueryResultItem searchedItem : items){

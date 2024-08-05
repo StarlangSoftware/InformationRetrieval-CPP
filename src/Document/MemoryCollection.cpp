@@ -9,6 +9,12 @@
 
 using std::filesystem::directory_iterator;
 
+/**
+ * Constructor for the MemoryCollection class. In small collections, dictionary and indexes are kept in memory.
+ * Memory collection also supports categorical documents.
+ * @param directory Directory where the document collection resides.
+ * @param parameter Search parameter
+ */
 MemoryCollection::MemoryCollection(const string& directory, const Parameter& parameter) : AbstractCollection(directory, parameter){
     indexType = parameter.getIndexType();
     if (parameter.loadIndexesFromFile()){
@@ -22,6 +28,11 @@ MemoryCollection::MemoryCollection(const string& directory, const Parameter& par
     }
 }
 
+/**
+ * The method loads the term dictionary, inverted index, positional index, phrase and N-Gram indexes from dictionary
+ * and index files to the memory.
+ * @param directory Directory where the document collection resides.
+ */
 void MemoryCollection::loadIndexesFromFile(const string &directory) {
     dictionary = TermDictionary(directory);
     invertedIndex = InvertedIndex(directory);
@@ -48,6 +59,11 @@ void MemoryCollection::loadIndexesFromFile(const string &directory) {
     }
 }
 
+/**
+ * The method saves the term dictionary, inverted index, positional index, phrase and N-Gram indexes to the dictionary
+ * and index files. If the collection is a categorical collection, categories are also saved to the category
+ * files.
+ */
 void MemoryCollection::save() {
     if (indexType == IndexType::INVERTED_INDEX){
         dictionary.save(name);
@@ -74,6 +90,9 @@ void MemoryCollection::save() {
     }
 }
 
+/**
+ * The method saves the category tree for the categorical collections.
+ */
 void MemoryCollection::saveCategories() {
     ofstream outfile;
     outfile.open(name + "-categories.txt", ofstream::out);
@@ -83,6 +102,9 @@ void MemoryCollection::saveCategories() {
     outfile.close();
 }
 
+/**
+ * The method constructs the term dictionary, inverted index, positional index, phrase and N-Gram indexes in memory.
+ */
 void MemoryCollection::constructIndexesInMemory() {
     vector<TermOccurrence> terms = constructTerms(TermType::TOKEN);
     dictionary = TermDictionary(terms);
@@ -116,6 +138,14 @@ void MemoryCollection::constructIndexesInMemory() {
     }
 }
 
+/**
+ * Given the document collection, creates an array list of terms. If term type is TOKEN, the terms are single
+ * word, if the term type is PHRASE, the terms are bi-words. Each document is loaded into memory and
+ * word list is created. Since the dictionary can be kept in memory, all operations can be done in memory.
+ * @param termType If term type is TOKEN, the terms are single word, if the term type is PHRASE, the terms are
+ *                 bi-words.
+ * @return Array list of terms occurring in the document collection.
+ */
 vector<TermOccurrence> MemoryCollection::constructTerms(TermType termType) const{
     vector<TermOccurrence> terms;
     vector<TermOccurrence> docTerms;
@@ -128,6 +158,18 @@ vector<TermOccurrence> MemoryCollection::constructTerms(TermType termType) const
     return terms;
 }
 
+/**
+ * The method searches given query string in the document collection using the attribute list according to the
+ * given search parameter. First, the original query is filtered by removing phrase attributes, shortcuts and single
+ * word attributes. At this stage, we get the word and phrase attributes in the original query and the remaining
+ * words in the original query as two separate queries. Second, both single word and phrase attributes in the
+ * original query are searched in the document collection. Third, these intermediate query results are then
+ * intersected. Fourth, we put this results into either (i) an inverted index (ii) or a ranked based positional
+ * filtering with the filtered query to get the end result.
+ * @param query Query string
+ * @param parameter Search parameter for the query
+ * @return The intermediate result of the query obtained by doing attribute list based search in the collection.
+ */
 QueryResult MemoryCollection::attributeSearch(Query& query, const SearchParameter& parameter) {
     Query termAttributes = Query();
     Query phraseAttributes = Query();
@@ -172,6 +214,14 @@ QueryResult MemoryCollection::attributeSearch(Query& query, const SearchParamete
     }
 }
 
+/**
+ * The method searches given query string in the document collection using the inverted index according to the
+ * given search parameter. If the search is (i) boolean, inverted index is used (ii) positional, positional
+ * inverted index is used, (iii) ranked, positional inverted index is used with a ranking algorithm at the end.
+ * @param query Query string
+ * @param parameter Search parameter for the query
+ * @return The intermediate result of the query obtained by doing inverted index based search in the collection.
+ */
 QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const SearchParameter &parameter) {
     switch (parameter.getRetrievalType()){
         case    RetrievalType::BOOLEAN:
@@ -189,6 +239,14 @@ QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const Search
     return QueryResult();
 }
 
+/**
+ * Filters current search result according to the predicted categories from the query string. For every search
+ * result, if it is in one of the predicated categories, is added to the filtered end result. Otherwise, it is
+ * omitted in the end result.
+ * @param currentResult Current search result before filtering.
+ * @param categories Predicted categories that match the query string.
+ * @return Filtered query result
+ */
 QueryResult MemoryCollection::filterAccordingToCategories(const QueryResult &currentResult, const vector<CategoryNode*>& categories) {
     QueryResult filteredResult = QueryResult();
     vector<QueryResultItem> items = currentResult.getItems();
@@ -204,6 +262,16 @@ QueryResult MemoryCollection::filterAccordingToCategories(const QueryResult &cur
     return filteredResult;
 }
 
+/**
+ * Searches a document collection for a given query according to the given search parameters. The documents are
+ * searched using (i) incidence matrix if the index type is incidence matrix, (ii) attribute list if search
+ * attributes option is selected, (iii) inverted index if the index type is inverted index and no attribute
+ * search is done. After the initial search, if there is a categorical focus, it filters the results
+ * according to the predicted categories from the query string.
+ * @param query Query string
+ * @param searchParameter Search parameter for the query
+ * @return The result of the query obtained by doing search in the collection.
+ */
 QueryResult MemoryCollection::searchCollection(Query& query, const SearchParameter& searchParameter) {
     QueryResult currentResult;
     if (searchParameter.getFocusType() == FocusType::CATEGORY){
@@ -229,6 +297,12 @@ QueryResult MemoryCollection::searchCollection(Query& query, const SearchParamet
     return QueryResult();
 }
 
+/**
+ * Constructs an auto complete list of product names for a given prefix. THe results are sorted according to
+ * frequencies.
+ * @param prefix Prefix of the name of the product.
+ * @return An auto complete list of product names for a given prefix.
+ */
 vector<string> MemoryCollection::autoCompleteWord(const string &prefix) {
     vector<string> result;
     int i = dictionary.getWordStartingWith(prefix);

@@ -4,10 +4,21 @@
 
 #include "CategoryTree.h"
 
+/**
+ * Simple constructor of the tree. Sets the root node of the tree.
+ * @param rootName Category name of the root node.
+ */
 CategoryTree::CategoryTree(const string &rootName) {
     root = new CategoryNode(rootName, nullptr);
 }
 
+/**
+ * Adds a path (and if required nodes in the path) to the category tree according to the hierarchy string. Hierarchy
+ * string is obtained by concatenating the names of all nodes in the path from root node to a leaf node separated
+ * with '%'.
+ * @param hierarchy Hierarchy string
+ * @return The leaf node added when the hierarchy string is processed.
+ */
 CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) {
     vector<string> categories = Word::split(hierarchy, "%");
     CategoryNode* current = root;
@@ -21,6 +32,14 @@ CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) {
     return current;
 }
 
+/**
+ * The method checks the query words in the category words of all nodes in the tree and returns the nodes that
+ * satisfies the condition. If any word in the query appears in any category word, the node will be returned.
+ * @param query Query string
+ * @param dictionary Term dictionary
+ * @param categoryDeterminationType Category determination type
+ * @return The category nodes whose names contain at least one word from the query string
+ */
 vector<CategoryNode *> CategoryTree::getCategories(const Query &query, TermDictionary *dictionary,
                                                    CategoryDeterminationType categoryDeterminationType) {
     vector<CategoryNode*> result;
@@ -35,6 +54,10 @@ vector<CategoryNode *> CategoryTree::getCategories(const Query &query, TermDicti
     return result;
 }
 
+/**
+ * The method sets the representative count. The representative count filters the most N frequent words.
+ * @param representativeCount Number of representatives.
+ */
 void CategoryTree::setRepresentativeCount(int representativeCount) {
     root->setRepresentativeCount(representativeCount);
 }

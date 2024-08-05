@@ -8,12 +8,27 @@
 #include "PositionalIndex.h"
 #include "../Query/VectorSpaceModel.h"
 
+/**
+ * Constructs an empty inverted index.
+ */
 PositionalIndex::PositionalIndex() = default;
 
+/**
+ * Reads the positional inverted index from an input file.
+ * @param fileName Input file name for the positional inverted index.
+ */
 PositionalIndex::PositionalIndex(const string &fileName) {
     readPositionalPostingList(fileName);
 }
 
+/**
+ * Constructs a positional inverted index from a list of sorted tokens. The terms array should be sorted before
+ * calling this method. Multiple occurrences of the same term from the same document are enlisted separately in the
+ * index.
+ * @param dictionary Term dictionary
+ * @param terms Sorted list of tokens in the memory collection.
+ * @param comparator Comparator method to compare two terms.
+ */
 PositionalIndex::PositionalIndex(TermDictionary &dictionary, const vector<TermOccurrence> &terms) {
     if (!terms.empty()) {
         TermOccurrence term = terms[0];
@@ -46,6 +61,12 @@ PositionalIndex::PositionalIndex(TermDictionary &dictionary, const vector<TermOc
     }
 }
 
+/**
+ * Reads the positional postings list of the positional index from an input file. The postings are stored in n
+ * lines. The first line contains the term id and the number of documents that term occurs. Other n - 1 lines
+ * contain the postings list for that term for a separate document.
+ * @param fileName Positional index file.
+ */
 void PositionalIndex::readPositionalPostingList(const string &fileName) {
     ifstream inputFile;
     string line;
@@ -62,6 +83,13 @@ void PositionalIndex::readPositionalPostingList(const string &fileName) {
     inputFile.close();
 }
 
+/**
+ * Adds a possible new term with a position and document id to the positional index. First the term is searched in
+ * the hash map, then the position and the document id is put into the correct postings list.
+ * @param termId Id of the term
+ * @param docId Document id in which the term exists
+ * @param position Position of the term in the document with id docId
+ */
 void PositionalIndex::addPosition(int termId, int docId, int position) {
     PositionalPostingList positionalPostingList;
     if (!positionalIndex.contains(termId)) {
@@ -73,6 +101,13 @@ void PositionalIndex::addPosition(int termId, int docId, int position) {
     positionalIndex[termId] = positionalPostingList;
 }
 
+/**
+ * Saves the positional index into the index file. The postings are stored in n lines. The first line contains the
+ * term id and the number of documents that term occurs. Other n - 1 lines contain the postings list for that term
+ * for a separate document.
+ * @param fileName Index file name. Real index file name is created by attaching -positionalPostings.txt to this
+ *                 file name
+ */
 void PositionalIndex::save(const string &fileName) {
     ofstream outfile;
     outfile.open(fileName + "-positionalPostings.txt", ofstream::out);
@@ -82,6 +117,12 @@ void PositionalIndex::save(const string &fileName) {
     outfile.close();
 }
 
+/**
+ * Searches a given query in the document collection using positional index boolean search.
+ * @param query Query string
+ * @param dictionary Term dictionary
+ * @return The result of the query obtained by doing positional index boolean search in the collection.
+ */
 QueryResult PositionalIndex::positionalSearch(const Query &query, TermDictionary &dictionary) {
     PositionalPostingList postingResult = PositionalPostingList();
     for (int i = 0; i < query.size(); i++) {
@@ -106,6 +147,11 @@ QueryResult PositionalIndex::positionalSearch(const Query &query, TermDictionary
         return {};
 }
 
+/**
+ * Returns the term frequencies  in a given document.
+ * @param docId Id of the document
+ * @return Term frequencies of the given document.
+ */
 int *PositionalIndex::getTermFrequencies(int docId) const {
     int *tf = new int[positionalIndex.size()];
     int i = 0;
@@ -122,6 +168,10 @@ int *PositionalIndex::getTermFrequencies(int docId) const {
     return tf;
 }
 
+/**
+ * Returns the document frequencies of the terms in the collection.
+ * @return The document frequencies of the terms in the collection.
+ */
 int *PositionalIndex::getDocumentFrequencies() const {
     int *df = new int[positionalIndex.size()];
     int i = 0;
@@ -132,6 +182,14 @@ int *PositionalIndex::getDocumentFrequencies() const {
     return df;
 }
 
+/**
+ * Searches a given query in the document collection using inverted index ranked search.
+ * @param query Query string
+ * @param dictionary Term dictionary
+ * @param documents Document collection
+ * @param parameter Search parameter
+ * @return The result of the query obtained by doing inverted index ranked search in the collection.
+ */
 QueryResult
 PositionalIndex::rankedSearch(const Query &query,
                               TermDictionary &dictionary,
@@ -171,6 +229,10 @@ PositionalIndex::rankedSearch(const Query &query,
     return result;
 }
 
+/**
+ * Returns the document frequencies of the terms in the collection.
+ * @return The document frequencies of the terms in the collection.
+ */
 int *PositionalIndex::getDocumentSizes(int documentSize) const {
     int *sizes = new int[documentSize];
     for (auto &iterator: positionalIndex) {
@@ -183,6 +245,10 @@ int *PositionalIndex::getDocumentSizes(int documentSize) const {
     return sizes;
 }
 
+/**
+ * Calculates and updates the frequency counts of the terms in each category node.
+ * @param documents Document collection.
+ */
 void PositionalIndex::setCategoryCounts(vector<Document> &documents) {
     for (auto &iterator: positionalIndex) {
         for (int j = 0; j < iterator.second.size(); j++) {

@@ -12,6 +12,15 @@ const vector<string> Query::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "
                                                       "ohm", "kwh", "kcal", "kbit", "mbit", "gbit", "bit", "byte", "mbps",
                                                       "gbps", "cm3", "mm2", "mm3", "khz", "ft", "db", "sn", "g", "v", "m", "l", "w", "s"};
 
+/**
+ * Constructor of the Query class. Initializes the terms array.
+ */
+Query::Query() = default;
+
+/**
+ * Another constructor of the Query class. Splits the query into multiple words and put them into the terms array.
+ * @param query Query string
+ */
 Query::Query(const string& query) {
     vector<string> _terms = Word::split(query);
     for (const string& term : _terms){
@@ -19,14 +28,30 @@ Query::Query(const string& query) {
     }
 }
 
+/**
+ * Accessor for the terms array. Returns the term at position index.
+ * @param index Position of the term in the terms array.
+ * @return The term at position index.
+ */
 Word Query::getTerm(int index) const{
     return terms[index];
 }
 
+/**
+ * Returns the size of the query, i.e. number of words in the query.
+ * @return Size of the query, i.e. number of words in the query.
+ */
 int Query::size() const{
     return terms.size();
 }
 
+/**
+ * Filters the origilan query by removing phrase attributes, shortcuts and single word attributes.
+ * @param attributeList Hash set containing all attributes (phrase and single word)
+ * @param termAttributes New query that will accumulate single word attributes from the original query.
+ * @param phraseAttributes New query that will accumulate phrase attributes from the original query.
+ * @return Filtered query after removing single word and phrase attributes from the original query.
+ */
 Query Query::filterAttributes(const unordered_set<string>& attributeList, Query &termAttributes,
                              Query &phraseAttributes) {
     int i = 0;
@@ -55,5 +80,3 @@ Query Query::filterAttributes(const unordered_set<string>& attributeList, Query 
     }
     return filteredQuery;
 }
-
-Query::Query() = default;

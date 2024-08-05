@@ -5,6 +5,13 @@
 #include "CategoryNode.h"
 #include "Term.h"
 
+/**
+ * Constructor for the category node. Each category is represented as a tree node in the category tree. Category
+ * words are constructed by splitting the name of the category w.r.t. space. Sets the parent node and adds this
+ * node as a child to parent node.
+ * @param name Name of the category.
+ * @param parent Parent node of this node.
+ */
 CategoryNode::CategoryNode(const string& _name, CategoryNode *_parent) {
     categoryWords = Word::split(_name);
     parent = _parent;
@@ -13,10 +20,18 @@ CategoryNode::CategoryNode(const string& _name, CategoryNode *_parent) {
     }
 }
 
+/**
+ * Adds the given child node to this node.
+ * @param child New child node
+ */
 void CategoryNode::addChild(CategoryNode *child) {
     children.push_back(child);
 }
 
+/**
+ * Constructs the category name from the category words. Basically combines all category words separated with space.
+ * @return Category name.
+ */
 string CategoryNode::getName() const{
     string result = categoryWords[0];
     for (int i = 1; i < categoryWords.size(); i++){
@@ -25,6 +40,11 @@ string CategoryNode::getName() const{
     return result;
 }
 
+/**
+ * Searches the children of this node for a specific category name.
+ * @param childName Category name of the child.
+ * @return The child with the given category name.
+ */
 CategoryNode *CategoryNode::getChild(const string& childName) const{
     for (CategoryNode* child : children){
         if (child->getName() == childName){
@@ -34,6 +54,11 @@ CategoryNode *CategoryNode::getChild(const string& childName) const{
     return nullptr;
 }
 
+/**
+ * Adds frequency count of the term to the counts hash map of all ascendants of this node.
+ * @param termId ID of the occurring term.
+ * @param count Frequency of the term.
+ */
 void CategoryNode::addCounts(int termId, int count) {
     CategoryNode* current = this;
     while (current->parent != nullptr){
@@ -42,10 +67,19 @@ void CategoryNode::addCounts(int termId, int count) {
     }
 }
 
+/**
+ * Accessor of the children attribute
+ * @return Children of the node
+ */
 vector<CategoryNode *> CategoryNode::getChildren() const{
     return children;
 }
 
+/**
+ * Recursive method that returns the hierarchy string of the node. Hierarchy string is obtained by concatenating the
+ * names of all ancestor nodes separated with '%'.
+ * @return Hierarchy string of this node
+ */
 string CategoryNode::to_string() const{
     if (parent != nullptr){
         if (parent->parent != nullptr){
@@ -57,6 +91,11 @@ string CategoryNode::to_string() const{
     return "";
 }
 
+/**
+ * Checks if the given node is an ancestor of the current node.
+ * @param ancestor Node for which ancestor check will be done
+ * @return True, if the given node is an ancestor of the current node.
+ */
 bool CategoryNode::isDescendant(CategoryNode *ancestor) const {
     if (this == ancestor){
         return true;
@@ -67,6 +106,10 @@ bool CategoryNode::isDescendant(CategoryNode *ancestor) const {
     return parent->isDescendant(ancestor);
 }
 
+/**
+ * Recursive method that sets the representative count. The representative count filters the most N frequent words.
+ * @param representativeCount Number of representatives.
+ */
 void CategoryNode::setRepresentativeCount(int representativeCount) {
     vector<pair<int, int>> topList;
     if (representativeCount <= counts.size()){
@@ -77,6 +120,13 @@ void CategoryNode::setRepresentativeCount(int representativeCount) {
     }
 }
 
+/**
+ * Recursive method that checks the query words in the category words of all descendants of this node and
+ * accumulates the nodes that satisfies the condition. If any word  in the query appears in any category word, the
+ * node will be accumulated.
+ * @param query Query string
+ * @param result Accumulator array
+ */
 void CategoryNode::getCategoriesWithKeyword(const Query &query, vector<CategoryNode *>& result){
     double categoryScore = 0;
     for (int i = 0; i < query.size(); i++){
@@ -92,6 +142,13 @@ void CategoryNode::getCategoriesWithKeyword(const Query &query, vector<CategoryN
     }
 }
 
+/**
+ * Recursive method that checks the query words in the category words of all descendants of this node and
+ * accumulates the nodes that satisfies the condition. If any word  in the query appears in any category word, the
+ * node will be accumulated.
+ * @param query Query string
+ * @param result Accumulator array
+ */
 void CategoryNode::getCategoriesWithCosine(const Query &query, TermDictionary* dictionary, vector<CategoryNode*>& result) {
     double categoryScore = 0;
     for (int i = 0; i < query.size(); i++){

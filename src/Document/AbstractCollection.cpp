@@ -5,6 +5,13 @@
 #include "AbstractCollection.h"
 using std::filesystem::directory_iterator;
 
+/**
+ * Constructor for the AbstractCollection class. All collections, disk, memory, large, medium are extended from this
+ * basic class. Loads the attribute list from attribute file if required. Loads the names of the documents from
+ * the document collection. If the collection is a categorical collection, also loads the category tree.
+ * @param directory Directory where the document collection resides.
+ * @param parameter Search parameter
+ */
 AbstractCollection::AbstractCollection(const string &directory, const Parameter &parameter) {
     name = directory;
     this->parameter = parameter;
@@ -24,14 +31,25 @@ AbstractCollection::AbstractCollection(const string &directory, const Parameter 
     }
 }
 
+/**
+ * Returns size of the document collection.
+ * @return Size of the document collection.
+ */
 int AbstractCollection::size() const{
     return documents.size();
 }
 
+/**
+ * Returns size of the term dictionary.
+ * @return Size of the term dictionary.
+ */
 int AbstractCollection::vocabularySize() const{
     return dictionary.size();
 }
 
+/**
+ * Constructs bi-gram and tri-gram indexes in memory.
+ */
 void AbstractCollection::constructNGramIndex() {
     vector<TermOccurrence> terms = dictionary.constructTermsFromDictionary(2);
     biGramDictionary = TermDictionary(terms);
@@ -41,6 +59,11 @@ void AbstractCollection::constructNGramIndex() {
     triGramIndex = NGramIndex(triGramDictionary, terms);
 }
 
+/**
+ * Loads the category tree for the categorical collections from category index file. Each line of the category index
+ * file stores the index of the category and the category name with its hierarchy. Hierarchy string is obtained by
+ * concatenating the names of all nodes in the path from root node to a leaf node separated with '%'.
+ */
 void AbstractCollection::loadCategories() {
     ifstream inputFile;
     string line;
@@ -60,6 +83,11 @@ void AbstractCollection::loadCategories() {
     inputFile.close();
 }
 
+/**
+ * Loads the attribute list from attribute index file. Attributes are single or bi-word phrases representing the
+ * important features of products in the collection. Each line of the attribute file contains either single or a two
+ * word expression.
+ */
 void AbstractCollection::loadAttributeList() {
     ifstream inputFile;
     string line;

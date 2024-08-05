@@ -7,6 +7,14 @@
 DiskCollection::DiskCollection(const string& directory, const Parameter& parameter) : AbstractCollection(directory, parameter) {
 }
 
+/**
+ * In single pass in memory indexing, the index files are merged to get the final index file. This method
+ * checks if all parallel index files are combined or not.
+ * @param currentIdList Current pointers for the terms in parallel index files. currentIdList[0] is the current term
+ *                     in the first index file to be combined, currentIdList[2] is the current term in the second
+ *                     index file to be combined etc.
+ * @return True, if all merge operation is completed, false otherwise.
+ */
 bool DiskCollection::notCombinedAllIndexes(const int* currentIdList, int size) const{
     for (int i = 0; i < size; i++){
         if (currentIdList[i] != -2){
@@ -16,6 +24,15 @@ bool DiskCollection::notCombinedAllIndexes(const int* currentIdList, int size) c
     return false;
 }
 
+/**
+ * In single pass in memory indexing, the index files are merged to get the final index file. This method
+ * identifies the indexes whose terms to be merged have the smallest term id. They will be selected and
+ * combined in the next phase.
+ * @param currentIdList Current pointers for the terms in parallel index files. currentIdList[0] is the current term
+ *                     in the first index file to be combined, currentIdList[2] is the current term in the second
+ *                     index file to be combined etc.
+ * @return An array list of indexes for the index files, whose terms to be merged have the smallest term id.
+ */
 vector<int> DiskCollection::selectIndexesWithMinimumTermIds(const int *currentIdList, int size) const{
     vector<int> result;
     int min = INT_MAX;
@@ -32,6 +49,14 @@ vector<int> DiskCollection::selectIndexesWithMinimumTermIds(const int *currentId
     return result;
 }
 
+/**
+ * In single pass in memory indexing, the index files are merged to get the final index file. This method
+ * implements the merging algorithm. Reads the index files in parallel and at each iteration merges the posting
+ * lists of the smallest term and put it to the merged index file. Updates the pointers of the indexes accordingly.
+ * @param name Name of the collection.
+ * @param tmpName Temporary name of the index files.
+ * @param blockCount Number of index files to be merged.
+ */
 void DiskCollection::combineMultipleInvertedIndexesInDisk(const string& _name, const string& tmpName, int blockCount) {
     ifstream* files;
     int* currentIdList;
@@ -72,9 +97,19 @@ void DiskCollection::combineMultipleInvertedIndexesInDisk(const string& _name, c
     for (int i = 0; i < blockCount; i++){
         files[i].close();
     }
+    delete[] currentIdList;
+    delete[] currentPostingLists;
+    delete[] files;
     outfile.close();
 }
 
+/**
+ * In single pass in memory indexing, the index files are merged to get the final index file. This method
+ * implements the merging algorithm. Reads the index files in parallel and at each iteration merges the positional
+ * posting lists of the smallest term and put it to the merged index file. Updates the pointers of the indexes accordingly.
+ * @param name Name of the collection.
+ * @param blockCount Number of index files to be merged.
+ */
 void DiskCollection::combineMultiplePositionalIndexesInDisk(const string& _name, int blockCount) {
     ifstream* files;
     int* currentIdList;
@@ -113,5 +148,8 @@ void DiskCollection::combineMultiplePositionalIndexesInDisk(const string& _name,
     for (int i = 0; i < blockCount; i++){
         files[i].close();
     }
+    delete[] currentIdList;
+    delete[] currentPostingLists;
+    delete[] files;
     outfile.close();
 }
