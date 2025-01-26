@@ -3,6 +3,7 @@
 //
 
 #include "CategoryTree.h"
+#include <StringUtils.h>
 
 /**
  * Simple constructor of the tree. Sets the root node of the tree.
@@ -19,8 +20,8 @@ CategoryTree::CategoryTree(const string &rootName) {
  * @param hierarchy Hierarchy string
  * @return The leaf node added when the hierarchy string is processed.
  */
-CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) {
-    vector<string> categories = Word::split(hierarchy, "%");
+CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) const {
+    vector<string> categories = StringUtils::split(hierarchy, "%");
     CategoryNode* current = root;
     for (const string& category : categories){
         CategoryNode* node = current->getChild(category);
@@ -41,7 +42,7 @@ CategoryNode *CategoryTree::addCategoryHierarchy(const string &hierarchy) {
  * @return The category nodes whose names contain at least one word from the query string
  */
 vector<CategoryNode *> CategoryTree::getCategories(const Query &query, TermDictionary *dictionary,
-                                                   CategoryDeterminationType categoryDeterminationType) {
+                                                   CategoryDeterminationType categoryDeterminationType) const {
     vector<CategoryNode*> result;
     switch (categoryDeterminationType) {
         case CategoryDeterminationType::KEYWORD:
@@ -58,6 +59,6 @@ vector<CategoryNode *> CategoryTree::getCategories(const Query &query, TermDicti
  * The method sets the representative count. The representative count filters the most N frequent words.
  * @param representativeCount Number of representatives.
  */
-void CategoryTree::setRepresentativeCount(int representativeCount) {
+void CategoryTree::setRepresentativeCount(int representativeCount) const {
     root->setRepresentativeCount(representativeCount);
 }

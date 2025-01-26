@@ -6,7 +6,7 @@
 
 /**
  * Constructor for the Posting class. Sets the document id attribute.
- * @param Id Document id.
+ * @param id Document id.
  */
 Posting::Posting(int id) {
     this->id = id;

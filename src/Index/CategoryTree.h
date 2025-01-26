@@ -14,9 +14,9 @@ private:
     CategoryNode* root;
 public:
     explicit CategoryTree(const string& rootName);
-    CategoryNode* addCategoryHierarchy(const string& hierarchy);
-    vector<CategoryNode*> getCategories(const Query& query, TermDictionary* dictionary, CategoryDeterminationType categoryDeterminationType);
-    void setRepresentativeCount(int representativeCount);
+    CategoryNode* addCategoryHierarchy(const string& hierarchy) const;
+    vector<CategoryNode*> getCategories(const Query& query, TermDictionary* dictionary, CategoryDeterminationType categoryDeterminationType) const;
+    void setRepresentativeCount(int representativeCount) const;
 };
 
 

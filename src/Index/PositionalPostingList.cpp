@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 #include "PositionalPostingList.h"
-#include "Dictionary/Word.h"
+#include <StringUtils.h>
 
 /**
  * Constructor of the PositionalPostingList class. Initializes the list.
@@ -16,14 +16,14 @@ PositionalPostingList::PositionalPostingList() = default;
  * Reads a positional posting list from a file. Reads N lines, where each line stores a positional posting. The
  * first item in the line shows document id. The second item in the line shows the number of positional postings.
  * Other items show the positional postings.
- * @param br Input stream to read from.
+ * @param infile Input stream to read from.
  * @param count Number of positional postings for this positional posting list.
  */
 PositionalPostingList::PositionalPostingList(ifstream &infile, int count) {
     string line;
     for (int i = 0; i < count; i++){
         getline(infile, line);
-        vector<string> ids = Word::split(line);
+        vector<string> ids = StringUtils::split(line);
         int numberOfPositionalPostings = stoi(ids[1]);
         int docId = stoi(ids[0]);
         for (int j = 0; j < numberOfPositionalPostings; j++){
@@ -176,10 +176,10 @@ string PositionalPostingList::to_string() const{
 
 /**
  * Prints this object into a file with the given index.
- * @param printWriter Output stream to write the file.
+ * @param outfile Output stream to write the file.
  * @param index Position of this positional posting list in the inverted index.
  */
-void PositionalPostingList::writeToFile(ofstream &outfile, int index) {
+void PositionalPostingList::writeToFile(ofstream &outfile, int index) const {
     if (size() > 0){
         outfile << ::to_string(index) << " " << ::to_string(size()) << "\n";
         outfile << to_string();

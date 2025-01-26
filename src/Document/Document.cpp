@@ -97,7 +97,7 @@ int Document::getSize() const{
 
 /**
  * Mutator for the size attribute.
- * @param size New size attribute.
+ * @param _size New size attribute.
  */
 void Document::setSize(int _size) {
     this->size = _size;
@@ -114,7 +114,7 @@ CategoryNode* Document::getCategory() const{
 /**
  * Mutator for the category attribute.
  * @param categoryTree Category tree to which new category will be added.
- * @param category New category that will be added
+ * @param _category New category that will be added
  */
 void Document::setCategory(CategoryTree* categoryTree, const string& _category) {
     category = categoryTree->addCategoryHierarchy(_category);

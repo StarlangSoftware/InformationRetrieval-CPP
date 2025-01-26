@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include "PositionalIndex.h"
+#include <StringUtils.h>
 #include "../Query/VectorSpaceModel.h"
 
 /**
@@ -27,7 +28,6 @@ PositionalIndex::PositionalIndex(const string &fileName) {
  * index.
  * @param dictionary Term dictionary
  * @param terms Sorted list of tokens in the memory collection.
- * @param comparator Comparator method to compare two terms.
  */
 PositionalIndex::PositionalIndex(TermDictionary &dictionary, const vector<TermOccurrence> &terms) {
     if (!terms.empty()) {
@@ -76,7 +76,7 @@ void PositionalIndex::readPositionalPostingList(const string &fileName) {
         if (line.empty()) {
             continue;
         }
-        vector<string> items = Word::split(line);
+        vector<string> items = StringUtils::split(line);
         int wordId = stoi(items[0]);
         positionalIndex[wordId] = PositionalPostingList(inputFile, stoi(items[1]));
     }
@@ -187,14 +187,14 @@ int *PositionalIndex::getDocumentFrequencies() const {
  * @param query Query string
  * @param dictionary Term dictionary
  * @param documents Document collection
- * @param parameter Search parameter
+ * @param searchParameter Parameter of the currect search.
  * @return The result of the query obtained by doing inverted index ranked search in the collection.
  */
 QueryResult
 PositionalIndex::rankedSearch(const Query &query,
                               TermDictionary &dictionary,
                               const vector<Document> &documents,
-                              const SearchParameter searchParameter) {
+                              const SearchParameter &searchParameter) {
     int N = documents.size();
     map<int, double> scores;
     QueryResult result = QueryResult();
@@ -249,7 +249,7 @@ int *PositionalIndex::getDocumentSizes(int documentSize) const {
  * Calculates and updates the frequency counts of the terms in each category node.
  * @param documents Document collection.
  */
-void PositionalIndex::setCategoryCounts(vector<Document> &documents) {
+void PositionalIndex::setCategoryCounts(const vector<Document> &documents) {
     for (auto &iterator: positionalIndex) {
         for (int j = 0; j < iterator.second.size(); j++) {
             PositionalPosting positionalPosting = iterator.second.get(j);

@@ -93,7 +93,7 @@ void MemoryCollection::save() {
 /**
  * The method saves the category tree for the categorical collections.
  */
-void MemoryCollection::saveCategories() {
+void MemoryCollection::saveCategories() const {
     ofstream outfile;
     outfile.open(name + "-categories.txt", ofstream::out);
     for (const Document& document : documents){
@@ -222,7 +222,7 @@ QueryResult MemoryCollection::attributeSearch(Query& query, const SearchParamete
  * @param parameter Search parameter for the query
  * @return The intermediate result of the query obtained by doing inverted index based search in the collection.
  */
-QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const SearchParameter &parameter) {
+QueryResult MemoryCollection::searchWithInvertedIndex(const Query &query, const SearchParameter &parameter) {
     switch (parameter.getRetrievalType()){
         case    RetrievalType::BOOLEAN:
             return invertedIndex.search(query, dictionary);
@@ -247,7 +247,7 @@ QueryResult MemoryCollection::searchWithInvertedIndex(Query &query, const Search
  * @param categories Predicted categories that match the query string.
  * @return Filtered query result
  */
-QueryResult MemoryCollection::filterAccordingToCategories(const QueryResult &currentResult, const vector<CategoryNode*>& categories) {
+QueryResult MemoryCollection::filterAccordingToCategories(const QueryResult &currentResult, const vector<CategoryNode*>& categories) const {
     QueryResult filteredResult = QueryResult();
     vector<QueryResultItem> items = currentResult.getItems();
     for (QueryResultItem queryResultItem : items) {

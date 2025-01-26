@@ -15,7 +15,7 @@ private:
     int documentSize;
 public:
     VectorSpaceModel();
-    VectorSpaceModel(int* termFrequencies, int* documentFrequencies, int documentSize, TermWeighting termWeighting, DocumentWeighting documentWeighting);
+    VectorSpaceModel(const int* termFrequencies, const int* documentFrequencies, int documentSize, TermWeighting termWeighting, DocumentWeighting documentWeighting);
     double get(int index) const;
     double cosineSimilarity(const VectorSpaceModel& vectorSpaceModel) const;
     static double weighting(double termFrequency, double documentFrequency, int documentSize, TermWeighting termWeighting, DocumentWeighting documentWeighting);

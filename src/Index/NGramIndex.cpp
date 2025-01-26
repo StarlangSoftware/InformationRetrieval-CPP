@@ -16,7 +16,6 @@ NGramIndex::NGramIndex() : InvertedIndex(){
  * method. Calls the constructor for the InvertedIndex.
  * @param dictionary Term dictionary
  * @param terms Sorted list of tokens in the memory collection.
- * @param comparator Comparator method to compare two terms.
  */
 NGramIndex::NGramIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms) : InvertedIndex(
         dictionary, terms) {

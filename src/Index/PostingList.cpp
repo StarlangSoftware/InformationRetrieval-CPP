@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include "PostingList.h"
-#include "Dictionary/Word.h"
+#include "StringUtils.h"
 
 /**
  * Constructor of the PostingList class. Initializes the list.
@@ -16,7 +16,7 @@ PostingList::PostingList() = default;
  * @param line A string containing postings separated with space character.
  */
 PostingList::PostingList(const string& line) {
-    vector<string> ids = Word::split(line);
+    vector<string> ids = StringUtils::split(line);
     for (const string& id : ids){
         add(stoi(id));
     }
@@ -106,10 +106,10 @@ string PostingList::to_string() const{
 
 /**
  * Prints this object into a file with the given index.
- * @param printWriter Output stream to write the file.
+ * @param outfile Output stream to write the file.
  * @param index Position of this posting list in the inverted index.
  */
-void PostingList::writeToFile(ofstream& outfile, int index) {
+void PostingList::writeToFile(ofstream& outfile, int index) const {
     if (size() > 0){
         outfile << index << " " << size() << "\n";
         outfile << to_string();

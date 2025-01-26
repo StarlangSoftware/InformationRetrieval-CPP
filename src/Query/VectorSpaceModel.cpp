@@ -13,7 +13,7 @@
  * @param termWeighting Term weighting scheme applied in term frequency calculation.
  * @param documentWeighting Document weighting scheme applied in document frequency calculation.
  */
-VectorSpaceModel::VectorSpaceModel(int *termFrequencies, int *documentFrequencies, int documentSize,
+VectorSpaceModel::VectorSpaceModel(const int *termFrequencies, const int *documentFrequencies, int documentSize,
                                    TermWeighting termWeighting, DocumentWeighting documentWeighting) {
     double sum = 0;
     this->documentSize = documentSize;

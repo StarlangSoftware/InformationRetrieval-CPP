@@ -11,10 +11,10 @@
 class LargeCollection : public DiskCollection{
 private:
     void constructDictionaryAndIndexesInDisk();
-    bool notCombinedAllDictionaries(string* currentWords, int size) const;
-    vector<int> selectDictionariesWithMinimumWords(string* currentWords, int size) const;
-    void combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount);
-    void constructDictionaryAndInvertedIndexInDisk(TermType termType);
+    bool notCombinedAllDictionaries(const string* currentWords, int size) const;
+    vector<int> selectDictionariesWithMinimumWords(const string* currentWords, int size) const;
+    void combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount) const;
+    void constructDictionaryAndInvertedIndexInDisk(TermType termType) const;
     void constructDictionaryAndPositionalIndexInDisk(TermType termType);
     void addNGramsToDictionaryAndIndex(const string& line, int k, TermDictionary& nGramDictionary, NGramIndex& nGramIndex);
     void constructNGramDictionaryAndIndexInDisk();

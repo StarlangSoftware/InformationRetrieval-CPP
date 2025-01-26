@@ -23,7 +23,7 @@ public:
     PositionalPostingList unionWith(const PositionalPostingList& second) const;
     PositionalPostingList intersection(const PositionalPostingList& secondList) const;
     string to_string() const;
-    void writeToFile(ofstream& outfile, int index);
+    void writeToFile(ofstream& outfile, int index) const;
 };
 
 

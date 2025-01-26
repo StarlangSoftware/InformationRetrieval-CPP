@@ -7,7 +7,7 @@
 /**
  * Constructor for the TermOccurrence class. Sets the attributes.
  * @param term Term for this occurrence.
- * @param docID Document id of the term occurrence.
+ * @param docId Document id of the term occurrence.
  * @param position Position of the term in the document for this occurrence.
  */
 TermOccurrence::TermOccurrence(const Word& term, int docId, int position) {
@@ -45,6 +45,6 @@ int TermOccurrence::getPosition() const{
  * @param currentTerm Term occurrence to be compared.
  * @return True, if two terms are different; false if they are the same.
  */
-bool TermOccurrence::isDifferent(const TermOccurrence& currentTerm) {
+bool TermOccurrence::isDifferent(const TermOccurrence& currentTerm) const {
     return !(currentTerm.getTerm() == term);
 }

@@ -25,11 +25,11 @@ public:
     void addPosition(int termId, int docId, int position);
     void save(const string& fileName);
     int* getDocumentSizes(int documentSize) const;
-    void setCategoryCounts(vector<Document>& documents);
+    void setCategoryCounts(const vector<Document>& documents);
     QueryResult positionalSearch(const Query& query, TermDictionary& dictionary);
     int* getTermFrequencies(int docId) const;
     int* getDocumentFrequencies() const;
-    QueryResult rankedSearch(const Query& query, TermDictionary& dictionary, const vector<Document>& documents, const SearchParameter searchParameter);
+    QueryResult rankedSearch(const Query& query, TermDictionary& dictionary, const vector<Document>& documents, const SearchParameter &searchParameter);
 };
 
 

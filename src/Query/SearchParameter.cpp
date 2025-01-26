@@ -14,7 +14,7 @@ RetrievalType SearchParameter::getRetrievalType() const{
 
 /**
  * Setter for the retrievalType.
- * @param retrievalType New retrieval type
+ * @param _retrievalType New retrieval type
  */
 void SearchParameter::setRetrievalType(RetrievalType _retrievalType) {
     this->retrievalType = _retrievalType;
@@ -30,7 +30,7 @@ DocumentWeighting SearchParameter::getDocumentWeighting() const{
 
 /**
  * Mutator for the documentWeighting scheme used in tf-idf search.
- * @param documentWeighting New document weighting scheme for tf-idf search.
+ * @param _documentWeighting New document weighting scheme for tf-idf search.
  */
 void SearchParameter::setDocumentWeighting(DocumentWeighting _documentWeighting) {
     this->documentWeighting = _documentWeighting;
@@ -46,7 +46,7 @@ TermWeighting SearchParameter::getTermWeighting() const{
 
 /**
  * Mutator for the termWeighting scheme used in tf-idf search.
- * @param termWeighting New term weighting scheme for tf-idf search.
+ * @param _termWeighting New term weighting scheme for tf-idf search.
  */
 void SearchParameter::setTermWeighting(TermWeighting _termWeighting) {
     this->termWeighting = _termWeighting;
@@ -62,7 +62,7 @@ int SearchParameter::getDocumentsRetrieved() const{
 
 /**
  * Mutator for the maximum number of documents retrieved.
- * @param documentsRetrieved New value for the maximum number of documents retrieved.
+ * @param _documentsRetrieved New value for the maximum number of documents retrieved.
  */
 void SearchParameter::setDocumentsRetrieved(int _documentsRetrieved) {
     this->documentsRetrieved = _documentsRetrieved;
@@ -78,7 +78,7 @@ CategoryDeterminationType SearchParameter::getCategoryDeterminationType() const{
 
 /**
  * Mutator for the category determination type.
- * @param categoryDeterminationType New category determination type.
+ * @param _categoryDeterminationType New category determination type.
  */
 void SearchParameter::setCategoryDeterminationType(CategoryDeterminationType _categoryDeterminationType) {
     this->categoryDeterminationType = _categoryDeterminationType;
@@ -94,7 +94,7 @@ FocusType SearchParameter::getFocusType() const {
 
 /**
  * Mutator for the focus type.
- * @param focusType New focus type.
+ * @param _focusType New focus type.
  */
 void SearchParameter::setFocusType(FocusType _focusType) {
     this->focusType = _focusType;
@@ -110,7 +110,7 @@ bool SearchParameter::getSearchAttributes() const{
 
 /**
  * Mutator for the search attributes field. The parameter will determine if an attribute search is performed.
- * @param searchAttributes New value for search attribute.
+ * @param _searchAttributes New value for search attribute.
  */
 void SearchParameter::setSearchAttributes(bool _searchAttributes) {
     this->searchAttributes = _searchAttributes;

@@ -42,11 +42,11 @@ set<string> MediumCollection::constructDistinctWordList(TermType termType) const
  * number of documents read are above the limit, current partial inverted index file is saved and new inverted index
  * file is open. After reading all documents, we combine the inverted index files to get the final inverted index
  * file.
- * @param dictionary Term dictionary.
+ * @param _dictionary Term dictionary.
  * @param termType If term type is TOKEN, the terms are single word, if the term type is PHRASE, the terms are
  *                 bi-words.
  */
-void MediumCollection::constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType) {
+void MediumCollection::constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType) const {
     int i = 0, blockCount = 0;
     InvertedIndex _invertedIndex = InvertedIndex();
     for (Document doc : documents){
@@ -82,11 +82,11 @@ void MediumCollection::constructInvertedIndexInDisk(TermDictionary& _dictionary,
  * number of documents read are above the limit, current partial positional index file is saved and new positional
  * index file is open. After reading all documents, we combine the posiitonal index files to get the final
  * positional index file.
- * @param dictionary Term dictionary.
+ * @param _dictionary Term dictionary.
  * @param termType If term type is TOKEN, the terms are single word, if the term type is PHRASE, the terms are
  *                 bi-words.
  */
-void MediumCollection::constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType) {
+void MediumCollection::constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType) const {
     int i = 0, blockCount = 0;
     PositionalIndex _positionalIndex = PositionalIndex();
     for (Document doc : documents){

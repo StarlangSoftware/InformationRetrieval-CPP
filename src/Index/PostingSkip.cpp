@@ -6,7 +6,7 @@
 
 /**
  * Constructor for the PostingSkip class. Sets the document id.
- * @param Id Document id.
+ * @param id Document id.
  */
 PostingSkip::PostingSkip(int id) : Posting(id) {
 }
@@ -21,7 +21,7 @@ bool PostingSkip::hasSkip() const{
 
 /**
  * Adds a skip pointer to the next skip posting.
- * @param skip Next posting to jump.
+ * @param _skip Next posting to jump.
  */
 void PostingSkip::addSkip(PostingSkip *_skip) {
     skipAvailable = true;

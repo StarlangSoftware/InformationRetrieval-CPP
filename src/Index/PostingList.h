@@ -23,7 +23,7 @@ public:
     PostingList intersection(const PostingList& secondList) const;
     PostingList unionWith(const PostingList& secondList) const;
     QueryResult toQueryResult() const;
-    void writeToFile(ofstream& outfile, int index);
+    void writeToFile(ofstream& outfile, int index) const;
     string to_string() const;
 };
 

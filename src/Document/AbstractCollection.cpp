@@ -3,6 +3,7 @@
 //
 
 #include "AbstractCollection.h"
+#include <StringUtils.h>
 using std::filesystem::directory_iterator;
 
 /**
@@ -74,7 +75,7 @@ void AbstractCollection::loadCategories() {
         if (line.empty()){
             continue;
         }
-        vector<string> items = Word::split(line, "\t");
+        vector<string> items = StringUtils::split(line, "\t");
         int docId = stoi(items.at(0));
         if (items.size() > 1){
             documents[docId].setCategory(categoryTree, items[1]);

@@ -16,10 +16,10 @@ private:
     IndexType indexType;
     void constructIndexesInMemory();
     vector<TermOccurrence> constructTerms(TermType termType) const;
-    void saveCategories();
+    void saveCategories() const;
     QueryResult attributeSearch(Query& query, const SearchParameter& parameter);
-    QueryResult searchWithInvertedIndex(Query& query, const SearchParameter& parameter);
-    QueryResult filterAccordingToCategories(const QueryResult& currentResult, const vector<CategoryNode*>& categories);
+    QueryResult searchWithInvertedIndex(const Query& query, const SearchParameter& parameter);
+    QueryResult filterAccordingToCategories(const QueryResult& currentResult, const vector<CategoryNode*>& categories) const;
 protected:
     void loadIndexesFromFile(const string& directory);
 public:

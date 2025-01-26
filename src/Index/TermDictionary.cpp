@@ -62,7 +62,7 @@ TermDictionary::TermDictionary(const vector<TermOccurrence>& terms) : Dictionary
     sort();
 }
 
-bool compareWord1(Word* wordA, Word* wordB)
+bool compareWord1(const Word* wordA, const Word* wordB)
 {
     return wordA->getName() < wordB->getName();
 }
@@ -90,7 +90,7 @@ TermDictionary::TermDictionary(const set<string>& words) : Dictionary(){
  * Adds a new term to the sorted words array. First the term is searched in the words array using binary search,
  * then the word is added into the correct place.
  * @param name Lemma of the term
- * @param termId Id of the term
+ * @param termID Id of the term
  */
 void TermDictionary::addTerm(const string& name, int termID) {
     auto middle = lower_bound(words.begin(), words.end(), new Word(name), compareWord1);
@@ -103,7 +103,7 @@ void TermDictionary::addTerm(const string& name, int termID) {
  * @param fileName Dictionary file name. Real dictionary file name is created by attaching -dictionary.txt to this
  *                 file name
  */
-void TermDictionary::save(const string& fileName) {
+void TermDictionary::save(const string& fileName) const {
     ofstream outfile;
     outfile.open(fileName + "-dictionary.txt", ofstream :: out);
     for (auto & word : words) {
@@ -117,7 +117,7 @@ void TermDictionary::save(const string& fileName) {
  * Constructs all NGrams from a given word. For example, 3 grams for word "term" are "$te", "ter", "erm", "rm$".
  * @param word Word for which NGrams will b created.
  * @param termId Term id to add into the posting list.
- * @param N N in NGram.
+ * @param k N in NGram.
  * @return An array of NGrams for a given word.
  */
 vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int termId, int k){
@@ -143,10 +143,10 @@ vector<TermOccurrence> TermDictionary::constructNGrams(const string& word, int t
 /**
  * Constructs all NGrams for all words in the dictionary. For example, 3 grams for word "term" are "$te", "ter",
  * "erm", "rm$".
- * @param N N in NGram.
+ * @param k N in NGram.
  * @return A sorted array of NGrams for all words in the dictionary.
  */
-vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k){
+vector<TermOccurrence> TermDictionary::constructTermsFromDictionary(int k) const {
     termOccurrenceComparator termComparator = termOccurrenceComparator();
     vector<TermOccurrence> terms;
     for (int i = 0; i < size(); i++){

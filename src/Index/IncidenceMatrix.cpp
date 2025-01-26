@@ -51,7 +51,7 @@ IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictio
  * @param row Row no of the cell
  * @param col Column no of the cell
  */
-void IncidenceMatrix::set(int row, int col) {
+void IncidenceMatrix::set(int row, int col) const {
     incidenceMatrix[row][col] = true;
 }
 
@@ -61,7 +61,7 @@ void IncidenceMatrix::set(int row, int col) {
  * @param dictionary Term dictionary
  * @return The result of the query obtained by doing incidence matrix boolean search in the collection.
  */
-QueryResult IncidenceMatrix::search(const Query& query, TermDictionary& dictionary) {
+QueryResult IncidenceMatrix::search(const Query& query, TermDictionary& dictionary) const {
     QueryResult result = QueryResult();
     bool* resultRow = new bool[documentSize];
     for (int i = 0; i < documentSize; i++){

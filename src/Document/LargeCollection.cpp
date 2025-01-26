@@ -42,9 +42,10 @@ void LargeCollection::constructDictionaryAndIndexesInDisk() {
  * @param currentWords Current pointers for the words in parallel dictionaries. currentWords[0] is the current word
  *                     in the first dictionary to be combined, currentWords[2] is the current word in the second
  *                     dictionary to be combined etc.
+ * @param size size of the currentWords
  * @return True, if all merge operation is completed, false otherwise.
  */
-bool LargeCollection::notCombinedAllDictionaries(string *currentWords, int size) const{
+bool LargeCollection::notCombinedAllDictionaries(const string *currentWords, int size) const{
     for (int i = 0; i < size; i++){
         if (!currentWords[i].empty()){
             return true;
@@ -53,7 +54,7 @@ bool LargeCollection::notCombinedAllDictionaries(string *currentWords, int size)
     return false;
 }
 
-bool compareWord2(Word* wordA, Word* wordB)
+bool compareWord2(const Word* wordA, const Word* wordB)
 {
     return wordA->getName() < wordB->getName();
 }
@@ -65,9 +66,10 @@ bool compareWord2(Word* wordA, Word* wordB)
  * @param currentWords Current pointers for the words in parallel dictionaries. currentWords[0] is the current word
  *                     in the first dictionary to be combined, currentWords[2] is the current word in the second
  *                     dictionary to be combined etc.
+ * @param size Size of the currentWords.
  * @return An array list of indexes for the dictionaries, whose words to be merged are lexicographically the first.
  */
-vector<int> LargeCollection::selectDictionariesWithMinimumWords(string *currentWords, int size) const{
+vector<int> LargeCollection::selectDictionariesWithMinimumWords(const string *currentWords, int size) const{
     vector<int> result;
     string min;
     for (int i = 0; i < size; i++){
@@ -87,11 +89,11 @@ vector<int> LargeCollection::selectDictionariesWithMinimumWords(string *currentW
  * In single pass in memory indexing, the dictionary files are merged to get the final dictionary file. This method
  * implements the merging algorithm. Reads the dictionary files in parallel and at each iteration puts the smallest
  * word to the final dictionary. Updates the pointers of the dictionaries accordingly.
- * @param name Name of the collection.
+ * @param _name Name of the collection.
  * @param tmpName Temporary name of the dictionary files.
  * @param blockCount Number of dictionaries to be merged.
  */
-void LargeCollection::combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount) {
+void LargeCollection::combineMultipleDictionariesInDisk(const string& _name, const string& tmpName, int blockCount) const {
     ifstream * files;
     int* currentIdList;
     string* currentWords;
@@ -139,7 +141,7 @@ void LargeCollection::combineMultipleDictionariesInDisk(const string& _name, con
  * @param termType If term type is TOKEN, the terms are single word, if the term type is PHRASE, the terms are
  *                 bi-words.
  */
-void LargeCollection::constructDictionaryAndInvertedIndexInDisk(TermType termType) {
+void LargeCollection::constructDictionaryAndInvertedIndexInDisk(TermType termType) const {
     int i = 0, blockCount = 0;
     InvertedIndex _invertedIndex = InvertedIndex();
     TermDictionary _dictionary = TermDictionary();
@@ -242,7 +244,7 @@ void LargeCollection::constructDictionaryAndPositionalIndexInDisk(TermType termT
  * the line by splitting from space, then constructs N-Grams for those tokens and adds N-Grams to the N-Gram
  * dictionary and N-Gram index.
  * @param line String containing the tokens.
- * @param N N in N-Gram.
+ * @param k N in N-Gram.
  * @param nGramDictionary N-Gram term dictionary
  * @param nGramIndex N-Gram inverted index
  */

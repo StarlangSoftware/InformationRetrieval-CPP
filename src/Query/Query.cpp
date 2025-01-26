@@ -4,6 +4,7 @@
 
 #include <regex>
 #include "Query.h"
+#include <StringUtils.h>
 
 const vector<string> Query::shortcuts = {"cc", "cm2", "cm", "gb", "ghz", "gr", "gram", "hz", "inc", "inch",
                                                       "inç", "kg", "kw", "kva", "litre", "lt", "m2", "m3", "mah", "mb",
@@ -22,7 +23,7 @@ Query::Query() = default;
  * @param query Query string
  */
 Query::Query(const string& query) {
-    vector<string> _terms = Word::split(query);
+    vector<string> _terms = StringUtils::split(query);
     for (const string& term : _terms){
         this->terms.emplace_back(Word(term));
     }

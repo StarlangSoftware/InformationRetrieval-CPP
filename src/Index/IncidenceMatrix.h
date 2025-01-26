@@ -20,8 +20,8 @@ public:
     IncidenceMatrix();
     IncidenceMatrix(int dictionarySize, int documentSize);
     IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictionary& dictionary, int documentSize);
-    void set(int row, int col);
-    QueryResult search(const Query& query, TermDictionary& dictionary);
+    void set(int row, int col) const;
+    QueryResult search(const Query& query, TermDictionary& dictionary) const;
 };
 
 

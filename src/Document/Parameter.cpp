@@ -104,7 +104,7 @@ int Parameter::getWordLimit() const{
 
 /**
  * Mutator for the index type search parameter. Index can be inverted index or incidence matrix.
- * @param indexType Index type search parameter
+ * @param _indexType Index type search parameter
  */
 void Parameter::setIndexType(IndexType _indexType) {
     this->indexType = _indexType;
@@ -122,7 +122,7 @@ void Parameter::setLoadIndexesFromFile(bool loadIndexesFromFile) {
 /**
  * Mutator for the disambiguator search parameter. The disambiguator is used for morphological disambiguation for
  * the terms in Turkish.
- * @param disambiguator disambiguator search parameter
+ * @param _disambiguator disambiguator search parameter
  */
 void Parameter::setDisambiguator(MorphologicalDisambiguator* _disambiguator) {
     this->disambiguator = _disambiguator;
@@ -130,7 +130,7 @@ void Parameter::setDisambiguator(MorphologicalDisambiguator* _disambiguator) {
 
 /**
  * Mutator for the fsm search parameter. The fsm is used for morphological analysis for the terms in Turkish.
- * @param fsm fsm search parameter
+ * @param _fsm fsm search parameter
  */
 void Parameter::setFsm(FsmMorphologicalAnalyzer* _fsm) {
     this->fsm = _fsm;
@@ -148,7 +148,7 @@ void Parameter::setNormalizeDocument(bool normalizeDocument) {
 /**
  * Mutator for the constructPhraseIndex search parameter. If constructPhraseIndex is true, phrase indexes will be
  * reconstructed or used in query processing.
- * @param phraseIndex constructPhraseIndex search parameter
+ * @param _phraseIndex constructPhraseIndex search parameter
  */
 void Parameter::setPhraseIndex(bool _phraseIndex) {
     this->phraseIndex = _phraseIndex;
@@ -157,7 +157,7 @@ void Parameter::setPhraseIndex(bool _phraseIndex) {
 /**
  * Mutator for the positionalIndex search parameter. If positionalIndex is true, positional indexes will be
  * reconstructed or used in query processing.
- * @param positionalIndex positionalIndex search parameter
+ * @param _positionalIndex positionalIndex search parameter
  */
 void Parameter::setPositionalIndex(bool _positionalIndex) {
     this->positionalIndex = _positionalIndex;
@@ -166,7 +166,7 @@ void Parameter::setPositionalIndex(bool _positionalIndex) {
 /**
  * Mutator for the constructNGramIndex search parameter. If constructNGramIndex is true, N-Gram indexes will be
  * reconstructed or used in query processing.
- * @param nGramIndex constructNGramIndex search parameter
+ * @param _nGramIndex constructNGramIndex search parameter
  */
 void Parameter::setNGramIndex(bool _nGramIndex) {
     this->nGramIndex = _nGramIndex;
@@ -184,7 +184,7 @@ void Parameter::setLimitNumberOfDocumentsLoaded(bool limitNumberOfDocumentsLoade
 /**
  * Mutator for the documentLimit search parameter. If limitNumberOfDocumentsLoaded is true,  the query result will
  * be filtered according to the documentLimit search parameter.
- * @param documentLimit limitNumberOfDocumentsLoaded search parameter
+ * @param _documentLimit limitNumberOfDocumentsLoaded search parameter
  */
 void Parameter::setDocumentLimit(int _documentLimit) {
     this->documentLimit = _documentLimit;
@@ -193,7 +193,7 @@ void Parameter::setDocumentLimit(int _documentLimit) {
 /**
  * Mutator for the documentLimit search parameter. If limitNumberOfDocumentsLoaded is true,  the query result will
  * be filtered according to the documentLimit search parameter.
- * @param wordLimit limitNumberOfDocumentsLoaded search parameter
+ * @param _wordLimit limitNumberOfDocumentsLoaded search parameter
  */
 void Parameter::setWordLimit(int _wordLimit) {
     this->wordLimit = _wordLimit;
@@ -209,7 +209,7 @@ DocumentType Parameter::getDocumentType() const{
 
 /**
  * Mutator for the document type search parameter. Document can be normal or a categorical document.
- * @param documentType Document type search parameter
+ * @param _documentType Document type search parameter
  */
 void Parameter::setDocumentType(DocumentType _documentType) {
     this->documentType = _documentType;
@@ -227,7 +227,7 @@ int Parameter::getRepresentationCount() const {
 /**
  * Mutator for the representativeCount search parameter. representativeCount is the maximum number of representative
  * words in the category based query search.
- * @param representativeCount representativeCount search parameter
+ * @param _representativeCount representativeCount search parameter
  */
 void Parameter::setRepresentativeCount(int _representativeCount) {
     this->representativeCount = _representativeCount;

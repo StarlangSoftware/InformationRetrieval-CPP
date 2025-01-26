@@ -3,17 +3,18 @@
 //
 
 #include "CategoryNode.h"
+#include <StringUtils.h>
 #include "Term.h"
 
 /**
  * Constructor for the category node. Each category is represented as a tree node in the category tree. Category
  * words are constructed by splitting the name of the category w.r.t. space. Sets the parent node and adds this
  * node as a child to parent node.
- * @param name Name of the category.
- * @param parent Parent node of this node.
+ * @param _name Name of the category.
+ * @param _parent Parent node of this node.
  */
 CategoryNode::CategoryNode(const string& _name, CategoryNode *_parent) {
-    categoryWords = Word::split(_name);
+    categoryWords = StringUtils::split(_name);
     parent = _parent;
     if (parent != nullptr){
         parent->addChild(this);
@@ -147,6 +148,7 @@ void CategoryNode::getCategoriesWithKeyword(const Query &query, vector<CategoryN
  * accumulates the nodes that satisfies the condition. If any word  in the query appears in any category word, the
  * node will be accumulated.
  * @param query Query string
+ * @param dictionary Term dictionary
  * @param result Accumulator array
  */
 void CategoryNode::getCategoriesWithCosine(const Query &query, TermDictionary* dictionary, vector<CategoryNode*>& result) {

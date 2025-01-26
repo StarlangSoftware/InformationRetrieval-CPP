@@ -17,9 +17,9 @@ public:
     TermDictionary(const vector<TermOccurrence>& terms);
     TermDictionary(const set<string>& words);
     void addTerm(const string& name, int termID);
-    void save(const string& fileName);
+    void save(const string& fileName) const;
     static vector<TermOccurrence> constructNGrams(const string& word, int termId, int k);
-    vector<TermOccurrence> constructTermsFromDictionary(int k);
+    vector<TermOccurrence> constructTermsFromDictionary(int k) const;
 };
 
 

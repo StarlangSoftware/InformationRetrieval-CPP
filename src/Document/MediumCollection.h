@@ -12,8 +12,8 @@ class MediumCollection : public DiskCollection{
 private:
     void constructIndexesInDisk();
     set<string> constructDistinctWordList(TermType termType) const;
-    void constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType);
-    void constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType);
+    void constructInvertedIndexInDisk(TermDictionary& _dictionary, TermType termType) const;
+    void constructPositionalIndexInDisk(TermDictionary& _dictionary, TermType termType) const;
 public:
     MediumCollection(const string& directory, const Parameter& parameter);
 };

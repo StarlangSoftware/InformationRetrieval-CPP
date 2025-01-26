@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include "InvertedIndex.h"
+#include <StringUtils.h>
 #include "PostingListComparator.h"
 
 /**
@@ -18,7 +19,6 @@ InvertedIndex::InvertedIndex() = default;
  * same term are then grouped, and the result is split into a postings list.
  * @param dictionary Term dictionary
  * @param terms Sorted list of tokens in the memory collection.
- * @param comparator Comparator method to compare two terms.
  */
 InvertedIndex::InvertedIndex(TermDictionary& dictionary, const vector<TermOccurrence>& terms) {
     if (!terms.empty()){
@@ -65,7 +65,7 @@ void InvertedIndex::readPostingList(const string& fileName) {
         if (line.empty()){
             continue;
         }
-        vector<string> items = Word::split(line);
+        vector<string> items = StringUtils::split(line);
         int wordId = stoi(items[0]);
         getline(inputFile, line);
         index[wordId] = PostingList(line);
