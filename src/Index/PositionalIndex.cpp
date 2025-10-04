@@ -235,6 +235,10 @@ PositionalIndex::rankedSearch(const Query &query,
  */
 int *PositionalIndex::getDocumentSizes(int documentSize) const {
     int *sizes = new int[documentSize];
+    for (int i = 0; i < documentSize; i++)
+    {
+        sizes[i] = 0;
+    }
     for (auto &iterator: positionalIndex) {
         for (int j = 0; j < iterator.second.size(); j++) {
             PositionalPosting positionalPosting = iterator.second.get(j);

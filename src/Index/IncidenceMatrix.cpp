@@ -16,6 +16,10 @@ IncidenceMatrix::IncidenceMatrix(int dictionarySize, int documentSize) {
     incidenceMatrix = new bool*[dictionarySize];
     for (int i = 0; i < dictionarySize; i++){
         incidenceMatrix[i] = new bool[documentSize];
+        for (int j = 0; j < documentSize; j++)
+        {
+            incidenceMatrix[i][j] = false;
+        }
     }
 }
 
@@ -31,6 +35,10 @@ IncidenceMatrix::IncidenceMatrix(const vector<TermOccurrence>& terms, TermDictio
     incidenceMatrix = new bool*[this->dictionarySize];
     for (int i = 0; i < dictionary.size(); i++){
         incidenceMatrix[i] = new bool[documentSize];
+        for (int j = 0; j < documentSize; j++)
+        {
+            incidenceMatrix[i][j] = false;
+        }
     }
     if (terms.size() > 0){
         TermOccurrence term = terms[0];
