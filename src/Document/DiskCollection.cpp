@@ -3,6 +3,8 @@
 //
 
 #include "DiskCollection.h"
+
+#include <climits>
 #include <StringUtils.h>
 
 DiskCollection::DiskCollection(const string& directory, const Parameter& parameter) : AbstractCollection(directory, parameter) {

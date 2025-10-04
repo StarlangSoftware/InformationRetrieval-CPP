@@ -4,6 +4,9 @@
 
 #include <fstream>
 #include "TermDictionary.h"
+
+#include <algorithm>
+
 #include "Term.h"
 #include "TermOccurrenceComparator.h"
 

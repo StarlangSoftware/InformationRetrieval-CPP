@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include "InvertedIndex.h"
+
+#include <algorithm>
 #include <StringUtils.h>
 #include "PostingListComparator.h"
 

@@ -3,6 +3,7 @@
 //
 
 #include "CategoryNode.h"
+#include<algorithm>
 #include <StringUtils.h>
 #include "Term.h"
 
